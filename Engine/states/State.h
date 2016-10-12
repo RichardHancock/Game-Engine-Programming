@@ -1,4 +1,4 @@
-#include "../dependencies/SDL.h"
+#include <SDL.h>
 #include <string>
 #include "../Platform.h"
 #include "../ResourceManager.h"

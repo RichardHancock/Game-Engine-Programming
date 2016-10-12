@@ -4,10 +4,10 @@
 #include <pugixml.hpp>
 #include <GL/glew.h>
 
-#include "dependencies/SDL.h"
-#include "dependencies/SDL_image.h"
-#include "dependencies/SDL_mixer.h"
-#include "dependencies/SDL_ttf.h"
+#include <SDL.h>
+#include <SDL_image.h>
+#include <SDL_mixer.h>
+#include <SDL_ttf.h>
 #include "misc/Vec2.h"
 
 //Quick Pre-processor key 

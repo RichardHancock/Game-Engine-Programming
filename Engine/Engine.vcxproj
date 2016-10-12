@@ -105,10 +105,6 @@
     <ClInclude Include="Audio.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Controller.h" />
-    <ClInclude Include="dependencies\SDL.h" />
-    <ClInclude Include="dependencies\SDL_image.h" />
-    <ClInclude Include="dependencies\SDL_mixer.h" />
-    <ClInclude Include="dependencies\SDL_ttf.h" />
     <ClInclude Include="GameModel.h" />
     <ClInclude Include="InputManager.h" />
     <ClInclude Include="misc\Colour.h" />

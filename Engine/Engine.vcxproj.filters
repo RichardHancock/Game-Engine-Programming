@@ -13,9 +13,6 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Header Files\Dependencies">
-      <UniqueIdentifier>{c117acc9-0b80-4f66-837f-281921954177}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\States">
       <UniqueIdentifier>{3fec53d4-82d2-4753-9b69-c20d5d8f9291}</UniqueIdentifier>
     </Filter>
@@ -94,18 +91,6 @@
   <ItemGroup>
     <ClInclude Include="Platform.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="dependencies\SDL_mixer.h">
-      <Filter>Header Files\Dependencies</Filter>
-    </ClInclude>
-    <ClInclude Include="dependencies\SDL.h">
-      <Filter>Header Files\Dependencies</Filter>
-    </ClInclude>
-    <ClInclude Include="dependencies\SDL_image.h">
-      <Filter>Header Files\Dependencies</Filter>
-    </ClInclude>
-    <ClInclude Include="dependencies\SDL_ttf.h">
-      <Filter>Header Files\Dependencies</Filter>
     </ClInclude>
     <ClInclude Include="states\State.h">
       <Filter>Header Files\States</Filter>

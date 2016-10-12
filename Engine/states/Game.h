@@ -5,7 +5,7 @@
 #include "../GameModel.h"
 #include "../Audio.h"
 #include "../misc/Vec3.h"
-#include "../dependencies/SDL.h"
+#include <SDL.h>
 #include "../ui/UI.h"
 
 class Game : public State

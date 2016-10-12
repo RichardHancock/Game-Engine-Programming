@@ -2,7 +2,7 @@
 
 #include <vector>
 #include <unordered_map>
-#include "dependencies/SDL.h"
+#include <SDL.h>
 
 #include "misc/Vec2.h"
 #include "Controller.h"

@@ -5,7 +5,7 @@
 #include <stdint.h>
 #include <iostream>
 #include <string>
-#include "../dependencies/SDL.h"
+#include <SDL.h>
 #include <unordered_map>
 #include <glm/glm.hpp>
 

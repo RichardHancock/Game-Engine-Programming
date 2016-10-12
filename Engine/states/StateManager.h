@@ -1,6 +1,6 @@
 #include "State.h"
 #include <vector>
-#include "../dependencies/SDL.h"
+#include <SDL.h>
 
 #pragma once
 

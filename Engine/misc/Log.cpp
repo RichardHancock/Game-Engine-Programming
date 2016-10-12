@@ -1,6 +1,6 @@
 #include "Log.h"
 
-#include "../dependencies/SDL.h"
+#include <SDL.h>
 #include <time.h>
 
 void Log::log(LogType type, std::string message)

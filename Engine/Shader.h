@@ -5,7 +5,7 @@
 #include <map>
 #include <glm/glm.hpp>
 
-#include "dependencies/SDL.h"
+#include <SDL.h>
 
 /** 
 @brief A GLSL shader program. 

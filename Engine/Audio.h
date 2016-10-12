@@ -1,6 +1,6 @@
 #pragma once
 
-#include "dependencies/SDL_mixer.h"
+#include <SDL_mixer.h>
 #include <string>
 
 #include "Resource.h"

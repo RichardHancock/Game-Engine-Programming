@@ -6,8 +6,8 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
-#include "dependencies/SDL.h"
-#include "dependencies/SDL_ttf.h"
+#include <SDL.h>
+#include <SDL_ttf.h>
 #include "Shader.h"
 #include "Texture.h"
 #include "ResourceManager.h"

@@ -1,6 +1,6 @@
 #define GLM_FORCE_CXX11
 
-#include "dependencies/SDL.h"
+#include <SDL.h>
 
 #include "Platform.h"
 #include "misc/Utility.h"

@@ -1,5 +1,5 @@
-#include "dependencies/SDL.h"
-#include "dependencies/SDL_image.h"
+#include <SDL.h>
+#include <SDL_image.h>
 #include <string>
 
 #include "misc/Vec2.h"

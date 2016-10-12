@@ -1,7 +1,7 @@
 #pragma once
 
 #include <stdint.h>
-#include "../dependencies/SDL.h"
+#include <SDL.h>
 #include <glm/glm.hpp>
 
 #include "Vec3.h"
