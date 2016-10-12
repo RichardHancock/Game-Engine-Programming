@@ -31,7 +31,6 @@ Platform::~Platform()
 
 bool Platform::initGLEW()
 {
-	///@todo convert couts to logs
 	// GLEW has a problem with loading core OpenGL
 	// See here: https://www.opengl.org/wiki/OpenGL_Loading_Library
 	// The temporary workaround is to enable its 'experimental' features
@@ -60,7 +59,7 @@ bool Platform::initSDL(bool openGL, std::string windowTitle)
 	bool status = true;
 	
 	//Android doesn't need this at SDL internally does this
-	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_GAMECONTROLLER | SDL_INIT_HAPTIC) < 0) 
+	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_GAMECONTROLLER | SDL_INIT_JOYSTICK | SDL_INIT_HAPTIC) < 0) 
 	{ 
 		status = false; 
 		Log::logE("SDL Init failed: " + std::string(SDL_GetError()));

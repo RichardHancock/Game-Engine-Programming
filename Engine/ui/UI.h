@@ -8,6 +8,8 @@
 #include "../Shader.h"
 #include "../GameModel.h"
 
+///@todo FIX Massive design flaw here that causes memory leaks. Because of the multiple textures 
+
 class UIElement
 {
 public:

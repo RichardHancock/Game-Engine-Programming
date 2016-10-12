@@ -58,5 +58,7 @@ private:
 
 	UITextElement* text;
 
+	TTF_Font* font;
+
 	bool hideGUI;
 };

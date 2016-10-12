@@ -35,7 +35,7 @@ Game::Game(StateManager* manager, Platform* platform,
 	ui = new UIElement(Vec2(-1.0f, 1.0f), Vec2(0.3f, -0.2f));
 	ui->addTexture(resourceManager->getTexture("uiTest.png"), "gSampler");
 
-	TTF_Font* font = TTF_OpenFont("resources/fonts/OpenSans-Regular.ttf", 32);
+	font = TTF_OpenFont("resources/fonts/OpenSans-Regular.ttf", 32);
 	text = new UITextElement(Vec2(0.0f), Vec2(0.5f, -0.5f ), "Testing", Colour(128), font);
 	text->addTexture(resourceManager->getTexture("uiTest.png"), "gSampler");
 
@@ -49,6 +49,8 @@ Game::~Game()
 	test->freeResourceInstance();
 	bowl->freeResourceInstance();
 	testSFX->freeResourceInstance();
+
+	TTF_CloseFont(font);
 
 	delete ui;
 	delete text;
