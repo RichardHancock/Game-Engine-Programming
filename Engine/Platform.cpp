@@ -7,9 +7,9 @@
 #include "misc/Utility.h"
 
 
-Platform::Platform(std::string settingsFilePath)
+Platform::Platform(std::string settingsFilename)
 	: scale(Vec2(640, 480)),
-	settingsFilePath(settingsFilePath),
+	settingsFilename(settingsFilename),
 	defaultSettingsPath("resources/defaultSettings.xml")
 {
 	
@@ -189,8 +189,15 @@ bool Platform::initSDL(bool openGL, std::string windowTitle)
 }
 
 
-void Platform::loadSettingsFromFile()
+void Platform::loadSettingsFromFile(std::string org, std::string app)
 {
+	//Get the path and combine with filename for settings file location
+	char* basePath = SDL_GetPrefPath(org.c_str(), app.c_str());
+	settingsFilePath = basePath + settingsFilename;
+	SDL_free(basePath);
+
+	Log::logI("Loading Settings from: " + settingsFilePath);
+
 	//Check if file exists, if not create the base settings file
 	if (!settingsFileExists())
 	{

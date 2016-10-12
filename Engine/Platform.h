@@ -43,9 +43,9 @@ public:
 	/**
 	@brief Constructor.
 	
-	@param settingsFilePath Relative pathname of the settings file.
+	@param settingsFilename Exact filename of the settings file (Not including Path).
 	 */
-	Platform(std::string settingsFilePath);
+	Platform(std::string settingsFilename);
 
 	/** @brief Destructor, Calls SDL's cleanup features for itself and its add ons. */
 	~Platform();
@@ -61,8 +61,13 @@ public:
 
 	bool initSDL(bool openGL, std::string windowTitle);
 
-	/** @brief	Loads game's settings from the settings file. */
-	void loadSettingsFromFile();
+	/**
+	 @brief	Loads game's settings from the settings file.
+	
+	 @param	org	The organisation name, will be the root directory of the setting file.
+	 @param	app	The application name, will be a subfolder in the above directory.
+	 */
+	void loadSettingsFromFile(std::string org, std::string app);
 
 
 	/**
@@ -118,7 +123,9 @@ private:
 
 	bool settingsFileExists();
 
-	const std::string settingsFilePath;
+	const std::string settingsFilename;
+
+	std::string settingsFilePath;
 
 	const std::string defaultSettingsPath;
 

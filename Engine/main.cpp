@@ -28,11 +28,10 @@ int main(int argc, char *argv[])
 {
 	processCommandLine(argc, argv);
 
-	std::string settingsPath = SDL_GetPrefPath("RH", "Engine");
-	settingsPath += "settings.xml";
+	std::string settingsFilename = "settings.xml";
 
-	Platform* platform = new Platform(settingsPath);
-	platform->loadSettingsFromFile();
+	Platform* platform = new Platform(settingsFilename);
+	platform->loadSettingsFromFile("RH", "Engine");
 
 	if (!platform->initSDL(true, "Engine"))
 	{
