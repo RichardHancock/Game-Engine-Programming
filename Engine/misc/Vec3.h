@@ -4,8 +4,6 @@
 #include <math.h>
 #include <assimp/vector3.h>
 
-//#include "Utility.h"
-
 /**
 @brief Stores a 3D Vector or Position, as floats
 */
@@ -50,7 +48,7 @@ public:
 
 	/**
 	@brief Get the length of the vector
-	@return float length of vector
+	@return length of vector
 	*/
 	float getLength()
 	{

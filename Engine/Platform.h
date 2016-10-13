@@ -24,8 +24,10 @@
 	//Linux Kernel
 #endif
 
+/** @brief	Contains Setting enums. */
 namespace Setting 
 {
+	/** @brief	Enums that represent different fullscreen modes. */
 	enum FullscreenMode
 	{
 		Windowed = 0,
@@ -56,9 +58,8 @@ public:
 	 @param	openGL	   	true to use openGL.
 	 @param	windowTitle	The window title.
 	
-	 @return	bool - Was successful.
+	 @return	true if it succeeds, false if it fails.
 	 */
-
 	bool initSDL(bool openGL, std::string windowTitle);
 
 	/**
@@ -71,7 +72,7 @@ public:
 
 
 	/**
-	 @brief Gets the window.
+	 @brief Gets the SDL window.
 	
 	 @return null if it fails, else the window.
 	 */
@@ -85,15 +86,28 @@ public:
 	SDL_GLContext getContext() { return context; }
 
 	/**
-	 @brief Gets window size.
+	 @brief Gets a Vec2 containing the windows size.
 	
 	 @return The window size.
 	 */
 	Vec2 getWindowSize() { return windowSize; }
 
-
+	/**
+	 @brief	Gets a specified setting value.
+	
+	 @param	setting	The setting's name/identifier.
+	
+	 @return	The setting's value.
+	 */
 	int getSetting(std::string setting);
 
+	/**
+	 @brief	Query if 'feature' is supported using SDLs CPU feature checks.
+	
+	 @param	feature	The feature.
+	
+	 @return	true if feature supported, false if not.
+	 */
 	bool isFeatureSupported(std::string feature);
 	
 private:
@@ -114,28 +128,44 @@ private:
 	/** @brief Size of the window. */
 	Vec2 windowSize;
 
-	//The resolution everything is scaled from
+	/** @brief The resolution everything is scaled from */
 	const Vec2 scale;
 
 
 	//Settings
+
+	/** @brief	Create a local settings file from the default settings file. */
 	void initSettingsFile();
 
+	/**
+	 @brief	Checks if a local settings file already exists.
+	
+	 @return	true if it exist, false if it does not.
+	 */
 	bool settingsFileExists();
 
+	/** @brief	Filename of the settings file. */
 	const std::string settingsFilename;
 
+	/** @brief	Full pathname of the settings file. */
 	std::string settingsFilePath;
 
+	/** @brief	The path of the default settings file in the resource folder. */
 	const std::string defaultSettingsPath;
 
+	/** @brief	The current fullscreen mode specified by the settings file. */
 	Setting::FullscreenMode fullscreenMode;
 	
+	/** @brief	Array containing all the setting data */
 	std::unordered_map<std::string, int> settings;
 
+
 	//Platform Feature Support (Wraps SDL CPU feature detection)
+	
+	/** @brief	Array containing all the system features and their availability */
 	std::unordered_map<std::string, bool> features;
 
+	/** @brief	Populate the features array by checking all of SDL's feature functions */
 	void checkFeatureSupport();
 
 	

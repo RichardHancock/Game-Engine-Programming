@@ -7,9 +7,6 @@
 #pragma once
 class StateManager;
 
-//Reference: Pete Allen's Game State Example
-//Used in other assignments
-
 /**
 @class State
 @brief A game state that contains one screen of the game such as a Menu or the game itself

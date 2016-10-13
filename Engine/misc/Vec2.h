@@ -3,10 +3,6 @@
 #include <iostream>
 #include <assimp/vector2.h>
 
-//#include "Utility.h"
-
-//Used in Other Assignments
-
 /**
 @brief Stores a 2D Vector or Position, as floats
 */
@@ -62,7 +58,7 @@ public:
 
 	/**
 	@brief Get the length of the vector
-	@return float length of vector
+	@return length of vector
 	*/
 	float getLength()
 	{
@@ -75,7 +71,7 @@ public:
 
 	/**
 	@brief Get a normalized Vec2
-	@return Vec2 Normalized vector
+	@return Normalized vector
 	*/
 	Vec2 normalize()
 	{

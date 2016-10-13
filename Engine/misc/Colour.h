@@ -17,7 +17,7 @@ struct Colour
 	///Blue Channel
 	uint8_t b;
 
-	//Alpha Channel
+	///Alpha Channel
 	uint8_t a;
 
 	Colour();

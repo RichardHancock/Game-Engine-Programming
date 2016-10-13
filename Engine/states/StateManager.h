@@ -4,8 +4,6 @@
 
 #pragma once
 
-//Reference: Pete Allen's Game State Example
-
 /**
 @class StateManager
 @brief Manages the creation, switching and function forwarding for States
@@ -58,7 +56,6 @@ public:
 	///Calls the render for all loaded states
 	void render();
 
-	//Think these are fine to have public since they are const
 	///The Window's Width
 	const int WINDOW_WIDTH;
 
