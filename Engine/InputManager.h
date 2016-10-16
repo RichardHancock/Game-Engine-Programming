@@ -7,6 +7,7 @@
 #include "misc/Vec2.h"
 #include "Controller.h"
 
+/** @brief	Manager for keyboard, mouse and game controller inputs. */
 class InputManager
 {
 public:
@@ -14,13 +15,37 @@ public:
 
 	~InputManager();
 
+
 	//Keyboard
+
+	/**
+	 @brief	Was the specified key pressed.
+	
+	 @param	key	The key code.
+	
+	 @return	true if pressed, false if not.
+	 */
 	bool wasKeyPressed(SDL_Keycode key);
 
+	/**
+	@brief	Is the specified key held.
+
+	@param	key	The key code.
+
+	@return	true if held, false if not.
+	*/
 	bool isKeyHeld(SDL_Keycode key);
 
+	/**
+	@brief	Was the specified key released.
+
+	@param	key	The key code.
+
+	@return	true if released, false if not.
+	*/
 	bool wasKeyReleased(SDL_Keycode key);
 	
+
 	//Quick Shortcuts.
 
 	/**
@@ -207,38 +232,90 @@ public:
 
 private:
 
+	/** @brief	Values that represent all the possible button states for a controller. */
 	enum ButtonState {
-		Pressed,
-		Held,
-		Released,
-		None,
-		Unknown
+		Pressed,  ///< Button was pressed this frame
+		Held,     ///< Button is held
+		Released, ///< Button was release this frame
+		None,     ///< Button has no active state
+		Unknown   ///< An unknown button that can't be used
 	};
 
+	/** @brief	Map of keys and their states. */
 	std::unordered_map<SDL_Keycode, ButtonState> keys;
 
+	/** @brief	Map of mouse buttons and their states. */
 	std::unordered_map<uint8_t, ButtonState> mouseButtons;
 
-	//Switch to standard array
+	/** 
+	@brief Vector containing all initialised controllers
+	
+	@todo Possibly switch to standard array. 
+	*/
 	std::vector<Controller*> gamepads;
 
+	/** @brief	The maximum number of gamepads that can be handled. */
 	const unsigned int MAX_GAMEPADS = 4;
 
+
 	//Mouse Vectors
+	
+	/** @brief	The mouse's current position this frame. */
 	Vec2 mousePos;
 
+	/**
+	@brief	The mouse's current direction this frame. 
+	The mouse direction is its' movement vector since the last frame.
+	*/
 	Vec2 mouseDirection;
 
+	/**
+	@brief	The mouse wheel's current direction this frame.
+	The mouse wheel's direction is its' movement vector since the last frame.
+
+	@todo Give more detail about the numbers returned
+	*/
 	Vec2 mouseWheelDirection;
 
+
+	/**
+	 @brief	Queries if a gamepad stored in the array is valid.
 	
+	 @param	controller	The controller index.
+	
+	 @return	true if the gamepad is valid, false if not.
+	 */
 	bool isGamepadValid(int controller);
 
+	/**
+	 @brief	Finds out which specific controller is responsible for the passed in event.
+	
+	 @param [in,out]	e	The SDL_Event to process.
+	
+	 @return	The joystick instance identifier responsible.
+	 */
 	SDL_JoystickID getJoystickInstanceIDFromEvent(SDL_Event& e);
 
+	/**
+	 @brief	Adds a controller when one is detected from the passed in event.
+	
+	 @param [in,out]	e	The SDL_Event to process.
+	 */
 	void addController(SDL_Event& e);
 
+	/**
+	 @brief	Adds a new controller to the internal arrays.
+	
+	 @param	joystickID	Identifier for the joystick.
+	 @param	arrayPos  	The array position.
+	 */
 	void addNewController(int joystickID, int arrayPos);
 
+	/**
+	 @brief	Called when a controller is no longer detected.
+	 Currently just cleans up its memory and deletes
+	
+	 @param [in,out]	e	The SDL_Event to process.
+	 */
 	void removeController(SDL_Event& e);
 };

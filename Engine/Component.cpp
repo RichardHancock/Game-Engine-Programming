@@ -1,6 +1,6 @@
 #include "Component.h"
 
-#include "misc\Utility.h"
+#include <assert.h>
 
 Component::~Component() 
 {
