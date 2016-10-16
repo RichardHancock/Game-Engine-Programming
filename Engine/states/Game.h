@@ -1,3 +1,5 @@
+#pragma once
+
 #include "State.h"
 #include "../Shader.h"
 #include "../Camera.h"

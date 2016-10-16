@@ -1,8 +1,8 @@
+#pragma once
+
 #include "State.h"
 #include <vector>
 #include <SDL.h>
-
-#pragma once
 
 /**
 @class StateManager

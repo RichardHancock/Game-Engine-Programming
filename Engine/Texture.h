@@ -1,13 +1,11 @@
+#pragma once
+
 #include <SDL.h>
 #include <SDL_image.h>
 #include <string>
 
 #include "misc/Vec2.h"
 #include "Resource.h"
-
-#pragma once
-
-//Used in other assignments, small modifications
 
 /**
 @class Texture

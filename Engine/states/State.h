@@ -1,10 +1,11 @@
+#pragma once
+
 #include <SDL.h>
 #include <string>
 #include "../Platform.h"
 #include "../ResourceManager.h"
 #include "../InputManager.h"
 
-#pragma once
 class StateManager;
 
 /**
