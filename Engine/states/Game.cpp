@@ -3,13 +3,12 @@
 #include "../misc/Utility.h"
 #include <glm/gtc/matrix_transform.hpp>
 
-Game::Game(StateManager* manager, Platform* platform, 
-	ResourceManager* resourceManager, InputManager* inputManager)
-	: State(manager, platform, resourceManager, inputManager)
+Game::Game(StateManager* manager, Platform* platform, InputManager* inputManager)
+	: State(manager, platform, inputManager)
 {
 	stateName = "Game";
 
-	std::string shaderPath = resourceManager->shaderDir;
+	std::string shaderPath = ResourceManager::shaderDir;
 	standardShader = new Shader(
 		shaderPath + "vertex.shader", 
 		shaderPath + "fragment.shader"
@@ -27,17 +26,17 @@ Game::Game(StateManager* manager, Platform* platform,
 		Log::logW("Bugger, mouse not happy");
 	}*/
 
-	test = resourceManager->getModel("barrel.obj", resourceManager->getTexture("barrel.png"));
-	bowl = resourceManager->getModel("bowl.obj", resourceManager->getTexture("bowl.png"));
+	test = ResourceManager::getModel("barrel.obj", ResourceManager::getTexture("barrel.png"));
+	bowl = ResourceManager::getModel("bowl.obj", ResourceManager::getTexture("bowl.png"));
 
-	testSFX = resourceManager->getAudio("POP Echo Bouncer 01.wav", false);
+	testSFX = ResourceManager::getAudio("POP Echo Bouncer 01.wav", false);
 
 	ui = new UIElement(Vec2(-1.0f, 1.0f), Vec2(0.3f, -0.2f));
-	ui->addTexture(resourceManager->getTexture("uiTest.png"), "gSampler");
+	ui->addTexture(ResourceManager::getTexture("uiTest.png"), "gSampler");
 
 	font = TTF_OpenFont("resources/fonts/OpenSans-Regular.ttf", 32);
 	text = new UITextElement(Vec2(0.0f), Vec2(0.5f, -0.5f ), "Testing", Colour(128), font);
-	text->addTexture(resourceManager->getTexture("uiTest.png"), "gSampler");
+	text->addTexture(ResourceManager::getTexture("uiTest.png"), "gSampler");
 
 	hideGUI = false;
 

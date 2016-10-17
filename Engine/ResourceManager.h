@@ -24,9 +24,11 @@ class ResourceManager
 {
 public:
 	
-	ResourceManager();
+	
 
-	~ResourceManager();
+	static void cleanUp();
+
+	static void init();
 
 	/**
 	@brief Gets a audio object, loads the audio if not already loaded.
@@ -37,7 +39,7 @@ public:
 	
 	@return null if it fails, else the audio.
 	 */
-	Audio* getAudio(std::string audioFilename, bool isMusic, bool defaultPath = true);
+	static Audio* getAudio(std::string audioFilename, bool isMusic, bool defaultPath = true);
 
 	/**
 	@brief Gets a model, loads the model if not already loaded.
@@ -50,7 +52,7 @@ public:
 	
 	@todo Support multi mesh models.
 	 */
-	GameModel* getModel(std::string modelFilename, Texture* texture, bool defaultPath = true);
+	static GameModel* getModel(std::string modelFilename, Texture* texture, bool defaultPath = true);
 
 	/**
 	@brief Gets a texture, loads the texture if not already loaded.
@@ -60,7 +62,7 @@ public:
 	
 	@return null if it fails, else the texture.
 	 */
-	Texture* getTexture(std::string textureFilename, bool defaultPath = true);
+	static Texture* getTexture(std::string textureFilename, bool defaultPath = true);
 
 
 	/**
@@ -70,7 +72,7 @@ public:
 	
 	@todo implement some way of limiting this, as it's not needed every frame.
 	 */
-	void update(float dt);
+	static void update(float dt);
 
 	/** @brief Values that represent resource types. */
 	enum ResourceTypes
@@ -81,28 +83,30 @@ public:
 	};
 
 	/** @brief The directory for the relevant asset type */
-	const std::string modelDir, shaderDir, audioDir, textureDir;
+	static const std::string modelDir, shaderDir, audioDir, textureDir;
 
 private:
+	ResourceManager();
+	
 	/** @brief The models. */
-	std::unordered_map<std::string, GameModel*> models;
+	static std::unordered_map<std::string, GameModel*> models;
 
 	/** @brief The audio. */
-	std::unordered_map<std::string, Audio*> audio;
+	static std::unordered_map<std::string, Audio*> audio;
 
 	/** @brief The textures. */
-	std::unordered_map<std::string, Texture*> textures;
+	static std::unordered_map<std::string, Texture*> textures;
 
 	
 	/** @brief The model importer from Assimp. */
-	Assimp::Importer* modelImporter;
+	static Assimp::Importer* modelImporter;
 
 
 	/** @brief Only check the internal resources every 10 seconds. */
-	const float UPDATE_DELAY = 10.0f;
+	static const float UPDATE_DELAY;
 	
 	/** @brief The update delay timer to stop update running every frame. */
-	Utility::SimpleTimer updateDelayTimer;
+	static Utility::SimpleTimer* updateDelayTimer;
 	
 
 	
@@ -112,5 +116,5 @@ private:
 	@param [in,out] resourceArray Array of resources.
 	 */
 	template<class R>
-	void checkForExpiredResources(std::unordered_map<std::string, R> &resourceArray);
+	static void checkForExpiredResources(std::unordered_map<std::string, R> &resourceArray);
 };

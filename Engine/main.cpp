@@ -55,9 +55,9 @@ int main(int argc, char *argv[])
 	StateManager* manager = new StateManager((int)platform->getWindowSize().x, (int)platform->getWindowSize().y);
 	InputManager* inputManager = new InputManager();
 
-	ResourceManager* resourceManager = new ResourceManager();
+	ResourceManager::init();
 
-	manager->addState(new Game(manager, platform, resourceManager, inputManager));
+	manager->addState(new Game(manager, platform, inputManager));
 
 	unsigned int lastTime = SDL_GetTicks();
 
@@ -78,7 +78,7 @@ int main(int argc, char *argv[])
 		manager->update(dt);
 
 		inputManager->update();
-		resourceManager->update(dt);
+		ResourceManager::update(dt);
 
 		//Render
 		// Specify the colour to clear the framebuffer to
@@ -98,7 +98,6 @@ int main(int argc, char *argv[])
 
 	delete manager;
 	delete inputManager;
-	delete resourceManager;
 	delete platform;
 	SDL_Quit();
 	

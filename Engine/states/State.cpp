@@ -1,9 +1,7 @@
 #include "State.h"
 
-State::State(StateManager* stateManager, Platform* platform, 
-	ResourceManager* resourceManager, InputManager* inputManager)
-		: stateManager(stateManager), platform(platform), 
-		resourceManager(resourceManager), inputManager(inputManager)
+State::State(StateManager* stateManager, Platform* platform, InputManager* inputManager)
+		: stateManager(stateManager), platform(platform), inputManager(inputManager)
 {
 	
 }

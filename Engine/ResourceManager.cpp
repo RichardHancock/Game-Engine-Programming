@@ -5,18 +5,30 @@
 #include "Audio.h"
 #include "misc/Log.h"
 
+//Static Declarations
+const std::string ResourceManager::modelDir = "resources/models/";
+const std::string ResourceManager::audioDir = "resources/audio/";
+const std::string ResourceManager::shaderDir = "resources/shaders/";
+const std::string ResourceManager::textureDir = "resources/textures/";
+const float ResourceManager::UPDATE_DELAY = 10.0f;
+std::unordered_map<std::string, GameModel*> ResourceManager::models;
+std::unordered_map<std::string, Audio*> ResourceManager::audio;
+std::unordered_map<std::string, Texture*> ResourceManager::textures;
+Assimp::Importer* ResourceManager::modelImporter;
+Utility::SimpleTimer* ResourceManager::updateDelayTimer;
 
-ResourceManager::ResourceManager()
-	: modelDir("resources/models/"), 
-	audioDir("resources/audio/"), 
-	shaderDir("resources/shaders/"), 
-	textureDir("resources/textures/"),
-	updateDelayTimer(UPDATE_DELAY)
+
+ResourceManager::ResourceManager() {}
+
+void ResourceManager::init()
 {
+	
+	updateDelayTimer = new Utility::SimpleTimer(UPDATE_DELAY);
+
 	modelImporter = new Assimp::Importer();
 }
 
-ResourceManager::~ResourceManager()
+void ResourceManager::cleanUp()
 {
 	for(auto model : models)
 	{
@@ -37,6 +49,8 @@ ResourceManager::~ResourceManager()
 	textures.clear();
 	
 	delete modelImporter;
+
+	delete updateDelayTimer;
 }
 
 Audio* ResourceManager::getAudio(std::string audioFilename, bool isMusic, bool defaultPath)
@@ -143,15 +157,15 @@ Texture* ResourceManager::getTexture(std::string textureFilename, bool defaultPa
 void ResourceManager::update(float dt)
 {
 	//I use a timer here so the code is only run occasionally
-	updateDelayTimer.update(dt);
+	updateDelayTimer->update(dt);
 	
-	if (updateDelayTimer.hasTimerFinished())
+	if (updateDelayTimer->hasTimerFinished())
 	{
 		checkForExpiredResources(models);
 		checkForExpiredResources(audio);
 		checkForExpiredResources(textures);
 
-		updateDelayTimer.restart();
+		updateDelayTimer->restart();
 	}
 }
 

@@ -21,11 +21,9 @@ public:
 	
 	@param [in,out] manager		    Pointer to the current state manager.
 	@param [in,out] platform	    Pointer to platform.
-	@param [in,out] resourceManager If non-null, manager for resources.
 	@param [in,out] inputManager    If non-null, manager for input.
 	 */
-	State(StateManager* manager, Platform* platform, 
-		ResourceManager* resourceManager, InputManager* inputManager);
+	State(StateManager* manager, Platform* platform, InputManager* inputManager);
 
 	virtual ~State() {}
 
@@ -57,9 +55,6 @@ protected:
 
 	///Platform
 	Platform* platform;
-
-	///Resource Manager
-	ResourceManager* resourceManager;
 
 	///Input Manager
 	InputManager* inputManager;
