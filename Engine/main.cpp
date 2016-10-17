@@ -53,9 +53,8 @@ int main(int argc, char *argv[])
 	SDL_Window* window = platform->getWindow();
 
 	StateManager* manager = new StateManager((int)platform->getWindowSize().x, (int)platform->getWindowSize().y);
-	InputManager* inputManager = new InputManager();
 
-	manager->addState(new Game(manager, platform, inputManager));
+	manager->addState(new Game(manager, platform));
 
 	unsigned int lastTime = SDL_GetTicks();
 
@@ -75,7 +74,7 @@ int main(int argc, char *argv[])
 
 		manager->update(dt);
 
-		inputManager->update();
+		InputManager::update();
 		ResourceManager::update(dt);
 
 		//Render
@@ -95,7 +94,7 @@ int main(int argc, char *argv[])
 	}
 
 	delete manager;
-	delete inputManager;
+	InputManager::cleanup();
 	ResourceManager::cleanUp();
 	delete platform;
 	SDL_Quit();

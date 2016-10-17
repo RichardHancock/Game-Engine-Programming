@@ -21,9 +21,8 @@ public:
 	
 	@param [in,out] manager		    Pointer to the current state manager.
 	@param [in,out] platform	    Pointer to platform.
-	@param [in,out] inputManager    If non-null, manager for input.
 	 */
-	State(StateManager* manager, Platform* platform, InputManager* inputManager);
+	State(StateManager* manager, Platform* platform);
 
 	virtual ~State() {}
 
@@ -55,9 +54,6 @@ protected:
 
 	///Platform
 	Platform* platform;
-
-	///Input Manager
-	InputManager* inputManager;
 
 	///This states name
 	std::string stateName;

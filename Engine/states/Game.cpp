@@ -3,8 +3,8 @@
 #include "../misc/Utility.h"
 #include <glm/gtc/matrix_transform.hpp>
 
-Game::Game(StateManager* manager, Platform* platform, InputManager* inputManager)
-	: State(manager, platform, inputManager)
+Game::Game(StateManager* manager, Platform* platform)
+	: State(manager, platform)
 {
 	stateName = "Game";
 
@@ -71,14 +71,14 @@ bool Game::eventHandler()
 
 		case SDL_KEYUP:
 		case SDL_KEYDOWN:
-			inputManager->processKeyEvent(e);
+			InputManager::processKeyEvent(e);
 			break;
 
 		case SDL_MOUSEBUTTONDOWN:
 		case SDL_MOUSEBUTTONUP:
 		case SDL_MOUSEMOTION:
 		case SDL_MOUSEWHEEL:
-			inputManager->processMouseEvent(e);
+			InputManager::processMouseEvent(e);
 
 			break;
 
@@ -87,12 +87,12 @@ bool Game::eventHandler()
 		case SDL_CONTROLLERBUTTONUP:
 		case SDL_CONTROLLERDEVICEADDED:
 		case SDL_CONTROLLERDEVICEREMOVED:
-			inputManager->processGameControllerEvent(e);
+			InputManager::processGameControllerEvent(e);
 			break;
 		}
 	}
 
-	if (inputManager->wasKeyReleased(SDLK_ESCAPE))
+	if (InputManager::wasKeyReleased(SDLK_ESCAPE))
 	{
 		return true;
 	}
@@ -103,11 +103,11 @@ bool Game::eventHandler()
 void Game::update(float dt)
 {
 	
-	//camera->updateViewMat(glm::vec3(inputManager->getMouseDirection().x, 0.0f, 0.0f);
-		//inputManager->getMouseDirection().y, inputManager->getMouseWheelDirection().y));
+	//camera->updateViewMat(glm::vec3(InputManager::getMouseDirection().x, 0.0f, 0.0f);
+		//InputManager::getMouseDirection().y, InputManager::getMouseWheelDirection().y));
 
 	//Sound Test
-	if (inputManager->wasKeyReleased(SDLK_p))
+	if (InputManager::wasKeyReleased(SDLK_p))
 	{
 		testSFX->play(0, 0);
 	}
@@ -115,35 +115,35 @@ void Game::update(float dt)
 	cameraControls(dt);
 
 	//Mouse Tests
-	if (inputManager->wasMouseButtonPressed(SDL_BUTTON_LEFT)) {
-		Log::logI("Mouse Pos: " + Utility::vec2ToString(inputManager->getMousePos()));
+	if (InputManager::wasMouseButtonPressed(SDL_BUTTON_LEFT)) {
+		Log::logI("Mouse Pos: " + Utility::vec2ToString(InputManager::getMousePos()));
 	}
-	if (inputManager->wasMouseButtonPressed(SDL_BUTTON_MIDDLE)) {
-		Log::logI("Mouse Dir: " + Utility::vec2ToString(inputManager->getMouseDirection()));
+	if (InputManager::wasMouseButtonPressed(SDL_BUTTON_MIDDLE)) {
+		Log::logI("Mouse Dir: " + Utility::vec2ToString(InputManager::getMouseDirection()));
 	}
-	if (inputManager->wasMouseButtonPressed(SDL_BUTTON_RIGHT)) {
-		Log::logI("Mouse wheel: " + Utility::vec2ToString(inputManager->getMouseWheelDirection()));
+	if (InputManager::wasMouseButtonPressed(SDL_BUTTON_RIGHT)) {
+		Log::logI("Mouse wheel: " + Utility::vec2ToString(InputManager::getMouseWheelDirection()));
 	}
 	
 	//Controller Tests
-	if (inputManager->wasControllerButtonPressed(0, Controller::A))
+	if (InputManager::wasControllerButtonPressed(0, Controller::A))
 	{
 		Log::logI("LeftAxis: " +
-			Utility::vec2ToString(inputManager->getControllerAxis2D(0, Controller::LeftStick)));
+			Utility::vec2ToString(InputManager::getControllerAxis2D(0, Controller::LeftStick)));
 		Log::logI("RightAxis: " +
-			Utility::vec2ToString(inputManager->getControllerAxis2D(0, Controller::RightStick)));
+			Utility::vec2ToString(InputManager::getControllerAxis2D(0, Controller::RightStick)));
 		Log::logI("LeftTrigger: " +
-			Utility::floatToString(inputManager->getControllerAxis1D(0, Controller::LeftTrigger)));
+			Utility::floatToString(InputManager::getControllerAxis1D(0, Controller::LeftTrigger)));
 		Log::logI("RightTrigger: " +
-			Utility::floatToString(inputManager->getControllerAxis1D(0, Controller::RightTrigger)));
+			Utility::floatToString(InputManager::getControllerAxis1D(0, Controller::RightTrigger)));
 	}
 
-	if (inputManager->wasControllerButtonPressed(0, Controller::RIGHTSHOULDER))
+	if (InputManager::wasControllerButtonPressed(0, Controller::RIGHTSHOULDER))
 	{
-		inputManager->playControllerRumble(0, 1.0f, 2000);
+		InputManager::playControllerRumble(0, 1.0f, 2000);
 	}
 
-	if (inputManager->wasKeyPressed(SDLK_g))
+	if (InputManager::wasKeyPressed(SDLK_g))
 		hideGUI = !hideGUI;
 }
 
@@ -172,63 +172,63 @@ void Game::render()
 void Game::cameraControls(float dt)
 {
 	//move along camera along x
-	if (inputManager->isKeyHeld(SDLK_a))
+	if (InputManager::isKeyHeld(SDLK_a))
 	{
 		camera->moveCameraAlongX(-100.0f * dt);
 	}
-	if (inputManager->isKeyHeld(SDLK_d))
+	if (InputManager::isKeyHeld(SDLK_d))
 	{
 		camera->moveCameraAlongX(100.0f * dt);
 	}
 	//move camera along y
-	if (inputManager->isKeyHeld(SDLK_q))
+	if (InputManager::isKeyHeld(SDLK_q))
 	{
 		camera->moveCameraAlongY(-100.0f * dt);
 	}
-	if (inputManager->isKeyHeld(SDLK_e))
+	if (InputManager::isKeyHeld(SDLK_e))
 	{
 		camera->moveCameraAlongY(100.0f * dt);
 	}
 	//move camera along z
-	if (inputManager->isKeyHeld(SDLK_w))
+	if (InputManager::isKeyHeld(SDLK_w))
 	{
 		camera->moveCameraAlongZ(-100.0f * dt);
 	}
-	if (inputManager->isKeyHeld(SDLK_s))
+	if (InputManager::isKeyHeld(SDLK_s))
 	{
 		camera->moveCameraAlongZ(100.0f * dt);
 	}
 
 	//rotate along camera along x
-	if (inputManager->isKeyHeld(SDLK_UP))
+	if (InputManager::isKeyHeld(SDLK_UP))
 	{
 		camera->rotateCameraAlongX(Utility::convertAngleToRadian(-100.0f * dt));
 	}
-	if (inputManager->isKeyHeld(SDLK_DOWN))
+	if (InputManager::isKeyHeld(SDLK_DOWN))
 	{
 		camera->rotateCameraAlongX(Utility::convertAngleToRadian(100.0f * dt));
 	}
 	//rotate camera along y
-	if (inputManager->isKeyHeld(SDLK_LEFT))
+	if (InputManager::isKeyHeld(SDLK_LEFT))
 	{
 		camera->rotateCameraAlongY(Utility::convertAngleToRadian(-100.0f * dt));
 	}
-	if (inputManager->isKeyHeld(SDLK_RIGHT))
+	if (InputManager::isKeyHeld(SDLK_RIGHT))
 	{
 		camera->rotateCameraAlongY(Utility::convertAngleToRadian(100.0f * dt));
 	}
 	//rotate camera along z
-	if (inputManager->isKeyHeld(SDLK_k))
+	if (InputManager::isKeyHeld(SDLK_k))
 	{
 		camera->rotateCameraAlongZ(Utility::convertAngleToRadian(-100.0f * dt));
 	}
-	if (inputManager->isKeyHeld(SDLK_l))
+	if (InputManager::isKeyHeld(SDLK_l))
 	{
 		camera->rotateCameraAlongZ(Utility::convertAngleToRadian(100.0f * dt));
 	}
 
 	//reset camera to 0,0,0
-	if (inputManager->wasKeyReleased(SDLK_SPACE))
+	if (InputManager::wasKeyReleased(SDLK_SPACE))
 	{
 		camera->lookAt(glm::vec3(0.0f, 0.0f, 0.0f));
 	}

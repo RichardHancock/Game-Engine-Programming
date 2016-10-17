@@ -19,9 +19,8 @@ public:
 	
 	@param [in,out] manager		    Pointer to the current state manager.
 	@param [in,out] platform	    Platform containing OS dependent data.
-	@param [in,out] inputManager    If non-null, manager for input.
 	 */
-	Game(StateManager* manager, Platform* platform, InputManager* inputManager);
+	Game(StateManager* manager, Platform* platform);
 
 	virtual ~Game();
 
