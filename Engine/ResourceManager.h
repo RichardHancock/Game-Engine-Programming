@@ -24,11 +24,8 @@ class ResourceManager
 {
 public:
 	
-	
-
+	/** @brief	Clean up memory used by Resource Manager */
 	static void cleanUp();
-
-	static void init();
 
 	/**
 	@brief Gets a audio object, loads the audio if not already loaded.
@@ -106,7 +103,7 @@ private:
 	static const float UPDATE_DELAY;
 	
 	/** @brief The update delay timer to stop update running every frame. */
-	static Utility::SimpleTimer* updateDelayTimer;
+	static Utility::SimpleTimer updateDelayTimer;
 	
 
 	

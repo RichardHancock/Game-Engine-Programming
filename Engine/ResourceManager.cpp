@@ -14,19 +14,11 @@ const float ResourceManager::UPDATE_DELAY = 10.0f;
 std::unordered_map<std::string, GameModel*> ResourceManager::models;
 std::unordered_map<std::string, Audio*> ResourceManager::audio;
 std::unordered_map<std::string, Texture*> ResourceManager::textures;
-Assimp::Importer* ResourceManager::modelImporter;
-Utility::SimpleTimer* ResourceManager::updateDelayTimer;
+Assimp::Importer* ResourceManager::modelImporter = new Assimp::Importer();
+Utility::SimpleTimer ResourceManager::updateDelayTimer(UPDATE_DELAY);
 
 
 ResourceManager::ResourceManager() {}
-
-void ResourceManager::init()
-{
-	
-	updateDelayTimer = new Utility::SimpleTimer(UPDATE_DELAY);
-
-	modelImporter = new Assimp::Importer();
-}
 
 void ResourceManager::cleanUp()
 {
@@ -49,8 +41,6 @@ void ResourceManager::cleanUp()
 	textures.clear();
 	
 	delete modelImporter;
-
-	delete updateDelayTimer;
 }
 
 Audio* ResourceManager::getAudio(std::string audioFilename, bool isMusic, bool defaultPath)
@@ -157,15 +147,15 @@ Texture* ResourceManager::getTexture(std::string textureFilename, bool defaultPa
 void ResourceManager::update(float dt)
 {
 	//I use a timer here so the code is only run occasionally
-	updateDelayTimer->update(dt);
+	updateDelayTimer.update(dt);
 	
-	if (updateDelayTimer->hasTimerFinished())
+	if (updateDelayTimer.hasTimerFinished())
 	{
 		checkForExpiredResources(models);
 		checkForExpiredResources(audio);
 		checkForExpiredResources(textures);
 
-		updateDelayTimer->restart();
+		updateDelayTimer.restart();
 	}
 }
 
