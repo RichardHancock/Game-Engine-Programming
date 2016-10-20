@@ -191,3 +191,5 @@ ModelManifest.xml
 *.opendb
 /Makefile
 /*.db
+/Tools/DoxgenLog.txt
+/Tools/Makefile
