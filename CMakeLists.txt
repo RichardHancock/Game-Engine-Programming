@@ -3,7 +3,7 @@ project (Engine)
 
 include_directories(Bowls)
 
-file(GLOB_RECURSE SOURCES "Bowls/*.cpp")
+file(GLOB_RECURSE SOURCES "Engine/*.cpp")
 
 add_executable(Engine ${SOURCES})
 
