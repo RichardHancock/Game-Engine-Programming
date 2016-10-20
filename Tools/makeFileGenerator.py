@@ -47,6 +47,10 @@ makeFileLines = [
     "   $(CC) $(SOURCES) $(FLAGS) $(RFLAGS) -o $(OUTPUT)"
 ]
 
+for srcFile in cppFiles:
+    makeFileLines[6] += "\"" + srcFile + "\" "
+
+
 makePath = "Makefile"
 
 with open(makePath, "w") as fileHandler:
