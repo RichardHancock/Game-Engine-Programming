@@ -41,10 +41,10 @@ makeFileLines = [
     "all: debug",
     "",
     "debug:",
-    "   $(CC) $(SOURCES) $(FLAGS) $(DFLAGS) -o $(OUTPUT)",
+    "\t$(CC) $(SOURCES) $(FLAGS) $(DFLAGS) -o $(OUTPUT)",
     "",
     "release:",
-    "   $(CC) $(SOURCES) $(FLAGS) $(RFLAGS) -o $(OUTPUT)"
+    "\t$(CC) $(SOURCES) $(FLAGS) $(RFLAGS) -o $(OUTPUT)"
 ]
 
 for srcFile in cppFiles:
