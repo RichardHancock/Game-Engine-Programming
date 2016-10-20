@@ -1,6 +1,6 @@
 #pragma once
 
-#include <vector>
+#include <unordered_map>
 #include <memory>
 
 #include "Component.h"
@@ -10,11 +10,15 @@ class Component; //Forward Specifier
 class GameObject {
 public:
 
-	template<class T>
-	T addComponent(std::weak_ptr<T> component);
+	GameObject();
 
+	~GameObject();
+
+	std::weak_ptr<Component> addComponent(std::string title, std::weak_ptr<Component> component);
+
+	template<class T>
+	std::weak_ptr<T> getComponent(std::string title);
 
 private:
-
-	std::vector<std::shared_ptr<Component>> components;
+	std::unordered_map<std::string, std::shared_ptr<Component>> components;
 };
