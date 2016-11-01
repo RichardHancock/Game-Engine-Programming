@@ -20,3 +20,27 @@ std::string Component::getType()
 
 	return type;
 }
+
+void Component::onAwake()
+{
+}
+
+void Component::onStart()
+{
+}
+
+void Component::onUpdate()
+{
+}
+
+void Component::onFixedUpdate()
+{
+}
+
+void Component::onRender()
+{
+}
+
+void Component::onGui()
+{
+}

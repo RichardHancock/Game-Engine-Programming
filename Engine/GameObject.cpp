@@ -3,8 +3,10 @@
 #include <assert.h>
 
 #include "misc/Log.h"
+#include "Transform.h"
 
-GameObject::GameObject()
+GameObject::GameObject(std::string name)
+	: name(name)
 {
 
 }
@@ -14,17 +16,32 @@ GameObject::~GameObject()
 
 }
 
-std::weak_ptr<Component> GameObject::addComponent(std::string title, std::weak_ptr<Component> component)
+/*
+template <class T>
+std::weak_ptr<T> GameObject::addComponent(std::string title)
 {
-	std::shared_ptr<Component> c = component.lock();
-	assert(!c);
+	std::shared_ptr<T> c(new T());
 
 	assert(components.count(title) == 0);
 
-	components.insert(std::make_pair(title, c));
-	return c;
+	components.insert(std::make_pair(title, component));
+	c->gameObject = std::weak_ptr<GameObject>(self);
+	c->onAwake();
+
+	return component;
+}*/
+
+std::string GameObject::getName()
+{
+	return name;
 }
 
+void GameObject::setName(std::string newName)
+{
+	name = newName;
+}
+
+/*
 template<class T>
 std::weak_ptr<T> GameObject::getComponent(std::string title)
 {
@@ -41,3 +58,4 @@ std::weak_ptr<T> GameObject::getComponent(std::string title)
 
 	return std::weak_ptr<T>();
 }
+*/

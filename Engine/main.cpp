@@ -9,6 +9,10 @@
 #include "states/Game.h"
 #include "ResourceManager.h"
 
+#include "GameObject.h"
+#include "Transform.h"
+
+
 #ifdef _WIN32
 #include <windows.h>
 
@@ -55,6 +59,16 @@ int main(int argc, char *argv[])
 	StateManager* manager = new StateManager((int)platform->getWindowSize().x, (int)platform->getWindowSize().y);
 
 	manager->addState(new Game(manager, platform));
+
+	//Here
+	std::shared_ptr<GameObject> gameObj = std::make_shared<GameObject>("test");
+	
+	gameObj->self = gameObj;
+
+	gameObj->addComponent<Transform>("testing");
+
+	auto testing = gameObj->getComponent<Transform>("testing");
+
 
 	unsigned int lastTime = SDL_GetTicks();
 

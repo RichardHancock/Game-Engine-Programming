@@ -9,6 +9,8 @@ class GameObject; //Forward Specifier
 
 class Component
 {
+	friend class GameObject;
+
 public:
 
 	virtual ~Component();
@@ -19,17 +21,17 @@ public:
 
 private:
 
-	virtual void onAwake() = 0;
+	virtual void onAwake();
 
-	virtual void onStart() = 0;
+	virtual void onStart();
 
-	virtual void onUpdate() = 0;
+	virtual void onUpdate();
 
-	virtual void onFixedUpdate() = 0;
+	virtual void onFixedUpdate();
 
-	virtual void onRender() = 0;
+	virtual void onRender();
 
-	virtual void onGui() = 0;
+	virtual void onGui();
 
 	std::string type;
 
