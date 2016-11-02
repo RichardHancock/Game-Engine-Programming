@@ -8,7 +8,7 @@
 
 class Component; //Forward Specifier
 
-class GameObject : std::enable_shared_from_this<GameObject>
+class GameObject : public std::enable_shared_from_this<GameObject>
 {
 public:
 
@@ -18,6 +18,12 @@ public:
 
 	~GameObject();
 	
+	/*
+	std::shared_ptr<GameObject> getMe()
+	{
+		return shared_from_this();
+	}
+	*/
 	template <class T>
 	std::weak_ptr<T> addComponent(std::string title)
 	{

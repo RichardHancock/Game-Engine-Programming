@@ -65,6 +65,8 @@ int main(int argc, char *argv[])
 	
 	gameObj->self = gameObj;
 
+	//gameObj->getMe();
+
 	gameObj->addComponent<Transform>("testing");
 
 	auto testing = gameObj->getComponent<Transform>("testing");
