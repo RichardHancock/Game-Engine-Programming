@@ -1,5 +1,6 @@
 #include "Transform.h"
 #include "glm/gtc/matrix_transform.hpp"
+#include "misc/Utility.h"
 
 Transform::~Transform()
 {
@@ -197,10 +198,27 @@ void Transform::rotate(glm::vec3 rotation)
 
 void Transform::lookAt(glm::vec3 worldPosition)
 {
+	//TODO: REWRITE
+	glm::vec2 diff = glm::vec2(localPosition.x, localPosition.z) - glm::vec2(worldPosition.x, worldPosition.z);
+
+	float angle = atan2(diff.x, diff.x) * 180 / Utility::PI;
+	localRotation.y = angle - 180.0f;
 }
 
 void Transform::rotateAroundPos(glm::vec3 centerPoint, glm::vec3 rotateAxis, float amount)
 {
+	glm::mat4 pos = buildTransformMat(centerPoint, glm::vec3(0), glm::vec3(1));
+
+	glm::mat4 rot = buildTransformMat(glm::vec3(0), glm::vec3(rotateAxis * amount), glm::vec3(1));
+
+	glm::mat4 current = glm::mat4(1);
+
+	
+	current = current * pos;
+	current = current * rot;
+	current = current * glm::inverse(pos);
+
+	localPosition = vec4ToVec3(current * glm::vec4(localPosition, 1));
 }
 
 glm::vec3 Transform::getForwardVector()
