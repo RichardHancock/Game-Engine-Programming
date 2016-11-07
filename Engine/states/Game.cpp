@@ -40,7 +40,7 @@ Game::Game(StateManager* manager, Platform* platform)
 
 	hideGUI = false;
 
-	camera->lookAt(glm::vec3(0.0f, 0.0f, 0.0f));
+	//camera->lookAt(glm::vec3(0.0f, 0.0f, 0.0f));
 }
 
 Game::~Game()
@@ -149,17 +149,17 @@ void Game::update(float dt)
 
 void Game::render()
 {
-	glm::mat4 projection = camera->getProjMatrix();
-	glm::mat4 view = camera->getViewMatrix();
+	//glm::mat4 projection = camera->getProjMatrix();
+	//glm::mat4 view = camera->getViewMatrix();
 	
 	glm::mat4 model;
 	model = glm::translate(glm::mat4(1.0f), glm::vec3(1.0f, -2.0f, -10.0f));
 	model = glm::scale(model, glm::vec3(1.0f));
 
-	test->draw(model, view, projection, standardShader);
+	//test->draw(model, view, projection, standardShader);
 	
 	model = glm::translate(glm::mat4(1.0f), glm::vec3(1.0f, 2.0f, -15.0f));
-	bowl->draw(model, view, projection, standardShader);
+	//bowl->draw(model, view, projection, standardShader);
 
 	//UI
 	if (!hideGUI)
@@ -171,6 +171,7 @@ void Game::render()
 
 void Game::cameraControls(float dt)
 {
+	/*
 	//move along camera along x
 	if (InputManager::isKeyHeld(SDLK_a))
 	{
@@ -232,4 +233,5 @@ void Game::cameraControls(float dt)
 	{
 		camera->lookAt(glm::vec3(0.0f, 0.0f, 0.0f));
 	}
+	*/
 }

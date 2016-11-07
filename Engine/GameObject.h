@@ -12,18 +12,10 @@ class GameObject : public std::enable_shared_from_this<GameObject>
 {
 public:
 
-	std::weak_ptr<GameObject> self;
-
 	GameObject(std::string name);
 
 	~GameObject();
 	
-	/*
-	std::shared_ptr<GameObject> getMe()
-	{
-		return shared_from_this();
-	}
-	*/
 	template <class T>
 	std::weak_ptr<T> addComponent(std::string title)
 	{
@@ -33,12 +25,7 @@ public:
 
 		components.insert(std::make_pair(title, c));
 		
-		if (!self.expired()) {
-			std::shared_ptr<GameObject> me = shared_from_this();
-		}
-		
-
-		c->gameObject = self.lock();
+		c->gameObject = shared_from_this();
 		c->onAwake();
 
 		Log::logI("Addding Component: " + title);

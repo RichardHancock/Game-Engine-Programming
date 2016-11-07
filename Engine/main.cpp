@@ -53,6 +53,11 @@ int main(int argc, char *argv[])
 	
 	Utility::randomInit();
 
+	std::shared_ptr<GameObject> gameO = std::make_shared<GameObject>("testing");
+
+	gameO->addComponent<Transform>("testing");
+
+	auto test = gameO->getComponent<Transform>("testing");
 
 	SDL_Window* window = platform->getWindow();
 
@@ -60,20 +65,8 @@ int main(int argc, char *argv[])
 
 	manager->addState(new Game(manager, platform));
 
-	//Here
-	std::shared_ptr<GameObject> gameObj = std::make_shared<GameObject>("test");
-	
-	gameObj->self = gameObj;
-
-	//gameObj->getMe();
-
-	gameObj->addComponent<Transform>("testing");
-
-	auto testing = gameObj->getComponent<Transform>("testing");
-
 
 	unsigned int lastTime = SDL_GetTicks();
-
 	bool done = false;
 
 	while (!done)
