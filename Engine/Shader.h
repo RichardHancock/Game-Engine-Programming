@@ -14,6 +14,8 @@ Contains a compiled shader program and any uniform locations
 */
 class Shader 
 {
+	friend class Material;
+
 public:
 
 	/**

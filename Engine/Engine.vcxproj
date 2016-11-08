@@ -88,8 +88,11 @@
     <ClCompile Include="Controller.cpp" />
     <ClCompile Include="GameModel.cpp" />
     <ClCompile Include="GameObject.cpp" />
+    <ClCompile Include="Graphics.cpp" />
     <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Material.cpp" />
+    <ClCompile Include="MeshComponent.cpp" />
     <ClCompile Include="misc\Colour.cpp" />
     <ClCompile Include="misc\Log.cpp" />
     <ClCompile Include="misc\Utility.cpp" />
@@ -111,7 +114,10 @@
     <ClInclude Include="Controller.h" />
     <ClInclude Include="GameModel.h" />
     <ClInclude Include="GameObject.h" />
+    <ClInclude Include="Graphics.h" />
     <ClInclude Include="InputManager.h" />
+    <ClInclude Include="Material.h" />
+    <ClInclude Include="MeshComponent.h" />
     <ClInclude Include="misc\Colour.h" />
     <ClInclude Include="misc\Log.h" />
     <ClInclude Include="misc\Utility.h" />

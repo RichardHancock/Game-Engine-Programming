@@ -77,12 +77,11 @@ bool Shader::checkShaderCompiled(GLint shader)
 		GLsizei len;
 		glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &len);
 
-		// OpenGL will store an error message as a string that we can retrieve and print
 		GLchar* log = new GLchar[len + 1];
 		glGetShaderInfoLog(shader, len, &len, log);
 		
 		Log::logE("Shader compilation failed: " + std::string(log));
-		//std::cerr << "ERROR: Shader compilation failed: " << log << std::endl;
+
 		delete[] log;
 
 		return false;
