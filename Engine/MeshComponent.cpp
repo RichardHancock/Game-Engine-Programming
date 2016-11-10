@@ -6,9 +6,9 @@ MeshComponent::~MeshComponent()
 {
 }
 
-void MeshComponent::setMesh(std::weak_ptr<GameModel> mesh)
+void MeshComponent::setMesh(std::weak_ptr<GameModel> newMesh)
 {
-	this->mesh = mesh;
+	this->mesh = newMesh;
 }
 
 std::weak_ptr<GameModel> MeshComponent::getMesh()

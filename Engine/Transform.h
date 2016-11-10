@@ -60,7 +60,7 @@ public:
 
 
 	static glm::mat4 buildTransformMat(glm::vec3 position, glm::vec3 rotation, glm::vec3 scale);
-	static glm::vec3 vec4ToVec3(glm::vec4& vector);
+	static glm::vec3 vec4ToVec3(const glm::vec4& vector);
 
 private:
 

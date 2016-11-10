@@ -37,7 +37,7 @@ void Transform::setPostion(glm::vec3 position)
 			curParent = node->getParent();
 		}
 
-		localPosition = vec4ToVec3(glm::inverse(mat) * glm::vec4(position, 1));
+		localPosition = vec4ToVec3((glm::inverse(mat) * glm::vec4(position, 1)));
 	}
 	else
 	{
@@ -260,7 +260,7 @@ glm::mat4 Transform::buildTransformMat(glm::vec3 position, glm::vec3 rotation, g
 	return mat;
 }
 
-glm::vec3 Transform::vec4ToVec3(glm::vec4& vector)
+glm::vec3 Transform::vec4ToVec3(const glm::vec4& vector)
 {
 	return glm::vec3(vector.x, vector.y, vector.z);
 }
