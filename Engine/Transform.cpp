@@ -8,12 +8,13 @@ Transform::~Transform()
 
 glm::vec3 Transform::getPostion()
 {
-	return glm::vec3();
+	///@todo Implement fully
+	return localPosition;
 }
 
 glm::vec3 Transform::getRotation()
 {
-	return glm::vec3();
+	return localRotation;
 }
 
 glm::vec3 Transform::getScale()

@@ -45,16 +45,11 @@ Game::Game(StateManager* manager, Platform* platform)
 
 Game::~Game()
 {
-	//test->freeResourceInstance();
-	//bowl->freeResourceInstance();
-	testSFX->freeResourceInstance();
-
 	//TTF_CloseFont(font);
 
 	//delete ui;
 	//delete text;
 
-	//delete camera;
 	delete standardShader;
 }
 
@@ -109,7 +104,7 @@ void Game::update(float dt)
 	//Sound Test
 	if (InputManager::wasKeyReleased(SDLK_p))
 	{
-		testSFX->play(0, 0);
+		testSFX.lock()->play(0, 0);
 	}
 
 	cameraControls(dt);

@@ -70,8 +70,7 @@ GameModel::~GameModel()
 
 	for (auto texture : textures)
 	{
-		glDeleteTextures(1, &texture.textureID);
-		texture.texture->freeResourceInstance();
+		//glDeleteTextures(1, &texture.textureID);
 	}
 	textures.clear();
 	

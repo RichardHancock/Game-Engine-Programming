@@ -20,7 +20,7 @@ public:
 	void setMaterials(std::vector<std::weak_ptr<Material>> newMaterials);
 
 
-	virtual void render();
+	virtual void onRender();
 
 private:
 

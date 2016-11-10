@@ -55,6 +55,19 @@ public:
 
 	void setName(std::string newName);
 
+
+	virtual void onAwake();
+
+	virtual void onStart();
+
+	virtual void onUpdate();
+
+	virtual void onFixedUpdate();
+
+	virtual void onRender();
+
+	virtual void onGui();
+
 private:
 	std::unordered_map<std::string, std::shared_ptr<Component>> components;
 

@@ -51,7 +51,7 @@ void Material::useProgram()
 		glGetIntegerv(GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS, &maxAvailableTexUnits);
 
 		//Really unlikely but just to be safe
-		assert(GL_TEXTURE0 + currentTexUnit < maxAvailableTexUnits);
+		assert(currentTexUnit < maxAvailableTexUnits);
 
 		//Activate the next available texture unit
 		glActiveTexture(GL_TEXTURE0 + currentTexUnit);

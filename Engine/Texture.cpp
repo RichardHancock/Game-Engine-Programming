@@ -6,14 +6,14 @@
 #include "misc/Log.h"
 
 Texture::Texture(std::string filename)
-	: Resource(), texID(0)
+	: Resource(), texID(0), surface(nullptr)
 {	
 	if (load(filename))
 		loadForOpenGL();
 }
 
 Texture::Texture(SDL_Surface* surface)
-	: Resource(), texID(0)
+	: Resource(), texID(0), surface(nullptr)
 {
 	if (load(surface))
 		loadForOpenGL();

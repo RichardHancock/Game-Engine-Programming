@@ -22,9 +22,10 @@ struct EngineState
 };
 
 
+
 /**
 @brief Manager for resources of most types.
-
+@todo Update comments as ptr converted to smart
 Loads and manages any resources.
 */
 class ResourceManager
@@ -45,7 +46,7 @@ public:
 	
 	@return null if it fails, else the audio.
 	 */
-	static Audio* getAudio(std::string audioFilename, bool isMusic, bool defaultPath = true);
+	static std::weak_ptr<Audio> getAudio(std::string audioFilename, bool isMusic, bool defaultPath = true);
 
 	/**
 	@brief Gets a model, loads the model if not already loaded.
@@ -57,7 +58,7 @@ public:
 	
 	@todo Support multi mesh models.
 	 */
-	static GameModel* getModel(std::string modelFilename, bool defaultPath = true);
+	static std::weak_ptr<GameModel> getModel(std::string modelFilename, bool defaultPath = true);
 
 	/**
 	@brief Gets a texture, loads the texture if not already loaded.
@@ -67,7 +68,7 @@ public:
 	
 	@return null if it fails, else the texture.
 	 */
-	static Texture* getTexture(std::string textureFilename, bool defaultPath = true);
+	static std::weak_ptr<Texture> getTexture(std::string textureFilename, bool defaultPath = true);
 
 
 	/**
@@ -94,13 +95,13 @@ private:
 	ResourceManager();
 	
 	/** @brief The models. */
-	static std::unordered_map<std::string, GameModel*> models;
+	static std::unordered_map<std::string, std::shared_ptr<GameModel>> models;
 
 	/** @brief The audio. */
-	static std::unordered_map<std::string, Audio*> audio;
+	static std::unordered_map<std::string, std::shared_ptr<Audio>> audio;
 
 	/** @brief The textures. */
-	static std::unordered_map<std::string, Texture*> textures;
+	static std::unordered_map<std::string, std::shared_ptr<Texture>> textures;
 
 	
 	/** @brief The model importer from Assimp. */
@@ -120,6 +121,6 @@ private:
 	
 	@param [in,out] resourceArray Array of resources.
 	 */
-	template<class R>
-	static void checkForExpiredResources(std::unordered_map<std::string, R> &resourceArray);
+	//template<class R>
+	//static void checkForExpiredResources(std::unordered_map<std::string, R> &resourceArray);
 };

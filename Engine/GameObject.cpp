@@ -41,6 +41,54 @@ void GameObject::setName(std::string newName)
 	name = newName;
 }
 
+void GameObject::onAwake()
+{
+	for (auto component : components)
+	{
+		component.second->onAwake();
+	}
+}
+
+void GameObject::onStart()
+{
+	for (auto component : components)
+	{
+		component.second->onStart();
+	}
+}
+
+void GameObject::onUpdate()
+{
+	for (auto component : components)
+	{
+		component.second->onUpdate();
+	}
+}
+
+void GameObject::onFixedUpdate()
+{
+	for (auto component : components)
+	{
+		component.second->onFixedUpdate();
+	}
+}
+
+void GameObject::onRender()
+{
+	for (auto component : components)
+	{
+		component.second->onRender();
+	}
+}
+
+void GameObject::onGui()
+{
+	for (auto component : components)
+	{
+		component.second->onGui();
+	}
+}
+
 /*
 template<class T>
 std::weak_ptr<T> GameObject::getComponent(std::string title)

@@ -5,7 +5,6 @@ layout(location = 1) in vec3 vNormalIn;
 layout(location = 2) in vec2 vTexture;
 
 uniform mat4 modelMat;
-uniform mat4 invModelMat;
 uniform mat4 viewMat;
 uniform mat4 projMat;
 

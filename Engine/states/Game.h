@@ -51,7 +51,7 @@ private:
 	//GameModel* test;
 	//GameModel* bowl;
 
-	Audio* testSFX;
+	std::weak_ptr<Audio> testSFX;
 
 	//UIElement* ui;
 

@@ -11,41 +11,42 @@ const std::string ResourceManager::audioDir = "resources/audio/";
 const std::string ResourceManager::shaderDir = "resources/shaders/";
 const std::string ResourceManager::textureDir = "resources/textures/";
 const float ResourceManager::UPDATE_DELAY = 10.0f;
-std::unordered_map<std::string, GameModel*> ResourceManager::models;
-std::unordered_map<std::string, Audio*> ResourceManager::audio;
-std::unordered_map<std::string, Texture*> ResourceManager::textures;
+std::unordered_map<std::string, std::shared_ptr<GameModel>> ResourceManager::models;
+std::unordered_map<std::string, std::shared_ptr<Audio>> ResourceManager::audio;
+std::unordered_map<std::string, std::shared_ptr<Texture>> ResourceManager::textures;
 Assimp::Importer* ResourceManager::modelImporter = new Assimp::Importer();
 Utility::SimpleTimer ResourceManager::updateDelayTimer(UPDATE_DELAY);
 
-std::shared_ptr<EngineState> ResourceManager::engineState;
+std::shared_ptr<EngineState> ResourceManager::engineState = std::make_shared<EngineState>();
 
 
 ResourceManager::ResourceManager() {}
 
 void ResourceManager::cleanUp()
 {
+	/*
 	for(auto model : models)
 	{
 		delete model.second;
-	}
+	}*/
 	models.clear();
-
+	/*
 	for (auto curAudio : audio)
 	{
 		delete curAudio.second;
-	}
+	}*/
 	audio.clear();
-
+	/*
 	for (auto texture : textures)
 	{
 		delete texture.second;
-	}
+	}*/
 	textures.clear();
 	
 	delete modelImporter;
 }
 
-Audio* ResourceManager::getAudio(std::string audioFilename, bool isMusic, bool defaultPath)
+std::weak_ptr<Audio> ResourceManager::getAudio(std::string audioFilename, bool isMusic, bool defaultPath)
 {
 	//Should we use the default path for this type of resource or just use the provided filename
 	if (defaultPath) {
@@ -55,21 +56,20 @@ Audio* ResourceManager::getAudio(std::string audioFilename, bool isMusic, bool d
 	//Is it already loaded
 	if (audio.count(audioFilename) > 0)
 	{
-		//Get a instance of the resource and increment its internal counter
-		audio[audioFilename]->loadResourceInstance();
+		//Get a weak_ptr of the resource
 		return audio[audioFilename];
 	}
 
 	//Else load the resource and add it to the resourceManager's storage
-	Audio* audioFile;
+	std::shared_ptr<Audio> audioFile;
 			
 	if (isMusic)
 	{
-		audioFile = new Music(audioFilename);
+		audioFile = std::make_shared<Music>(audioFilename);
 	}
 	else
 	{
-		audioFile = new SFX(audioFilename);
+		audioFile = std::make_shared<SFX>(audioFilename);
 	}
 
 	audio[audioFilename] = audioFile;
@@ -77,7 +77,7 @@ Audio* ResourceManager::getAudio(std::string audioFilename, bool isMusic, bool d
 	return audioFile;
 }
 
-GameModel* ResourceManager::getModel(std::string modelFilename, bool defaultPath)
+std::weak_ptr<GameModel> ResourceManager::getModel(std::string modelFilename, bool defaultPath)
 {
 	//Should we use the default path for this type of resource or just use the provided filename
 	if (defaultPath) {
@@ -87,8 +87,7 @@ GameModel* ResourceManager::getModel(std::string modelFilename, bool defaultPath
 	//Is it already loaded
 	if (models.count(modelFilename) > 0)
 	{
-		//Get a instance of the resource and increment its internal counter
-		models[modelFilename]->loadResourceInstance();
+		//Get a weak_ptr of the resource
 		return models[modelFilename];
 	}
 
@@ -106,14 +105,14 @@ GameModel* ResourceManager::getModel(std::string modelFilename, bool defaultPath
 	if (rawModelData == nullptr)
 	{
 		Log::logE(modelFilename + " import failed: " + modelImporter->GetErrorString());
-		return nullptr;
+		return std::weak_ptr<GameModel>();
 	}
 
 	//TEMP get the first mesh only
 	aiMesh* mesh = rawModelData->mMeshes[0];
 
 
-	GameModel* modelData = new GameModel(mesh);
+	std::shared_ptr<GameModel> modelData = std::make_shared<GameModel>(mesh);
 	
 	//We've converted the data to our formats so delete the raw version.
 	modelImporter->FreeScene();
@@ -123,7 +122,7 @@ GameModel* ResourceManager::getModel(std::string modelFilename, bool defaultPath
 	return modelData;
 }
 
-Texture* ResourceManager::getTexture(std::string textureFilename, bool defaultPath)
+std::weak_ptr<Texture> ResourceManager::getTexture(std::string textureFilename, bool defaultPath)
 {
 	//Should we use the default path for this type of resource or just use the provided filename
 	if (defaultPath) {
@@ -133,13 +132,12 @@ Texture* ResourceManager::getTexture(std::string textureFilename, bool defaultPa
 	//Is it already loaded
 	if (textures.count(textureFilename) > 0)
 	{
-		//Get a instance of the resource and increment its internal counter
-		textures[textureFilename]->loadResourceInstance();
+		//Get a weak_ptr of the resource
 		return textures[textureFilename];
 	}
 
 	//Else load the resource and add it to the resourceManager's storage
-	Texture* textureData = new Texture(textureFilename);
+	std::shared_ptr<Texture> textureData = std::make_shared<Texture>(textureFilename);
 
 	textures[textureFilename] = textureData;
 
@@ -148,6 +146,7 @@ Texture* ResourceManager::getTexture(std::string textureFilename, bool defaultPa
 
 void ResourceManager::update(float dt)
 {
+	/*
 	//I use a timer here so the code is only run occasionally
 	updateDelayTimer.update(dt);
 	
@@ -159,8 +158,10 @@ void ResourceManager::update(float dt)
 
 		updateDelayTimer.restart();
 	}
+	*/
 }
 
+/*
 template<class R>
 void ResourceManager::checkForExpiredResources(std::unordered_map<std::string, R> &resourceArray)
 {
@@ -180,3 +181,4 @@ void ResourceManager::checkForExpiredResources(std::unordered_map<std::string, R
 		}
 	}
 }
+*/

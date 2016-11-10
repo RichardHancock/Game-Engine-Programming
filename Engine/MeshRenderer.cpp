@@ -42,7 +42,7 @@ void MeshRenderer::setMaterials(std::vector<std::weak_ptr<Material>> newMaterial
 	materials = newMaterials;
 }
 
-void MeshRenderer::render()
+void MeshRenderer::onRender()
 {
 	std::shared_ptr<GameObject> gameObj = getGameObject().lock();
 
