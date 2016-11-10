@@ -1,17 +1,18 @@
 #pragma once
 
 #include <memory>
+#include <vector>
 
 #include "Component.h"
 #include "misc/Vec3.h"
 #include "glm/matrix.hpp"
 
-class Transform : public Component, std::enable_shared_from_this<Transform>
+class Transform : public Component, public std::enable_shared_from_this<Transform>
 {
 public:
 
 	friend class GameObject;
-	
+
 	virtual ~Transform();
 
 	glm::vec3 getPostion();
@@ -23,10 +24,10 @@ public:
 
 
 	//Local Transform Components
-	
+
 	/**
 	 @brief	Gets local position.
-	
+
 	 @return	The local position.
 	 */
 	glm::vec3 getLocalPosition();
@@ -72,5 +73,5 @@ private:
 	virtual void onAwake();
 	virtual void onDestroy();
 
-	
+
 };

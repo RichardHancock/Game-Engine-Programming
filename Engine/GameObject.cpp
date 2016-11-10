@@ -2,7 +2,6 @@
 
 #include <assert.h>
 
-#include "misc/Log.h"
 #include "Transform.h"
 
 GameObject::GameObject(std::string name)

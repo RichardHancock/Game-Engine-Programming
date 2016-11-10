@@ -2,8 +2,10 @@
 
 #include <unordered_map>
 #include <memory>
+#include <cassert>
 
 #include "Component.h"
+#include "misc/Log.h"
 
 
 class Component; //Forward Specifier
@@ -15,7 +17,7 @@ public:
 	GameObject(std::string name);
 
 	~GameObject();
-	
+
 	template <class T>
 	std::weak_ptr<T> addComponent(std::string title)
 	{
@@ -24,7 +26,7 @@ public:
 		assert(components.count(title) == 0);
 
 		components.insert(std::make_pair(title, c));
-		
+
 		c->gameObject = shared_from_this();
 		c->onAwake();
 
@@ -40,7 +42,7 @@ public:
 		for (auto component : components)
 		{
 			std::shared_ptr<T> c = std::dynamic_pointer_cast<T>(component.second);
-			
+
 			if (c.get() != nullptr)
 			{
 				return c;
@@ -72,5 +74,5 @@ private:
 	std::unordered_map<std::string, std::shared_ptr<Component>> components;
 
 	std::string name;
-	
+
 };

@@ -2,6 +2,9 @@
 
 #include "Component.h"
 
+#include <vector>
+#include <memory>
+
 #include "Material.h"
 
 class MeshRenderer : public Component
@@ -10,7 +13,7 @@ public:
 
 	virtual ~MeshRenderer();
 
-	
+
 	std::weak_ptr<Material> getMaterial();
 
 	std::vector<std::weak_ptr<Material>> getMaterials();

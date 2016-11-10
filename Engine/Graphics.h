@@ -4,6 +4,7 @@
 #include <glm/glm.hpp>
 
 #include "GameModel.h"
+#include "Material.h"
 
 class Graphics
 {
