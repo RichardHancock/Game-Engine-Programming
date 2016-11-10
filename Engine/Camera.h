@@ -14,6 +14,8 @@ public:
 
 	void setProjMat(glm::mat4& projMatrix);
 
+	glm::mat4 getTransformMat();
+
 private:
 
 

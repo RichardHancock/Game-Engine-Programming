@@ -8,7 +8,7 @@
 #include "misc/Utility.h"
 #include "misc/Log.h"
 
-GameModel::GameModel(aiMesh* mesh, Texture* texture)
+GameModel::GameModel(aiMesh* mesh)
 	: Resource()
 {
 	// Initialise variables
@@ -23,11 +23,10 @@ GameModel::GameModel(aiMesh* mesh, Texture* texture)
 
 	// Create the model
 	loadModelDataFromASSIMP(mesh);
-	addTexture(texture, "gSampler");
 }
 
 GameModel::GameModel(std::vector<glm::vec3>* vertices, std::vector<glm::vec3>* normals, std::vector<glm::vec2>* uvs,
-	std::vector<unsigned int>* indices, Texture* texture) : Resource()
+	std::vector<unsigned int>* indices) : Resource()
 {
 	// Initialise variables
 	indexBuffer = 0;
@@ -58,9 +57,6 @@ GameModel::GameModel(std::vector<glm::vec3>* vertices, std::vector<glm::vec3>* n
 
 	if (indices != nullptr)
 		addIndexBuffer(*indices);
-
-	if (texture != nullptr)
-		addTexture(texture, "gSampler");
 }
 
 GameModel::~GameModel()
@@ -258,7 +254,7 @@ void GameModel::addIndexBuffer(std::vector<unsigned int> &indices)
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
-
+/*
 void GameModel::addTexture(Texture* texture, std::string shaderVarName)
 {
 	glBindVertexArray(VAO);
@@ -339,6 +335,7 @@ void GameModel::deleteTexturesFromGPU()
 
 	glBindVertexArray(0);
 }
+*/
 
 void GameModel::draw(glm::mat4& modelMatrix, glm::mat4& viewMatrix, glm::mat4& projMatrix, Shader* shader)
 {
@@ -413,4 +410,24 @@ void GameModel::draw2D(Shader* shader)
 		glBindVertexArray(0);
 
 	glUseProgram(0);
+}
+
+GLuint GameModel::getVAO()
+{
+	return VAO;
+}
+
+bool GameModel::hasIndexBuffer()
+{
+	return (indexBuffer != 0);
+}
+
+unsigned int GameModel::getNumVertices()
+{
+	return numVertices;
+}
+
+unsigned int GameModel::getNumIndices()
+{
+	return numIndices;
 }

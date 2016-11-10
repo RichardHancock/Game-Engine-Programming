@@ -6,29 +6,41 @@
 #include "misc/Log.h"
 
 Texture::Texture(std::string filename)
-	: Resource()
+	: Resource(), texID(0)
 {	
-	load(filename);
+	if (load(filename))
+		loadForOpenGL();
 }
 
 Texture::Texture(SDL_Surface* surface)
-	: Resource()
+	: Resource(), texID(0)
 {
-	load(surface);
+	if (load(surface))
+		loadForOpenGL();
+
 }
 
 Texture::~Texture()
 {
 	SDL_FreeSurface(surface);
+
+	glDeleteTextures(1, &texID);
 }
 
 bool Texture::load(std::string filename)
 {
+	if (surface != nullptr)
+	{
+		Log::logE("Texture already loaded");
+		assert(false);
+		return false;
+	}
+
 	surface = IMG_Load(filename.c_str());
 	if (!surface)
 	{
-		// We'll do a quick check here because it's easy to get filenames or directories wrong
-		Log::logW("Can't find image named " + filename + " " + std::string(IMG_GetError()));
+		// Check if loaded successfully
+		Log::logW("Can't load image named " + filename + " " + std::string(IMG_GetError()));
 		return false;
 	}
 
@@ -37,10 +49,17 @@ bool Texture::load(std::string filename)
 
 bool Texture::load(SDL_Surface* image)
 {
+	if (surface != nullptr)
+	{
+		Log::logE("Texture already loaded");
+		assert(false);
+		return false;
+	}
+
 	surface = image;
 	if (!image)
 	{
-		// We'll do a quick check here because it's easy to get filenames or directories wrong
+		// Check if loaded successfully
 		Log::logW("Image passed to Texture::load was null: " + std::string(IMG_GetError()));
 		return false;
 	}
@@ -72,8 +91,68 @@ Texture* Texture::copy()
 	return new Texture(tempSurface);
 }
 
+GLuint Texture::getGLTexID()
+{
+	return texID;
+}
+
+void Texture::loadForOpenGL()
+{
+	GLenum textureFormat = 0;
+
+	//Section from http://ubuntuforums.org/archive/index.php/t-1088836.html post 2
+#ifdef _MSC_VER
+	__pragma(warning(push));
+	__pragma(warning(disable:4127)); // This is a problem in SDL2 (Can't fix) and isn't any danger
+#endif // _MSC_VER
+
+	switch (surface->format->BytesPerPixel) {
+	case 4:
+		if (SDL_BYTEORDER == SDL_BIG_ENDIAN)
+			textureFormat = GL_BGRA;
+		else
+			textureFormat = GL_RGBA;
+		break;
+
+	case 3:
+		if (SDL_BYTEORDER == SDL_BIG_ENDIAN)
+			textureFormat = GL_BGR;
+		else
+			textureFormat = GL_RGB;
+		break;
+	}
+
+#ifdef _MSC_VER
+	__pragma(warning(pop));
+#endif // _MSC_VER
+	//End Section
+
+	assert(textureFormat != 0);
+
+	glGenTextures(1, &texID);
+	glBindTexture(GL_TEXTURE_2D, texID);
+
+	glTexImage2D(
+		GL_TEXTURE_2D,
+		0,
+		textureFormat,
+		surface->w,
+		surface->h,
+		0,
+		textureFormat,
+		GL_UNSIGNED_BYTE,
+		surface->pixels
+	);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	glBindTexture(GL_TEXTURE_2D, 0);
+}
+
 
 Vec2 Texture::getDimensions()
 {
+	//Returns a Vec2 of the dimension unless surface is nullptr in which case a 0x0 Vec2 is returned
 	return (surface != nullptr ? Vec2((float) surface->w, (float) surface->h) : Vec2(0.0f));
 }

@@ -11,6 +11,9 @@
 
 #include "GameObject.h"
 #include "Transform.h"
+#include "MeshComponent.h"
+#include "Material.h"
+#include "MeshRenderer.h"
 
 
 #ifdef _WIN32
@@ -53,11 +56,36 @@ int main(int argc, char *argv[])
 	
 	Utility::randomInit();
 
+
+	//TEST AREA
+	std::shared_ptr<GameObject> cameraObj = std::make_shared<GameObject>("Camera");
+	cameraObj->addComponent<Transform>("Transform");
+	auto camTransform = cameraObj->getComponent<Transform>("Transform").lock();
+	camTransform->setPostion(glm::vec3(0, 0, 0));
+	camTransform->setScale(glm::vec3(1));
+
+	cameraObj->addComponent<Camera>("Camera");
+
+
 	std::shared_ptr<GameObject> gameO = std::make_shared<GameObject>("testing");
+	gameO->addComponent<Transform>("Transform");
+	auto transform = gameO->getComponent<Transform>("Transform").lock();
+	transform->setPostion(glm::vec3(0, 0, 0));
+	transform->setScale(glm::vec3(1));
 
-	gameO->addComponent<Transform>("testing");
+	std::shared_ptr<GameModel> model = (ResourceManager::getModel("barrel.obj"));
 
-	auto test = gameO->getComponent<Transform>("testing");
+	gameO->addComponent<MeshComponent>("MeshComponent");
+	gameO->getComponent<MeshComponent>("MeshComponent").lock()->setMesh(model);
+
+	std::shared_ptr<Texture> texture = std::make_shared<Texture>(ResourceManager::getTexture("barrel.png"));
+
+	std::shared_ptr<Material> material = std::make_shared<Material>("vertex.shader", "fragment.shader");
+	material->addTexture("tex", texture);
+
+	gameO->addComponent<MeshRenderer>("MeshRenderer").lock()->setMaterial(material);
+	//TEST AREA END
+
 
 	SDL_Window* window = platform->getWindow();
 

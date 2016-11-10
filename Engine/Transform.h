@@ -55,6 +55,9 @@ public:
 	glm::vec3 getRightVector();
 
 
+	glm::mat4 getTransformMat();
+
+
 	static glm::mat4 buildTransformMat(glm::vec3 position, glm::vec3 rotation, glm::vec3 scale);
 	static glm::vec3 vec4ToVec3(glm::vec4& vector);
 

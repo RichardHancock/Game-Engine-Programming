@@ -3,6 +3,7 @@
 #include <SDL.h>
 #include <SDL_image.h>
 #include <string>
+#include <GL/glew.h>
 
 #include "misc/Vec2.h"
 #include "Resource.h"
@@ -61,10 +62,17 @@ public:
 	
 	 @return null if it fails, else the raw surface.
 	 */
-	SDL_Surface* getRawSurface() { return surface; }
+	SDL_Surface* getSurface() { return surface; }
+
+	GLuint getGLTexID();
+
 private:
 
 	/** @brief The surface. */
 	SDL_Surface* surface;
+
+	void loadForOpenGL();
+
+	GLuint texID;
 };
 

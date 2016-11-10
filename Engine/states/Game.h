@@ -46,18 +46,18 @@ private:
 	Shader* standardShader;
 	Shader* shader2D;
 
-	Camera* camera;
+	//Camera* camera;
 
-	GameModel* test;
-	GameModel* bowl;
+	//GameModel* test;
+	//GameModel* bowl;
 
 	Audio* testSFX;
 
-	UIElement* ui;
+	//UIElement* ui;
 
-	UITextElement* text;
+	//UITextElement* text;
 
-	TTF_Font* font;
+	//TTF_Font* font;
 
 	bool hideGUI;
 };

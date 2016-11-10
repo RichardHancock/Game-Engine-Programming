@@ -16,10 +16,15 @@ private:
 		std::weak_ptr<Texture> data;
 		GLuint index;
 
-		GLTextureInfo(std::weak_ptr<Texture> data, GLuint index)
-			: data(data), index(index)
+		GLTextureInfo()
 		{
 
+		}
+
+		GLTextureInfo(std::weak_ptr<Texture> data, GLuint index)
+		{
+			this->data = data;
+			this->index = index;
 		}
 	};
 
@@ -30,6 +35,8 @@ public:
 	std::weak_ptr<Shader> getShader();
 
 	void addTexture(std::string name, std::weak_ptr<Texture> texture);
+
+	void useProgram();
 
 private:
 

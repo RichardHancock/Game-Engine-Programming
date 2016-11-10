@@ -17,6 +17,8 @@ std::unordered_map<std::string, Texture*> ResourceManager::textures;
 Assimp::Importer* ResourceManager::modelImporter = new Assimp::Importer();
 Utility::SimpleTimer ResourceManager::updateDelayTimer(UPDATE_DELAY);
 
+std::shared_ptr<EngineState> ResourceManager::engineState;
+
 
 ResourceManager::ResourceManager() {}
 
@@ -75,7 +77,7 @@ Audio* ResourceManager::getAudio(std::string audioFilename, bool isMusic, bool d
 	return audioFile;
 }
 
-GameModel* ResourceManager::getModel(std::string modelFilename, Texture* texture, bool defaultPath)
+GameModel* ResourceManager::getModel(std::string modelFilename, bool defaultPath)
 {
 	//Should we use the default path for this type of resource or just use the provided filename
 	if (defaultPath) {
@@ -111,7 +113,7 @@ GameModel* ResourceManager::getModel(std::string modelFilename, Texture* texture
 	aiMesh* mesh = rawModelData->mMeshes[0];
 
 
-	GameModel* modelData = new GameModel(mesh, texture);
+	GameModel* modelData = new GameModel(mesh);
 	
 	//We've converted the data to our formats so delete the raw version.
 	modelImporter->FreeScene();

@@ -27,20 +27,18 @@ public:
 	@brief Constructor.
 	
 	@param [in,out] mesh    Mesh data.
-	@param [in,out] texture Texture to use for the model.
 	 */
-	GameModel(aiMesh* mesh, Texture* texture);
+	GameModel(aiMesh* mesh);
 
 	GameModel(
 		std::vector<glm::vec3>* vertices,
 		std::vector<glm::vec3>* normals,
 		std::vector<glm::vec2>* uvs,
-		std::vector<unsigned int>* indices,
-		Texture* texture);
+		std::vector<unsigned int>* indices);
 	
 	~GameModel();
 
-	void addTexture(Texture* texture, std::string shaderVarName);
+	//void addTexture(Texture* texture, std::string shaderVarName);
 
 	void deleteTexturesFromGPU();
 
@@ -55,6 +53,14 @@ public:
 	void draw(glm::mat4& modelMatrix, glm::mat4& viewMatrix, glm::mat4& projMatrix, Shader* shader);
 
 	void draw2D(Shader* shader);
+
+	GLuint getVAO();
+
+	bool hasIndexBuffer();
+
+	unsigned int getNumVertices();
+
+	unsigned int getNumIndices();
 private:
 
 	struct TextureWrapper

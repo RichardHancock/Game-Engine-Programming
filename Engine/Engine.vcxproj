@@ -93,6 +93,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="MeshComponent.cpp" />
+    <ClCompile Include="MeshRenderer.cpp" />
     <ClCompile Include="misc\Colour.cpp" />
     <ClCompile Include="misc\Log.cpp" />
     <ClCompile Include="misc\Utility.cpp" />
@@ -118,6 +119,7 @@
     <ClInclude Include="InputManager.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="MeshComponent.h" />
+    <ClInclude Include="MeshRenderer.h" />
     <ClInclude Include="misc\Colour.h" />
     <ClInclude Include="misc\Log.h" />
     <ClInclude Include="misc\Utility.h" />

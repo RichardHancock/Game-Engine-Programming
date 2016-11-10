@@ -1,5 +1,5 @@
 #include "UI.h"
-
+/*
 UIElement::UIElement(Vec2 pos, Vec2 size)
 	: pos(pos), size(size), backgroundTexture(nullptr)
 {
@@ -134,3 +134,4 @@ void UITextElement::updateMergedTexture()
 	delete textSurface;
 	textSurface = nullptr;
 }
+*/

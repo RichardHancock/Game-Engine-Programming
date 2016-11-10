@@ -19,24 +19,24 @@ Game::Game(StateManager* manager, Platform* platform)
 		shaderPath + "2D fragment.shader"
 	);
 
-	camera = new Camera();
+	//camera = new Camera();
 	
 	/*if (SDL_SetRelativeMouseMode(SDL_TRUE) == -1)
 	{
 		Log::logW("Bugger, mouse not happy");
 	}*/
 
-	test = ResourceManager::getModel("barrel.obj", ResourceManager::getTexture("barrel.png"));
-	bowl = ResourceManager::getModel("bowl.obj", ResourceManager::getTexture("bowl.png"));
+	//test = ResourceManager::getModel("barrel.obj", ResourceManager::getTexture("barrel.png"));
+	//bowl = ResourceManager::getModel("bowl.obj", ResourceManager::getTexture("bowl.png"));
 
 	testSFX = ResourceManager::getAudio("POP Echo Bouncer 01.wav", false);
 
-	ui = new UIElement(Vec2(-1.0f, 1.0f), Vec2(0.3f, -0.2f));
-	ui->addTexture(ResourceManager::getTexture("uiTest.png"), "gSampler");
+	//ui = new UIElement(Vec2(-1.0f, 1.0f), Vec2(0.3f, -0.2f));
+	//ui->addTexture(ResourceManager::getTexture("uiTest.png"), "gSampler");
 
-	font = TTF_OpenFont("resources/fonts/OpenSans-Regular.ttf", 32);
-	text = new UITextElement(Vec2(0.0f), Vec2(0.5f, -0.5f ), "Testing", Colour(128), font);
-	text->addTexture(ResourceManager::getTexture("uiTest.png"), "gSampler");
+	//font = TTF_OpenFont("resources/fonts/OpenSans-Regular.ttf", 32);
+	//text = new UITextElement(Vec2(0.0f), Vec2(0.5f, -0.5f ), "Testing", Colour(128), font);
+	//text->addTexture(ResourceManager::getTexture("uiTest.png"), "gSampler");
 
 	hideGUI = false;
 
@@ -45,16 +45,16 @@ Game::Game(StateManager* manager, Platform* platform)
 
 Game::~Game()
 {
-	test->freeResourceInstance();
-	bowl->freeResourceInstance();
+	//test->freeResourceInstance();
+	//bowl->freeResourceInstance();
 	testSFX->freeResourceInstance();
 
-	TTF_CloseFont(font);
+	//TTF_CloseFont(font);
 
-	delete ui;
-	delete text;
+	//delete ui;
+	//delete text;
 
-	delete camera;
+	//delete camera;
 	delete standardShader;
 }
 
@@ -162,11 +162,11 @@ void Game::render()
 	//bowl->draw(model, view, projection, standardShader);
 
 	//UI
-	if (!hideGUI)
+	/*if (!hideGUI)
 	{
 		ui->draw(shader2D);
 		text->draw(shader2D);
-	}
+	}*/
 }
 
 void Game::cameraControls(float dt)

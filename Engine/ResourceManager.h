@@ -11,8 +11,15 @@
 #include "Resource.h"
 #include "misc/Utility.h"
 
+#include "Camera.h"
+
 // Forward Declaration
 class GameModel;
+
+struct EngineState
+{
+	std::weak_ptr<Camera> currentCamera;
+};
 
 
 /**
@@ -24,6 +31,8 @@ class ResourceManager
 {
 public:
 	
+	static std::shared_ptr<EngineState> engineState;
+
 	/** @brief	Clean up memory used by Resource Manager */
 	static void cleanUp();
 
@@ -42,14 +51,13 @@ public:
 	@brief Gets a model, loads the model if not already loaded.
 	
 	@param modelFilename    Filename of the model file.
-	@param [in,out] texture Standard Texture.
 	@param defaultPath	    true to use default model path.
 	
 	@return null if it fails, else the model.
 	
 	@todo Support multi mesh models.
 	 */
-	static GameModel* getModel(std::string modelFilename, Texture* texture, bool defaultPath = true);
+	static GameModel* getModel(std::string modelFilename, bool defaultPath = true);
 
 	/**
 	@brief Gets a texture, loads the texture if not already loaded.

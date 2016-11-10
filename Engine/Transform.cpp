@@ -237,6 +237,11 @@ glm::vec3 Transform::getRightVector()
 	return vec4ToVec3(mat * vec);
 }
 
+glm::mat4 Transform::getTransformMat()
+{
+	return buildTransformMat(getPostion(), getRotation(), getScale());
+}
+
 glm::mat4 Transform::buildTransformMat(glm::vec3 position, glm::vec3 rotation, glm::vec3 scale)
 {
 	glm::mat4 mat = glm::mat4(1);

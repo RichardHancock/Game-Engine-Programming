@@ -7,5 +7,6 @@
 
 class Graphics
 {
-	static void renderMesh(std::weak_ptr<GameModel> mesh, glm::mat4 modelMat);
+public:
+	static void renderMesh(std::weak_ptr<GameModel> mesh, std::weak_ptr<Material> material);
 };
