@@ -1,33 +1,18 @@
 #include "Game.h"
+
+#include <glm/gtc/matrix_transform.hpp>
+
 #include "../misc/Log.h"
 #include "../misc/Utility.h"
-#include <glm/gtc/matrix_transform.hpp>
+#include "../Transform.h"
+#include "../MeshComponent.h"
+#include "../Material.h"
+#include "../MeshRenderer.h"
 
 Game::Game(StateManager* manager, Platform* platform)
 	: State(manager, platform)
 {
 	stateName = "Game";
-
-	std::string shaderPath = ResourceManager::shaderDir;
-	standardShader = new Shader(
-		shaderPath + "vertex.shader", 
-		shaderPath + "fragment.shader"
-	);
-
-	shader2D = new Shader(
-		shaderPath + "2D vertex.shader",
-		shaderPath + "2D fragment.shader"
-	);
-
-	//camera = new Camera();
-	
-	/*if (SDL_SetRelativeMouseMode(SDL_TRUE) == -1)
-	{
-		Log::logW("Bugger, mouse not happy");
-	}*/
-
-	//test = ResourceManager::getModel("barrel.obj", ResourceManager::getTexture("barrel.png"));
-	//bowl = ResourceManager::getModel("bowl.obj", ResourceManager::getTexture("bowl.png"));
 
 	testSFX = ResourceManager::getAudio("POP Echo Bouncer 01.wav", false);
 
@@ -40,7 +25,37 @@ Game::Game(StateManager* manager, Platform* platform)
 
 	hideGUI = false;
 
-	//camera->lookAt(glm::vec3(0.0f, 0.0f, 0.0f));
+	//Camera
+	cameraObj = std::make_shared<GameObject>("Camera");
+	auto camTransform = cameraObj->addComponent<Transform>("Transform").lock();
+	camTransform->setPostion(glm::vec3(0, -3, -10));
+	camTransform->setRotation(glm::vec3(0, 0, 0));
+	camTransform->setScale(glm::vec3(1));
+
+	auto cameraComponent = cameraObj->addComponent<Camera>("Camera");
+	ResourceManager::engineState->currentCamera = cameraComponent;
+
+	//Game Object
+	gameO = std::make_shared<GameObject>("testing");
+	auto transform = gameO->addComponent<Transform>("Transform").lock();
+	transform->setPostion(glm::vec3(0, 0, 0));
+	transform->setScale(glm::vec3(1));
+
+	gameO->addComponent<MeshComponent>("MeshComponent").lock()->setMesh(
+		ResourceManager::getModel("barrel.obj"));
+
+
+	//Material
+	std::string shaderDir = ResourceManager::shaderDir;
+
+	material = std::make_shared<Material>(shaderDir + "vertexNormal.shader", shaderDir + "fragmentNormal.shader");
+	material->addTexture("diffuseMap", ResourceManager::getTexture("barrel.png"));
+	material->addTexture("normalMap", ResourceManager::getTexture("barrelNormal.png"));
+
+	gameO->addComponent<MeshRenderer>("MeshRenderer").lock()->setMaterial(material);
+
+	gameO->onAwake();
+	cameraObj->onAwake();
 }
 
 Game::~Game()
@@ -49,8 +64,6 @@ Game::~Game()
 
 	//delete ui;
 	//delete text;
-
-	delete standardShader;
 }
 
 bool Game::eventHandler()
@@ -97,10 +110,6 @@ bool Game::eventHandler()
 
 void Game::update(float dt)
 {
-	
-	//camera->updateViewMat(glm::vec3(InputManager::getMouseDirection().x, 0.0f, 0.0f);
-		//InputManager::getMouseDirection().y, InputManager::getMouseWheelDirection().y));
-
 	//Sound Test
 	if (InputManager::wasKeyReleased(SDLK_p))
 	{
@@ -109,52 +118,22 @@ void Game::update(float dt)
 
 	cameraControls(dt);
 
-	//Mouse Tests
-	if (InputManager::wasMouseButtonPressed(SDL_BUTTON_LEFT)) {
-		Log::logI("Mouse Pos: " + Utility::vec2ToString(InputManager::getMousePos()));
-	}
-	if (InputManager::wasMouseButtonPressed(SDL_BUTTON_MIDDLE)) {
-		Log::logI("Mouse Dir: " + Utility::vec2ToString(InputManager::getMouseDirection()));
-	}
-	if (InputManager::wasMouseButtonPressed(SDL_BUTTON_RIGHT)) {
-		Log::logI("Mouse wheel: " + Utility::vec2ToString(InputManager::getMouseWheelDirection()));
-	}
-	
-	//Controller Tests
-	if (InputManager::wasControllerButtonPressed(0, Controller::A))
-	{
-		Log::logI("LeftAxis: " +
-			Utility::vec2ToString(InputManager::getControllerAxis2D(0, Controller::LeftStick)));
-		Log::logI("RightAxis: " +
-			Utility::vec2ToString(InputManager::getControllerAxis2D(0, Controller::RightStick)));
-		Log::logI("LeftTrigger: " +
-			Utility::floatToString(InputManager::getControllerAxis1D(0, Controller::LeftTrigger)));
-		Log::logI("RightTrigger: " +
-			Utility::floatToString(InputManager::getControllerAxis1D(0, Controller::RightTrigger)));
-	}
-
-	if (InputManager::wasControllerButtonPressed(0, Controller::RIGHTSHOULDER))
-	{
-		InputManager::playControllerRumble(0, 1.0f, 2000);
-	}
+	InputManager::printDebugInfo();
 
 	if (InputManager::wasKeyPressed(SDLK_g))
 		hideGUI = !hideGUI;
+
+
+	gameO->getComponent<Transform>("Transform").lock()->rotate(glm::vec3(0.0f, 1.0f * dt, 0.0f));
+
+
+	gameO->onUpdate();
+	cameraObj->onUpdate();
 }
 
 void Game::render()
 {
-	//glm::mat4 projection = camera->getProjMatrix();
-	//glm::mat4 view = camera->getViewMatrix();
-	
-	glm::mat4 model;
-	model = glm::translate(glm::mat4(1.0f), glm::vec3(1.0f, -2.0f, -10.0f));
-	model = glm::scale(model, glm::vec3(1.0f));
-
-	//test->draw(model, view, projection, standardShader);
-	
-	model = glm::translate(glm::mat4(1.0f), glm::vec3(1.0f, 2.0f, -15.0f));
-	//bowl->draw(model, view, projection, standardShader);
+	gameO->onRender();
 
 	//UI
 	/*if (!hideGUI)

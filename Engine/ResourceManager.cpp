@@ -98,7 +98,8 @@ std::weak_ptr<GameModel> ResourceManager::getModel(std::string modelFilename, bo
 	int flags = (
 		aiProcess_JoinIdenticalVertices | 
 		aiProcess_Triangulate |
-		aiProcess_CalcTangentSpace
+		aiProcess_CalcTangentSpace |
+		aiProcess_GenNormals
 		);
 	const aiScene* rawModelData = modelImporter->ReadFile(modelFilename, flags);
 

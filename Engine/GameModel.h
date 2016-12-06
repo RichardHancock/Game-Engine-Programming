@@ -61,6 +61,10 @@ public:
 	unsigned int getNumVertices();
 
 	unsigned int getNumIndices();
+
+	unsigned int getMeshNumIndices(unsigned int meshIndex);
+
+	unsigned int getMeshCount();
 private:
 
 	struct TextureWrapper
@@ -108,6 +112,9 @@ private:
 
 	/// Number of vertices in the model
 	unsigned int numVertices;
+
+	//Number of indicies in each mesh
+	std::vector<unsigned int> numMeshIndices;
 
 	unsigned int numIndices;
 };

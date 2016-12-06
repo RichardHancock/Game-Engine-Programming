@@ -9,13 +9,6 @@
 #include "states/Game.h"
 #include "ResourceManager.h"
 
-#include "GameObject.h"
-#include "Transform.h"
-#include "MeshComponent.h"
-#include "Material.h"
-#include "MeshRenderer.h"
-
-
 #ifdef _WIN32
 #include <windows.h>
 
@@ -57,46 +50,6 @@ int main(int argc, char *argv[])
 	Utility::randomInit();
 
 
-	//TEST AREA
-	std::shared_ptr<GameObject> cameraObj = std::make_shared<GameObject>("Camera");
-	cameraObj->addComponent<Transform>("Transform");
-	auto camTransform = cameraObj->getComponent<Transform>("Transform").lock();
-	camTransform->setPostion(glm::vec3(0, -3, -10));
-	camTransform->setRotation(glm::vec3(0, 0, 0));
-	camTransform->setScale(glm::vec3(1));
-
-	auto cameraComponent = cameraObj->addComponent<Camera>("Camera");
-	ResourceManager::engineState->currentCamera = cameraComponent;
-
-
-	std::shared_ptr<GameObject> gameO = std::make_shared<GameObject>("testing");
-	gameO->addComponent<Transform>("Transform");
-	auto transform = gameO->getComponent<Transform>("Transform").lock();
-	transform->setPostion(glm::vec3(0, 0, 0));
-	transform->setScale(glm::vec3(1));
-
-	std::shared_ptr<GameModel> model = ResourceManager::getModel("barrel.obj").lock();
-
-	gameO->addComponent<MeshComponent>("MeshComponent");
-	gameO->getComponent<MeshComponent>("MeshComponent").lock()->setMesh(model);
-
-
-	std::shared_ptr<Texture> texture = ResourceManager::getTexture("barrel.png").lock();
-
-	std::string shaderDir = ResourceManager::shaderDir;
-
-	std::shared_ptr<Material> material = std::make_shared<Material>(shaderDir + "vertex.shader", shaderDir + "fragment.shader");
-	material->addTexture("gSampler", texture);
-
-	gameO->addComponent<MeshRenderer>("MeshRenderer").lock()->setMaterial(material);
-	
-
-	gameO->onAwake();
-	cameraObj->onAwake();
-	
-	//TEST AREA END
-
-
 	SDL_Window* window = platform->getWindow();
 
 	StateManager* manager = new StateManager((int)platform->getWindowSize().x, (int)platform->getWindowSize().y);
@@ -120,6 +73,7 @@ int main(int argc, char *argv[])
 		Utility::Timer::update(dt);
 
 		manager->update(dt);
+		
 
 		InputManager::update();
 		ResourceManager::update(dt);
@@ -131,7 +85,6 @@ int main(int argc, char *argv[])
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		manager->render();
-		gameO->onRender();
 
 		SDL_GL_SwapWindow(window);
 

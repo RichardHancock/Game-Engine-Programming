@@ -543,6 +543,38 @@ void InputManager::processGameControllerEvent(SDL_Event& e)
 	}
 }
 
+void InputManager::printDebugInfo()
+{
+	//Mouse Tests
+	if (InputManager::wasMouseButtonPressed(SDL_BUTTON_LEFT)) {
+		Log::logI("Mouse Pos: " + Utility::vec2ToString(InputManager::getMousePos()));
+	}
+	if (InputManager::wasMouseButtonPressed(SDL_BUTTON_MIDDLE)) {
+		Log::logI("Mouse Dir: " + Utility::vec2ToString(InputManager::getMouseDirection()));
+	}
+	if (InputManager::wasMouseButtonPressed(SDL_BUTTON_RIGHT)) {
+		Log::logI("Mouse wheel: " + Utility::vec2ToString(InputManager::getMouseWheelDirection()));
+	}
+
+	//Controller Tests
+	if (InputManager::wasControllerButtonPressed(0, Controller::A))
+	{
+		Log::logI("LeftAxis: " +
+			Utility::vec2ToString(InputManager::getControllerAxis2D(0, Controller::LeftStick)));
+		Log::logI("RightAxis: " +
+			Utility::vec2ToString(InputManager::getControllerAxis2D(0, Controller::RightStick)));
+		Log::logI("LeftTrigger: " +
+			Utility::floatToString(InputManager::getControllerAxis1D(0, Controller::LeftTrigger)));
+		Log::logI("RightTrigger: " +
+			Utility::floatToString(InputManager::getControllerAxis1D(0, Controller::RightTrigger)));
+	}
+
+	if (InputManager::wasControllerButtonPressed(0, Controller::RIGHTSHOULDER))
+	{
+		InputManager::playControllerRumble(0, 1.0f, 2000);
+	}
+}
+
 
 void InputManager::update()
 {

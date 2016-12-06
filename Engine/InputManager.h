@@ -228,6 +228,10 @@ public:
 	*/
 	static void processGameControllerEvent(SDL_Event& e);
 
+
+	static void printDebugInfo();
+
+
 	/** @brief	Updates the internal variables. */
 	static void update();
 
