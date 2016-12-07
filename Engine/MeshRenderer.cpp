@@ -90,30 +90,33 @@ void MeshRenderer::onRender()
 	glm::mat4 viewMat = camera->getTransformMat();
 	glm::mat4 modelMat = transform->getTransformMat();
 
+	if (materials.size() == 0)
+		return;
 
 	///TODO Implement sub meshes
-	
-	//Material
-	std::weak_ptr<Material> materialRef = getMaterial();
-
-	if (materialRef.expired())
+	for (unsigned int curMesh = 0; curMesh < mesh->getMeshCount(); curMesh++)
 	{
-		Log::logE("No material provided to mesh renderer");
-		return;
+		//Material
+		std::weak_ptr<Material> materialRef = materials[mesh->getSubmesh(curMesh).materialIndex];
+
+		if (materialRef.expired())
+		{
+			Log::logE("No material provided to mesh renderer");
+			return;
+		}
+
+		std::shared_ptr<Material> material = materialRef.lock();
+
+		std::shared_ptr<Shader> shader = material->getShader().lock();
+
+		shader->setUniform("modelMat", modelMat);
+		shader->setUniform("viewMat", viewMat);
+		shader->setUniform("projMat", camera->getProjMat());
+		shader->setUniform("lightPos", glm::vec3(0.0f, 3.0f, 5.0f));
+		//shader->setUniform("viewPos", glm::vec3(viewMat[0][3], viewMat[1][3], viewMat[2][3]));
+		shader->setUniform("viewPos", glm::vec3(viewMat[3][0], viewMat[3][1], viewMat[3][2]));
+
+		material->useProgram();
+		Graphics::renderMesh(mesh, curMesh, material);
 	}
-
-	std::shared_ptr<Material> material = materialRef.lock();
-
-	std::shared_ptr<Shader> shader = material->getShader().lock();
-
-	shader->setUniform("modelMat", modelMat);
-	shader->setUniform("viewMat", viewMat);
-	shader->setUniform("projMat", camera->getProjMat());
-	shader->setUniform("lightPos", glm::vec3(5.0f, 1.0f, 5.0f));
-	shader->setUniform("viewPos", glm::vec3(viewMat[0][3], viewMat[1][3], viewMat[2][3]));
-	shader->setUniform("viewPos", glm::vec3(viewMat[3][0], viewMat[3][1], viewMat[3][2]));
-
-	material->useProgram();
-	Graphics::renderMesh(mesh, material);
-	
 }

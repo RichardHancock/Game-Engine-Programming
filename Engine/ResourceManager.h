@@ -10,6 +10,7 @@
 #include "Texture.h"
 #include "Resource.h"
 #include "misc/Utility.h"
+#include "Material.h"
 
 #include "Camera.h"
 
@@ -48,6 +49,12 @@ public:
 	 */
 	static std::weak_ptr<Audio> getAudio(std::string audioFilename, bool isMusic, bool defaultPath = true);
 
+	static void loadMaterials(std::string materialName, const aiScene* scene);
+
+	static std::weak_ptr<Material> getMaterial(std::string materialName, unsigned int index);
+
+	static std::vector<std::weak_ptr<Material>> getMaterials(std::string materialName);
+
 	/**
 	@brief Gets a model, loads the model if not already loaded.
 	
@@ -85,7 +92,8 @@ public:
 	{
 		ModelFile,
 		AudioFile,
-		TextureFile
+		TextureFile,
+		MaterialType
 	};
 
 	/** @brief The directory for the relevant asset type */
@@ -96,6 +104,8 @@ private:
 	
 	/** @brief The models. */
 	static std::unordered_map<std::string, std::shared_ptr<GameModel>> models;
+
+	static std::unordered_map<std::string, std::vector<std::shared_ptr<Material>>> materials;
 
 	/** @brief The audio. */
 	static std::unordered_map<std::string, std::shared_ptr<Audio>> audio;

@@ -10,4 +10,6 @@ class Graphics
 {
 public:
 	static void renderMesh(std::weak_ptr<GameModel> mesh, std::weak_ptr<Material> material);
+
+	static void renderMesh(std::weak_ptr<GameModel> mesh, unsigned int index, std::weak_ptr<Material> material);
 };

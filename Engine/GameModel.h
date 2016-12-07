@@ -13,6 +13,7 @@
 #include "ResourceManager.h"
 #include "Resource.h"
 #include "misc/Vertex.h"
+#include "Mesh.h"
 
 //Forward Declaration
 class ResourceManager;
@@ -30,6 +31,8 @@ public:
 	 */
 	GameModel(aiMesh* mesh);
 
+	GameModel();
+
 	GameModel(
 		std::vector<glm::vec3>* vertices,
 		std::vector<glm::vec3>* normals,
@@ -37,6 +40,8 @@ public:
 		std::vector<unsigned int>* indices);
 	
 	~GameModel();
+
+	void processAssimpScene(const aiScene* scene);
 
 	//void addTexture(Texture* texture, std::string shaderVarName);
 
@@ -62,9 +67,9 @@ public:
 
 	unsigned int getNumIndices();
 
-	unsigned int getMeshNumIndices(unsigned int meshIndex);
-
 	unsigned int getMeshCount();
+
+	Mesh getSubmesh(unsigned int index);
 private:
 
 	struct TextureWrapper
@@ -101,6 +106,18 @@ private:
 	*/
 	void loadModelDataFromASSIMP(aiMesh* mesh);
 
+	
+	void initMeshFromAssimp(
+		aiMesh* mesh,
+		std::vector<glm::vec3>& positions,
+		std::vector<glm::vec3>& normals,
+		std::vector<glm::vec2>& uvs,
+		std::vector<glm::vec3>& tangents,
+		std::vector<glm::vec3>& biTangents,
+		std::vector<unsigned int>& indicies
+	);
+
+
 	void addVBO(std::vector<glm::vec3> &data);
 	void addVBO(std::vector<glm::vec2> &data);
 
@@ -113,8 +130,8 @@ private:
 	/// Number of vertices in the model
 	unsigned int numVertices;
 
-	//Number of indicies in each mesh
-	std::vector<unsigned int> numMeshIndices;
+	std::vector<Mesh> meshes;
+
 
 	unsigned int numIndices;
 };

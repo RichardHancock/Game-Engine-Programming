@@ -8,7 +8,7 @@
 
 #include "misc/Log.h"
 
-class Material
+class Material : public Resource
 {
 private:
 	struct GLTextureInfo

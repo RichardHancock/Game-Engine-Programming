@@ -42,17 +42,18 @@ Game::Game(StateManager* manager, Platform* platform)
 	transform->setScale(glm::vec3(1));
 
 	gameO->addComponent<MeshComponent>("MeshComponent").lock()->setMesh(
-		ResourceManager::getModel("barrel.obj"));
-
+		ResourceManager::getModel("Viper-mk-IV-fighter.obj"));
 
 	//Material
-	std::string shaderDir = ResourceManager::shaderDir;
+	//std::string shaderDir = ResourceManager::shaderDir;
+	//
+	//material = std::make_shared<Material>(shaderDir + "vertexNormal.shader", shaderDir + "fragmentNormal.shader");
+	//material->addTexture("diffuseMap", ResourceManager::getTexture("barrel.png"));
+	//material->addTexture("normalMap", ResourceManager::getTexture("barrelNormal.png"));
 
-	material = std::make_shared<Material>(shaderDir + "vertexNormal.shader", shaderDir + "fragmentNormal.shader");
-	material->addTexture("diffuseMap", ResourceManager::getTexture("barrel.png"));
-	material->addTexture("normalMap", ResourceManager::getTexture("barrelNormal.png"));
-
-	gameO->addComponent<MeshRenderer>("MeshRenderer").lock()->setMaterial(material);
+	gameO->addComponent<MeshRenderer>("MeshRenderer").lock()->setMaterials(
+		ResourceManager::getMaterials("Viper-mk-IV-fighter.obj")
+	);
 
 	gameO->onAwake();
 	cameraObj->onAwake();

@@ -14,6 +14,8 @@ const float ResourceManager::UPDATE_DELAY = 10.0f;
 std::unordered_map<std::string, std::shared_ptr<GameModel>> ResourceManager::models;
 std::unordered_map<std::string, std::shared_ptr<Audio>> ResourceManager::audio;
 std::unordered_map<std::string, std::shared_ptr<Texture>> ResourceManager::textures;
+std::unordered_map<std::string, std::vector<std::shared_ptr<Material>>> ResourceManager::materials;
+
 Assimp::Importer* ResourceManager::modelImporter = new Assimp::Importer();
 Utility::SimpleTimer ResourceManager::updateDelayTimer(UPDATE_DELAY);
 
@@ -77,6 +79,90 @@ std::weak_ptr<Audio> ResourceManager::getAudio(std::string audioFilename, bool i
 	return audioFile;
 }
 
+void ResourceManager::loadMaterials(std::string materialName, const aiScene* scene)
+{
+	materials[materialName].reserve(scene->mNumMaterials);
+
+	for (unsigned int curMaterial = 0; curMaterial < scene->mNumMaterials; curMaterial++)
+	{
+		std::shared_ptr<Material> newMaterial = std::make_shared<Material>(
+			shaderDir + "vertexNormal.shader", shaderDir + "fragmentNormal.shader");
+
+		aiMaterial* materialData = scene->mMaterials[curMaterial];
+
+		if (materialData->GetTextureCount(aiTextureType_DIFFUSE))
+		{
+			aiString path;
+			materialData->GetTexture(aiTextureType_DIFFUSE, 0, &path, NULL, NULL, NULL);
+			newMaterial->addTexture("diffuseMap", getTexture(path.C_Str()));
+		}
+
+		if (materialData->GetTextureCount(aiTextureType_NORMALS))
+		{
+			aiString path;
+			materialData->GetTexture(aiTextureType_NORMALS, 0, &path, NULL, NULL, NULL);
+			newMaterial->addTexture("normalMap", getTexture(path.C_Str()));
+		} 
+		else if (materialData->GetTextureCount(aiTextureType_HEIGHT)) 
+		{ 
+			aiString path;
+			materialData->GetTexture(aiTextureType_HEIGHT, 0, &path, NULL, NULL, NULL);
+			newMaterial->addTexture("normalMap", getTexture(path.C_Str()));
+		}
+
+
+		if (materialData->GetTextureCount(aiTextureType_SPECULAR))
+		{
+			aiString path;
+			materialData->GetTexture(aiTextureType_SPECULAR, 0, &path, NULL, NULL, NULL);
+			newMaterial->addTexture("specularMap", getTexture(path.C_Str()));
+		}
+
+		materials[materialName].push_back(newMaterial);
+	}
+}
+
+std::weak_ptr<Material> ResourceManager::getMaterial(std::string materialName, unsigned int index)
+{
+	materialName = modelDir + materialName;
+
+	if (materials.count(materialName) > 0)
+	{
+		std::weak_ptr<Material> materialPtr;
+		
+		try {
+			materialPtr = materials[materialName].at(index);
+			return materialPtr;
+		}
+		catch (std::out_of_range)
+		{
+			return std::weak_ptr<Material>();
+		}
+	}
+
+	return std::weak_ptr<Material>();
+}
+
+std::vector<std::weak_ptr<Material>> ResourceManager::getMaterials(std::string materialName)
+{
+	materialName = modelDir + materialName;
+
+	if (materials.count(materialName) > 0)
+	{
+		std::vector<std::weak_ptr<Material>> result;
+		result.reserve(materials[materialName].size());
+		
+		for (unsigned int curMaterial = 0; curMaterial < materials[materialName].size(); curMaterial++)
+		{
+			result.push_back(materials[materialName][curMaterial]);
+		}
+
+		return result;
+	}
+
+	return std::vector<std::weak_ptr<Material>>();
+}
+
 std::weak_ptr<GameModel> ResourceManager::getModel(std::string modelFilename, bool defaultPath)
 {
 	//Should we use the default path for this type of resource or just use the provided filename
@@ -110,11 +196,14 @@ std::weak_ptr<GameModel> ResourceManager::getModel(std::string modelFilename, bo
 	}
 
 	//TEMP get the first mesh only
-	aiMesh* mesh = rawModelData->mMeshes[0];
+	//aiMesh* mesh = rawModelData->mMeshes[0];
 
 
-	std::shared_ptr<GameModel> modelData = std::make_shared<GameModel>(mesh);
+	std::shared_ptr<GameModel> modelData = std::make_shared<GameModel>();
+	modelData->processAssimpScene(rawModelData);
 	
+	loadMaterials(modelFilename, rawModelData);
+
 	//We've converted the data to our formats so delete the raw version.
 	modelImporter->FreeScene();
 

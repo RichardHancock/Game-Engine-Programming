@@ -25,6 +25,15 @@ GameModel::GameModel(aiMesh* mesh)
 	loadModelDataFromASSIMP(mesh);
 }
 
+GameModel::GameModel()
+{
+	indexBuffer = 0;
+	numVertices = 0;
+	numIndices = 0;
+	nextAvailableTextureUnit = GL_TEXTURE0;
+	disableMatUniforms = false;
+}
+
 GameModel::GameModel(std::vector<glm::vec3>* vertices, std::vector<glm::vec3>* normals, std::vector<glm::vec2>* uvs,
 	std::vector<unsigned int>* indices) : Resource()
 {
@@ -182,10 +191,117 @@ void GameModel::loadModelDataFromASSIMP(aiMesh* mesh)
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
-void GameModel::addVBO(std::vector<glm::vec3> &data)
+void GameModel::processAssimpScene(const aiScene * scene)
 {
+	assert(scene->HasMeshes());
+
+	//Pre allocate space
+	meshes.reserve(scene->mNumMeshes);
+
+	//Counts
+	numVertices = 0;
+	numIndices = 0;
+
+	//Get initial information
+	for (unsigned int currentMeshIndex = 0; currentMeshIndex < scene->mNumMeshes; currentMeshIndex++)
+	{
+		auto mesh = scene->mMeshes[currentMeshIndex];
+
+		//Format checks
+		if (mesh->GetNumUVChannels() > 1)
+			Log::logW("Mesh has unsupported number of UV channels, this can lead to undefined behaviour");
+
+		assert(
+			mesh->HasPositions() &&
+			mesh->HasNormals() &&
+			mesh->HasFaces() &&
+			mesh->HasTextureCoords(0) &&
+			mesh->HasTangentsAndBitangents() &&
+			mesh->mFaces[0].mNumIndices == 3
+		);
+
+		meshes.push_back(Mesh(
+			mesh->mNumFaces * 3,
+			numVertices,
+			numIndices,
+			mesh->mMaterialIndex
+		));
+		
+		numVertices += mesh->mNumVertices;
+		numIndices += meshes[currentMeshIndex].numIndicies;
+	}
+
+
+	//Reserve Space in arrays (This saves a lot of processing time, thats why I do two loops)
+	std::vector<glm::vec3> positions;   positions.reserve(numVertices);
+	std::vector<glm::vec3> normals;		normals.reserve(numVertices);
+	std::vector<glm::vec2> uvs;			uvs.reserve(numVertices);
+	std::vector<glm::vec3> tangents;	tangents.reserve(numVertices);
+	std::vector<glm::vec3> biTangents;  biTangents.reserve(numVertices);
+
+	std::vector<unsigned int> indices;  indices.reserve(numIndices);
+
+	for (unsigned int currentMeshIndex = 0; currentMeshIndex < scene->mNumMeshes; currentMeshIndex++)
+	{
+		auto mesh = scene->mMeshes[currentMeshIndex];
+		initMeshFromAssimp(mesh,
+			positions,
+			normals,
+			uvs,
+			tangents,
+			biTangents,
+			indices
+		);
+	}
+	
+	//Fill Buffers
+	glGenVertexArrays(1, &VAO);
 	glBindVertexArray(VAO);
 
+	addVBO(positions);
+	addVBO(normals);
+	addVBO(uvs);
+	addVBO(tangents);
+	addVBO(biTangents);
+
+	addIndexBuffer(indices);
+
+	glBindVertexArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+}
+
+void GameModel::initMeshFromAssimp(aiMesh * mesh, std::vector<glm::vec3>& positions, std::vector<glm::vec3>& normals, std::vector<glm::vec2>& uvs, std::vector<glm::vec3>& tangents, std::vector<glm::vec3>& biTangents, std::vector<unsigned int>& indicies)
+{
+	//Vertices
+	for (unsigned int i = 0; i < mesh->mNumVertices; i++)
+	{
+		const aiVector3D position = mesh->mVertices[i];
+		const aiVector3D normal = mesh->mNormals[i];
+		const aiVector3D uv = mesh->mTextureCoords[0][i];
+		const aiVector3D tangent = mesh->mTangents[i];
+		const aiVector3D biTangent = mesh->mBitangents[i];
+
+		positions.push_back(glm::vec3(position.x, position.y, position.z));
+		normals.push_back(glm::vec3(normal.x, normal.y, normal.z));
+		uvs.push_back(glm::vec2(uv.x, uv.y));
+		tangents.push_back(glm::vec3(tangent.x, tangent.y, tangent.z));
+		biTangents.push_back(glm::vec3(biTangent.x, biTangent.y, biTangent.z));
+	}
+
+	//Indices
+	for (unsigned int i = 0; i < mesh->mNumFaces; i++)
+	{
+		const aiFace face = mesh->mFaces[i];
+		assert(face.mNumIndices == 3);
+		indicies.push_back(face.mIndices[0]);
+		indicies.push_back(face.mIndices[1]);
+		indicies.push_back(face.mIndices[2]);
+	}
+}
+
+void GameModel::addVBO(std::vector<glm::vec3> &data)
+{
 	GLuint VBO;
 	glGenBuffers(1, &VBO);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
@@ -205,14 +321,12 @@ void GameModel::addVBO(std::vector<glm::vec3> &data)
 		(void*)0       //Array Buffer Offset
 	);
 
-	glBindVertexArray(0);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	//glBindVertexArray(0);
+	//glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
 void GameModel::addVBO(std::vector<glm::vec2> &data)
 {
-	glBindVertexArray(VAO);
-
 	GLuint VBO;
 	glGenBuffers(1, &VBO);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
@@ -232,15 +346,13 @@ void GameModel::addVBO(std::vector<glm::vec2> &data)
 		(void*)0       //Array Buffer Offset
 	);
 
-	glBindVertexArray(0);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	//glBindVertexArray(0);
+	//glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
 
 void GameModel::addIndexBuffer(std::vector<unsigned int> &indices)
 {
-	glBindVertexArray(VAO);
-
 	numIndices = indices.size();
 
 	//Create and Bind Index Buffer
@@ -249,8 +361,8 @@ void GameModel::addIndexBuffer(std::vector<unsigned int> &indices)
 
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * numIndices, &indices[0], GL_STATIC_DRAW);
 
-	glBindVertexArray(0);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+	//glBindVertexArray(0);
+	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
 /*
@@ -429,4 +541,14 @@ unsigned int GameModel::getNumVertices()
 unsigned int GameModel::getNumIndices()
 {
 	return numIndices;
+}
+
+unsigned int GameModel::getMeshCount()
+{
+	return meshes.size();
+}
+
+Mesh GameModel::getSubmesh(unsigned int index)
+{
+	return meshes[index];
 }
