@@ -146,67 +146,75 @@ void Game::render()
 
 void Game::cameraControls(float dt)
 {
-	/*
+	std::shared_ptr<Transform> camera = cameraObj->getComponent<Transform>("Transform").lock();
+
+	float speed = 50.0f;
+
 	//move along camera along x
 	if (InputManager::isKeyHeld(SDLK_a))
 	{
-		camera->moveCameraAlongX(-100.0f * dt);
+		camera->translate(glm::vec3(speed * dt, 0, 0));
 	}
-	if (InputManager::isKeyHeld(SDLK_d))
+	else if (InputManager::isKeyHeld(SDLK_d))
 	{
-		camera->moveCameraAlongX(100.0f * dt);
+		camera->translate(glm::vec3(-speed * dt, 0, 0));
 	}
+
 	//move camera along y
 	if (InputManager::isKeyHeld(SDLK_q))
 	{
-		camera->moveCameraAlongY(-100.0f * dt);
+		camera->translate(glm::vec3(0, speed * dt, 0));
 	}
-	if (InputManager::isKeyHeld(SDLK_e))
+	else if (InputManager::isKeyHeld(SDLK_e))
 	{
-		camera->moveCameraAlongY(100.0f * dt);
+		camera->translate(glm::vec3(0, -speed * dt, 0));
 	}
+
 	//move camera along z
 	if (InputManager::isKeyHeld(SDLK_w))
 	{
-		camera->moveCameraAlongZ(-100.0f * dt);
+		camera->translate(glm::vec3(0, 0, speed * dt));
 	}
 	if (InputManager::isKeyHeld(SDLK_s))
 	{
-		camera->moveCameraAlongZ(100.0f * dt);
+		camera->translate(glm::vec3(0, 0, -speed * dt));
 	}
+
+	float speedRadians = Utility::convertAngleToRadian(speed * dt);
 
 	//rotate along camera along x
 	if (InputManager::isKeyHeld(SDLK_UP))
 	{
-		camera->rotateCameraAlongX(Utility::convertAngleToRadian(-100.0f * dt));
+		camera->rotate(glm::vec3(-speedRadians, 0, 0));
 	}
-	if (InputManager::isKeyHeld(SDLK_DOWN))
+	else if (InputManager::isKeyHeld(SDLK_DOWN))
 	{
-		camera->rotateCameraAlongX(Utility::convertAngleToRadian(100.0f * dt));
+		camera->rotate(glm::vec3(speedRadians, 0, 0));
 	}
 	//rotate camera along y
 	if (InputManager::isKeyHeld(SDLK_LEFT))
 	{
-		camera->rotateCameraAlongY(Utility::convertAngleToRadian(-100.0f * dt));
+		camera->rotate(glm::vec3(0, -speedRadians, 0));
 	}
 	if (InputManager::isKeyHeld(SDLK_RIGHT))
 	{
-		camera->rotateCameraAlongY(Utility::convertAngleToRadian(100.0f * dt));
+		camera->rotate(glm::vec3(0, speedRadians, 0));
 	}
 	//rotate camera along z
 	if (InputManager::isKeyHeld(SDLK_k))
 	{
-		camera->rotateCameraAlongZ(Utility::convertAngleToRadian(-100.0f * dt));
+		camera->rotate(glm::vec3(0, 0, -speedRadians));
 	}
 	if (InputManager::isKeyHeld(SDLK_l))
 	{
-		camera->rotateCameraAlongZ(Utility::convertAngleToRadian(100.0f * dt));
+		camera->rotate(glm::vec3(0, 0, speedRadians));
 	}
 
 	//reset camera to 0,0,0
 	if (InputManager::wasKeyReleased(SDLK_SPACE))
 	{
-		camera->lookAt(glm::vec3(0.0f, 0.0f, 0.0f));
+		camera->setRotation(glm::vec3(0.0f));
+		camera->setPostion(glm::vec3(0, -3, -10));
 	}
-	*/
+
 }
