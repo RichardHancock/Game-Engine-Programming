@@ -16,8 +16,6 @@ Game::Game(StateManager* manager, Platform* platform)
 {
 	stateName = "Game";
 
-	testSFX = ResourceManager::getAudio("POP Echo Bouncer 01.wav", false);
-
 	//ui = new UIElement(Vec2(-1.0f, 1.0f), Vec2(0.3f, -0.2f));
 	//ui->addTexture(ResourceManager::getTexture("uiTest.png"), "gSampler");
 
@@ -30,7 +28,7 @@ Game::Game(StateManager* manager, Platform* platform)
 	//Camera
 	auto cameraObj = GameObject::create("Camera").lock();
 	auto camTransform = cameraObj->addComponent<Transform>("Transform").lock();
-	camTransform->setPostion(glm::vec3(0, 0, -20));
+	camTransform->setPostion(glm::vec3(0, 0, -40));
 	camTransform->setRotation(glm::vec3(0, 0, 0));
 	camTransform->setScale(glm::vec3(1));
 
@@ -49,6 +47,44 @@ Game::Game(StateManager* manager, Platform* platform)
 	gameO->addComponent<MeshRenderer>("MeshRenderer").lock()->setMaterials(
 		ResourceManager::getMaterials("dark_fighter_6.obj")
 	);
+
+	auto ship = GameObject::create("ship").lock();
+	auto transform2 = ship->addComponent<Transform>("Transform").lock();
+	transform2->setPostion(glm::vec3(0.0f, 30.0f, 10.0f));
+	transform2->setScale(glm::vec3(1));
+
+	ship->addComponent<MeshComponent>("MeshComponent").lock()->setMesh(
+		ResourceManager::getModel("Viper-mk-IV-fighter.obj"));
+
+	ship->addComponent<MeshRenderer>("MeshRenderer").lock()->setMaterials(
+		ResourceManager::getMaterials("Viper-mk-IV-fighter.obj")
+	);
+
+	auto earth = GameObject::create("earth").lock();
+	auto transform3 = earth->addComponent<Transform>("Transform").lock();
+	transform3->setPostion(glm::vec3(-20.0f, 50.0f, -150.0f));
+	transform3->setScale(glm::vec3(50));
+
+	earth->addComponent<MeshComponent>("MeshComponent").lock()->setMesh(
+		ResourceManager::getModel("Earth.obj"));
+
+	earth->addComponent<MeshRenderer>("MeshRenderer").lock()->setMaterials(
+		ResourceManager::getMaterials("Earth.obj")
+	);
+
+	auto flatPlane = GameObject::create("bg").lock();
+	auto transform4 = flatPlane->addComponent<Transform>("Transform").lock();
+	transform4->setPostion(glm::vec3(-20.0f, 50.0f, -150.0f));
+	transform4->setRotation(glm::vec3(Utility::HALF_PI, 0.0f, 0.0f));
+	transform4->setScale(glm::vec3(50));
+
+	flatPlane->addComponent<MeshComponent>("MeshComponent").lock()->setMesh(
+		ResourceManager::getModel("flatPlane.obj"));
+
+	flatPlane->addComponent<MeshRenderer>("MeshRenderer").lock()->setMaterials(
+		ResourceManager::getMaterials("flatPlane.obj")
+	);
+
 
 	//Bowls
 	auto bowl1 = GameObject::create("bowl1").lock();
@@ -79,6 +115,9 @@ Game::Game(StateManager* manager, Platform* platform)
 
 
 	gameO->onAwake();
+	ship->onAwake();
+	earth->onAwake();
+	flatPlane->onAwake();
 	bowl1->onAwake();
 	bowl2->onAwake();
 	cameraObj->onAwake();
@@ -136,20 +175,20 @@ bool Game::eventHandler()
 
 void Game::update(float dt)
 {
-	//Sound Test
-	if (InputManager::wasKeyReleased(SDLK_p))
-	{
-		testSFX.lock()->play(0, 0);
-	}
-
 	cameraControls(dt);
 
 	InputManager::printDebugInfo();
 
 	if (InputManager::wasKeyPressed(SDLK_g))
 		hideGUI = !hideGUI;
-
+	if (InputManager::wasKeyPressed(SDLK_1) || InputManager::wasControllerButtonPressed(0,Controller::Button::B))
+	{
+		ResourceManager::getAudio("ItemPlace.wav", false).lock()->play(0,0);
+	}
 	
+	
+	collisionResponse();
+
 	GameVariables::data->gameObjs["bowl1"]->getComponent<Transform>().lock()->translate(glm::vec3(1.0f * dt, -1.0f * dt, 0.0f));
 	GameVariables::data->gameObjs["bowl2"]->getComponent<Transform>().lock()->translate(glm::vec3(-1.0f * dt, 1.0f * dt, 0.0f));
 
@@ -244,10 +283,44 @@ void Game::cameraControls(float dt)
 	}
 
 	//reset camera to 0,0,0
-	if (InputManager::wasKeyReleased(SDLK_SPACE))
+	if (InputManager::wasKeyReleased(SDLK_SPACE) || InputManager::wasControllerButtonPressed(0, Controller::Button::B))
 	{
 		camera->setRotation(glm::vec3(0.0f));
 		camera->setPostion(glm::vec3(0, -3, -10));
+
+		GameVariables::data->gameObjs["bowl1"]->getComponent<Transform>().lock()->setPostion(glm::vec3(-50.0f, 10.0f, -5.0f));
+		GameVariables::data->gameObjs["bowl2"]->getComponent<Transform>().lock()->setPostion(glm::vec3(-40.0f, 0.0f, -5.0f));
 	}
 
+	if (InputManager::isControllerAxisInUse(0, Controller::Axis2D::LeftStick))
+	{
+		camera->translate(glm::vec3(
+			-InputManager::getControllerAxis2D(0, Controller::Axis2D::LeftStick).x * speed * dt,
+			0.0f, 
+			-InputManager::getControllerAxis2D(0, Controller::Axis2D::LeftStick).y * speed * dt));
+	}
+
+}
+
+void Game::collisionResponse()
+{
+
+	if (GameVariables::data->gameObjs["bowl1"]->getComponent<SphereCollider>().lock()->isColliding())
+	{
+		GameVariables::data->gameObjs["bowl1"]->getComponent<MeshRenderer>().lock()->
+			setMaterials(ResourceManager::getMaterials("bowl2.obj"));
+		GameVariables::data->gameObjs["bowl2"]->getComponent<MeshRenderer>().lock()->
+			setMaterials(ResourceManager::getMaterials("bowl2.obj"));
+
+		InputManager::playControllerRumble(0, 1, 10);
+	}
+	else
+	{
+		GameVariables::data->gameObjs["bowl1"]->getComponent<MeshRenderer>().lock()->
+			setMaterials(ResourceManager::getMaterials("bowl.obj"));
+		GameVariables::data->gameObjs["bowl2"]->getComponent<MeshRenderer>().lock()->
+			setMaterials(ResourceManager::getMaterials("bowl.obj"));
+	}
+
+	
 }

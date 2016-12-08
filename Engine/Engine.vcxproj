@@ -78,7 +78,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalLibraryDirectories>C:\SDKs\SDL2015\lib\x86;C:\SDKs\assimp\bin\release;C:\SDKs\bullet3-2.83.6\lib\Release;%(AdditionalLibraryDirectories);C:\SDKs\pugixml-1.7\lib\x86;C:\SDKs\glew-1.13.0\lib\x86</AdditionalLibraryDirectories>
       <AdditionalDependencies>glew32s.lib;SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2_mixer.lib;SDL2_ttf.lib;OpenGL32.lib;LinearMath.lib;BulletCollision.lib;Bullet3Collision.lib;BulletDynamics.lib;Bullet3Dynamics.lib;assimp.lib;pugixml.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>

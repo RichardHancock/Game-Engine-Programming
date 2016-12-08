@@ -253,7 +253,7 @@ std::vector<Controller*> InputManager::gamepads;
 Vec2 InputManager::mousePos;
 Vec2 InputManager::mouseDirection;
 Vec2 InputManager::mouseWheelDirection;
-
+float InputManager::deadzone = 0.2f;
 
 
 InputManager::InputManager()
@@ -449,6 +449,19 @@ uint8_t InputManager::getNumControllers()
 	}
 
 	return controllers;
+}
+
+bool InputManager::isControllerAxisInUse(int controller, Controller::Axis2D axis)
+{
+	Vec2 value = getControllerAxis2D(controller, axis);
+
+	//check if the axis is over the deadzone in any direction
+	return (value.x <= -deadzone || value.x >= deadzone || value.y <= -deadzone || value.y >= deadzone);
+}
+
+void InputManager::setDeadZone(float newDeadzone)
+{
+	deadzone = newDeadzone;
 }
 
 

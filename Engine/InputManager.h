@@ -204,6 +204,11 @@ public:
 	 */
 	static uint8_t getNumControllers();
 
+	static bool isControllerAxisInUse(int controller, Controller::Axis2D axis);
+
+	static void setDeadZone(float newDeadzone);
+
+
 
 	//Process Events
 
@@ -269,6 +274,8 @@ private:
 	
 	/** @brief	The mouse's current position this frame. */
 	static Vec2 mousePos;
+
+	static float deadzone;
 
 	/**
 	@brief	The mouse's current direction this frame. 

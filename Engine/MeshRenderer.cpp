@@ -115,8 +115,8 @@ void MeshRenderer::onRender()
 		shader->setUniform("viewMat", viewMat);
 		shader->setUniform("projMat", camera->getProjMat());
 		shader->setUniform("lightPos", glm::vec3(0.0f, 3.0f, 5.0f));
-		//shader->setUniform("viewPos", glm::vec3(viewMat[0][3], viewMat[1][3], viewMat[2][3]));
-		shader->setUniform("viewPos", glm::vec3(viewMat[3][0], viewMat[3][1], viewMat[3][2]));
+		shader->setUniform("viewPos", glm::vec3(viewMat[0][3], viewMat[1][3], viewMat[2][3]));
+		//shader->setUniform("viewPos", glm::vec3(viewMat[3][0], viewMat[3][1], viewMat[3][2]));
 
 		
 		Graphics::renderMesh(mesh, curMesh, material);

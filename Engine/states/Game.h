@@ -43,8 +43,7 @@ public:
 private:
 	void cameraControls(float dt);
 
-
-	std::weak_ptr<Audio> testSFX;
+	void collisionResponse();
 
 	//UIElement* ui;
 

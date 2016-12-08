@@ -12,7 +12,7 @@ glm::mat4 Camera::getProjMat()
 {
 	///TODO Ortho 
 	
-	return glm::perspective(45.0f, 4.0f / 3.0f, 0.1f, 200.0f);
+	return glm::perspective(45.0f, 16.0f / 9.0f, 0.1f, 400.0f);
 }
 
 void Camera::setProjMat(glm::mat4& projMatrix)
