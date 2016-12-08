@@ -3,6 +3,7 @@
 #include <assert.h>
 
 #include "Transform.h"
+#include "GameVariables.h"
 
 GameObject::GameObject(std::string name)
 	: name(name)
@@ -15,20 +16,14 @@ GameObject::~GameObject()
 
 }
 
-/*
-template <class T>
-std::weak_ptr<T> GameObject::addComponent(std::string title)
+std::weak_ptr<GameObject> GameObject::create(std::string name)
 {
-	std::shared_ptr<T> c(new T());
+	std::shared_ptr<GameObject> gameObj = std::make_shared<GameObject>(name);
 
-	assert(components.count(title) == 0);
+	GameVariables::data->gameObjs[name] = gameObj;
 
-	components.insert(std::make_pair(title, component));
-	c->gameObject = std::weak_ptr<GameObject>(self);
-	c->onAwake();
-
-	return component;
-}*/
+	return gameObj;
+}
 
 std::string GameObject::getName()
 {
@@ -42,10 +37,7 @@ void GameObject::setName(std::string newName)
 
 void GameObject::onAwake()
 {
-	for (auto component : components)
-	{
-		component.second->onAwake();
-	}
+	
 }
 
 void GameObject::onStart()
@@ -87,22 +79,3 @@ void GameObject::onGui()
 		component.second->onGui();
 	}
 }
-
-/*
-template<class T>
-std::weak_ptr<T> GameObject::getComponent(std::string title)
-{
-	//Reference Karsten (Mutiny)
-	for (auto component : components)
-	{
-		std::weak_ptr<T> c = dynamic_cast<T*>(component.second.get());
-
-		if (c.valid())
-		{
-			return c;
-		}
-	}
-
-	return std::weak_ptr<T>();
-}
-*/

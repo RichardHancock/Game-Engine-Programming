@@ -8,6 +8,8 @@
 #include "../MeshComponent.h"
 #include "../Material.h"
 #include "../MeshRenderer.h"
+#include "../GameVariables.h"
+#include "../SphereCollider.h"
 
 Game::Game(StateManager* manager, Platform* platform)
 	: State(manager, platform)
@@ -26,36 +28,59 @@ Game::Game(StateManager* manager, Platform* platform)
 	hideGUI = false;
 
 	//Camera
-	cameraObj = std::make_shared<GameObject>("Camera");
+	auto cameraObj = GameObject::create("Camera").lock();
 	auto camTransform = cameraObj->addComponent<Transform>("Transform").lock();
-	camTransform->setPostion(glm::vec3(0, -3, -10));
+	camTransform->setPostion(glm::vec3(0, 0, -20));
 	camTransform->setRotation(glm::vec3(0, 0, 0));
 	camTransform->setScale(glm::vec3(1));
 
 	auto cameraComponent = cameraObj->addComponent<Camera>("Camera");
-	ResourceManager::engineState->currentCamera = cameraComponent;
+	GameVariables::data->currentCamera = cameraComponent;
 
 	//Game Object
-	gameO = std::make_shared<GameObject>("testing");
+	auto gameO = GameObject::create("fighter").lock();
 	auto transform = gameO->addComponent<Transform>("Transform").lock();
-	transform->setPostion(glm::vec3(0, 0, 0));
+	transform->setPostion(glm::vec3(0.0f, 0.0f, 5.0f));
 	transform->setScale(glm::vec3(1));
 
 	gameO->addComponent<MeshComponent>("MeshComponent").lock()->setMesh(
-		ResourceManager::getModel("Viper-mk-IV-fighter.obj"));
-
-	//Material
-	//std::string shaderDir = ResourceManager::shaderDir;
-	//
-	//material = std::make_shared<Material>(shaderDir + "vertexNormal.shader", shaderDir + "fragmentNormal.shader");
-	//material->addTexture("diffuseMap", ResourceManager::getTexture("barrel.png"));
-	//material->addTexture("normalMap", ResourceManager::getTexture("barrelNormal.png"));
+		ResourceManager::getModel("dark_fighter_6.obj"));
 
 	gameO->addComponent<MeshRenderer>("MeshRenderer").lock()->setMaterials(
-		ResourceManager::getMaterials("Viper-mk-IV-fighter.obj")
+		ResourceManager::getMaterials("dark_fighter_6.obj")
 	);
 
+	//Bowls
+	auto bowl1 = GameObject::create("bowl1").lock();
+	auto b1Transform = bowl1->addComponent<Transform>("Transform").lock();
+	b1Transform->setPostion(glm::vec3(-50.0f, 10.0f, -5.0f));
+
+	bowl1->addComponent<MeshComponent>("MeshComponent").lock()->setMesh(
+		ResourceManager::getModel("bowl.obj"));
+
+	bowl1->addComponent<MeshRenderer>("MeshRenderer").lock()->setMaterials(
+		ResourceManager::getMaterials("bowl.obj")
+	);
+	bowl1->addComponent<SphereCollider>("SphereCollider");
+
+	
+	auto bowl2 = GameObject::create("bowl2").lock();
+	auto b2Transform = bowl2->addComponent<Transform>("Transform").lock();
+	b2Transform->setPostion(glm::vec3(-40.0f, 0.0f, -5.0f));
+
+	bowl2->addComponent<MeshComponent>("MeshComponent").lock()->setMesh(
+		ResourceManager::getModel("bowl2.obj"));
+
+	bowl2->addComponent<MeshRenderer>("MeshRenderer").lock()->setMaterials(
+		ResourceManager::getMaterials("bowl2.obj")
+	);
+	bowl2->addComponent<SphereCollider>("SphereCollider");
+
+
+
 	gameO->onAwake();
+	bowl1->onAwake();
+	bowl2->onAwake();
 	cameraObj->onAwake();
 }
 
@@ -124,17 +149,24 @@ void Game::update(float dt)
 	if (InputManager::wasKeyPressed(SDLK_g))
 		hideGUI = !hideGUI;
 
+	
+	GameVariables::data->gameObjs["bowl1"]->getComponent<Transform>().lock()->translate(glm::vec3(1.0f * dt, -1.0f * dt, 0.0f));
+	GameVariables::data->gameObjs["bowl2"]->getComponent<Transform>().lock()->translate(glm::vec3(-1.0f * dt, 1.0f * dt, 0.0f));
 
-	gameO->getComponent<Transform>("Transform").lock()->rotate(glm::vec3(0.0f, 1.0f * dt, 0.0f));
+	GameVariables::data->gameObjs["fighter"]->getComponent<Transform>("Transform").lock()->rotate(glm::vec3(0.0f, 1.0f * dt, 0.0f));
 
-
-	gameO->onUpdate();
-	cameraObj->onUpdate();
+	for (auto object : GameVariables::data->gameObjs)
+	{
+		object.second->onUpdate();
+	}
 }
 
 void Game::render()
 {
-	gameO->onRender();
+	for (auto object : GameVariables::data->gameObjs)
+	{
+		object.second->onRender();
+	}
 
 	//UI
 	/*if (!hideGUI)
@@ -146,7 +178,8 @@ void Game::render()
 
 void Game::cameraControls(float dt)
 {
-	std::shared_ptr<Transform> camera = cameraObj->getComponent<Transform>("Transform").lock();
+	std::shared_ptr<Transform> camera = GameVariables::data->currentCamera.lock()
+		->getGameObject().lock()->getComponent<Transform>("Transform").lock();
 
 	float speed = 50.0f;
 

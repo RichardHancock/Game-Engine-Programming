@@ -82,12 +82,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AABB.cpp" />
     <ClCompile Include="Audio.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="Collider.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="Controller.cpp" />
     <ClCompile Include="GameModel.cpp" />
     <ClCompile Include="GameObject.cpp" />
+    <ClCompile Include="GameVariables.cpp" />
     <ClCompile Include="Graphics.cpp" />
     <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="main.cpp" />
@@ -102,6 +105,7 @@
     <ClCompile Include="Resource.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="SphereCollider.cpp" />
     <ClCompile Include="states\Game.cpp" />
     <ClCompile Include="states\State.cpp" />
     <ClCompile Include="states\StateManager.cpp" />
@@ -110,12 +114,15 @@
     <ClCompile Include="ui\UI.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AABB.h" />
     <ClInclude Include="Audio.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="Collider.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="Controller.h" />
     <ClInclude Include="GameModel.h" />
     <ClInclude Include="GameObject.h" />
+    <ClInclude Include="GameVariables.h" />
     <ClInclude Include="Graphics.h" />
     <ClInclude Include="InputManager.h" />
     <ClInclude Include="Material.h" />
@@ -132,6 +139,7 @@
     <ClInclude Include="Resource.h" />
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="Shader.h" />
+    <ClInclude Include="SphereCollider.h" />
     <ClInclude Include="states\Game.h" />
     <ClInclude Include="states\State.h" />
     <ClInclude Include="states\StateManager.h" />

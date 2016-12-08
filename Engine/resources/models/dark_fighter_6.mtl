@@ -1,0 +1,4 @@
+newmtl temp
+map_Kd dark_fighter_6_color.png
+map_Ks dark_fighter_6_specular.png
+bump dark_fighter_6_bump.png

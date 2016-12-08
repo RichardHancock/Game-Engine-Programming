@@ -108,6 +108,40 @@ std::vector<unsigned int> GameModel::extractMeshIndexData(aiMesh* mesh)
 	return indexArray;
 }
 
+void GameModel::calculateAABB(std::vector<glm::vec3> vertices)
+{
+	if (vertices.size() < 1)
+	{
+		bounds = AABB(glm::vec3(0), glm::vec3(0));
+		return;
+	}
+
+
+	glm::vec3 min(vertices[0]);
+	glm::vec3 max(min);
+
+	for (glm::vec3 vertex : vertices)
+	{
+		//Rolled into loop for hopefully better performance
+		for (unsigned int axis = 0; axis < 3; axis++)
+		{
+			if (vertex[axis] < min[axis])
+			{
+				min[axis] = vertex[axis];
+			}
+			else if (vertex[axis] > max[axis])
+			{
+				max[axis] = vertex[axis];
+			}
+		}
+	}
+
+	glm::vec3 center = (max + min) / 2.0f;
+	glm::vec3 size = (max - min);
+
+	bounds = AABB(center, size);
+}
+
 void GameModel::loadModelDataFromASSIMP(aiMesh* mesh)
 {
 	glBindVertexArray(VAO);
@@ -265,6 +299,9 @@ void GameModel::processAssimpScene(const aiScene * scene)
 	addVBO(biTangents);
 
 	addIndexBuffer(indices);
+
+	//Calculate AABB bounds
+	calculateAABB(positions);
 
 	glBindVertexArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -551,4 +588,9 @@ unsigned int GameModel::getMeshCount()
 Mesh GameModel::getSubmesh(unsigned int index)
 {
 	return meshes[index];
+}
+
+AABB GameModel::getAABB()
+{
+	return bounds;
 }

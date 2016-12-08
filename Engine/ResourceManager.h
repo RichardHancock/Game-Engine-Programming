@@ -12,17 +12,8 @@
 #include "misc/Utility.h"
 #include "Material.h"
 
-#include "Camera.h"
-
 // Forward Declaration
 class GameModel;
-
-struct EngineState
-{
-	std::weak_ptr<Camera> currentCamera;
-};
-
-
 
 /**
 @brief Manager for resources of most types.
@@ -32,8 +23,6 @@ Loads and manages any resources.
 class ResourceManager
 {
 public:
-	
-	static std::shared_ptr<EngineState> engineState;
 
 	/** @brief	Clean up memory used by Resource Manager */
 	static void cleanUp();

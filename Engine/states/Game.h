@@ -44,10 +44,6 @@ private:
 	void cameraControls(float dt);
 
 
-	std::shared_ptr<GameObject> cameraObj;
-	std::shared_ptr<GameObject> gameO;
-	std::shared_ptr<Material> material;
-
 	std::weak_ptr<Audio> testSFX;
 
 	//UIElement* ui;

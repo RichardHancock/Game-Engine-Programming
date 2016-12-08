@@ -19,8 +19,6 @@ std::unordered_map<std::string, std::vector<std::shared_ptr<Material>>> Resource
 Assimp::Importer* ResourceManager::modelImporter = new Assimp::Importer();
 Utility::SimpleTimer ResourceManager::updateDelayTimer(UPDATE_DELAY);
 
-std::shared_ptr<EngineState> ResourceManager::engineState = std::make_shared<EngineState>();
-
 
 ResourceManager::ResourceManager() {}
 

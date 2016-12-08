@@ -35,7 +35,7 @@ void main()
     vec3 reflectDir = reflect(-lightDir, normal);
     vec3 halfwayDir = normalize(lightDir + viewDir);  
     float spec = pow(max(dot(normal, halfwayDir), 0.0), 32.0);
-    vec3 specular = vec3(0.2) * spec * texture(specularMap, flipTexCoords).rgb;
+    vec3 specular = vec3(0.6f) * spec * texture(specularMap, flipTexCoords).rgb;
     
     FragColor = vec4(ambient + diffuse + specular, 1.0f);
 }

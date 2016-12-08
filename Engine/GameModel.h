@@ -14,6 +14,7 @@
 #include "Resource.h"
 #include "misc/Vertex.h"
 #include "Mesh.h"
+#include "AABB.h"
 
 //Forward Declaration
 class ResourceManager;
@@ -70,6 +71,8 @@ public:
 	unsigned int getMeshCount();
 
 	Mesh getSubmesh(unsigned int index);
+
+	AABB getAABB();
 private:
 
 	struct TextureWrapper
@@ -134,4 +137,8 @@ private:
 
 
 	unsigned int numIndices;
+
+	AABB bounds;
+
+	void calculateAABB(std::vector<glm::vec3> vertices);
 };
