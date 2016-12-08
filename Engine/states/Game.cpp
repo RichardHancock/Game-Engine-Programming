@@ -183,7 +183,7 @@ void Game::update(float dt)
 		hideGUI = !hideGUI;
 	if (InputManager::wasKeyPressed(SDLK_1) || InputManager::wasControllerButtonPressed(0,Controller::Button::B))
 	{
-		ResourceManager::getAudio("ItemPlace.wav", false).lock()->play(0,0);
+		ResourceManager::getAudio("Item Place.wav", false).lock()->play(0,0);
 	}
 	
 	
