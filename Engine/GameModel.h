@@ -24,15 +24,7 @@ class ResourceManager;
 class GameModel : public Resource
 {
 public:
-
-	/**
-	@brief Constructor.
-	
-	@param [in,out] mesh    Mesh data.
-	 */
-	GameModel(aiMesh* mesh);
-
-	GameModel();
+	GameModel(std::weak_ptr<aiScene> scene);
 
 	GameModel(
 		std::vector<glm::vec3>* vertices,
@@ -41,24 +33,6 @@ public:
 		std::vector<unsigned int>* indices);
 	
 	~GameModel();
-
-	void processAssimpScene(const aiScene* scene);
-
-	//void addTexture(Texture* texture, std::string shaderVarName);
-
-	void deleteTexturesFromGPU();
-
-	/**
-	 @brief Draws object using the given camera view and projection matrices.
-	
-	 @param [in,out] modelMatrix The model matrix.
-	 @param [in,out] viewMatrix  The view matrix.
-	 @param [in,out] projMatrix  The projection matrix.
-	 @param [in,out] shader		 Shader used for rendering this model.
-	 */
-	void draw(glm::mat4& modelMatrix, glm::mat4& viewMatrix, glm::mat4& projMatrix, Shader* shader);
-
-	void draw2D(Shader* shader);
 
 	GLuint getVAO();
 
@@ -75,14 +49,6 @@ public:
 	AABB getAABB();
 private:
 
-	struct TextureWrapper
-	{
-		GLint textureUnit;
-		GLuint textureID;
-		std::string shaderVarName;
-		Texture* texture;
-	};
-
 	/// Vertex Array Object for model in OpenGL
 	GLuint VAO;
 
@@ -91,27 +57,9 @@ private:
 
 	/// Buffer for indices
 	GLuint indexBuffer;
-
-	int nextAvailableTextureUnit;
-
-	/** @brief Identifier for the textures. */
-	std::vector<TextureWrapper> textures;
-
-	/** @brief The texture data. */
-	//Texture* texture;
-
-	/** @brief true to disable, false to enable the matrix uniforms. (Is used to avoid passing matrices to 2D UI objects)*/
-	bool disableMatUniforms;
-
-	/**
-	@brief Initialises the Vertices and Indicies from a model imported by ASSIMP
-	@param mesh Mesh data.
-	*/
-	void loadModelDataFromASSIMP(aiMesh* mesh);
-
 	
 	void initMeshFromAssimp(
-		aiMesh* mesh,
+		std::weak_ptr<aiMesh> meshPtr,
 		std::vector<glm::vec3>& positions,
 		std::vector<glm::vec3>& normals,
 		std::vector<glm::vec2>& uvs,
@@ -127,8 +75,9 @@ private:
 	void addIndexBuffer(std::vector<unsigned int> &indices);
 
 	
+	void processAssimpScene(std::weak_ptr<aiScene> scenePtr);
 
-	std::vector<unsigned int> extractMeshIndexData(aiMesh* mesh);
+	std::vector<unsigned int> extractMeshIndexData(std::weak_ptr<aiMesh> meshPtr);
 
 	/// Number of vertices in the model
 	unsigned int numVertices;

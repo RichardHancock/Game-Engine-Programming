@@ -1,8 +1,10 @@
 #include "Controller.h"
-#include "misc/Log.h"
-#include "misc/Utility.h"
+
 #include <assert.h>
 
+#include "misc/Log.h"
+#include "misc/Utility.h"
+#include "CustomDestructors.h"
 
 Controller::Controller(int joyID)
 	: joystickID(joyID), leftStick(0), rightStick(0), leftTrigger(0), rightTrigger(0), 
@@ -27,15 +29,16 @@ Controller::Controller(int joyID)
 		{ DPAD_RIGHT , None }
 	};
 
-	gameController = SDL_GameControllerOpen(joyID);
-	if (gameController == nullptr)
+	gameController = std::make_shared<SDL_GameController>(SDL_GameControllerOpen(joyID), CustomDestructors::DeleteSDL_GameController);
+	if (gameController.get() == nullptr)
 	{
 		Log::logE("Controller (" + Utility::intToString(joyID) + ") did not Init");
 		Log::logE(SDL_GetError());
 		return;
 	}
 
-	SDL_Joystick* joy = SDL_GameControllerGetJoystick(gameController);
+	//This pointer is owned internally by SDL_GameController so must not be deleted or managed.
+	SDL_Joystick* joy = SDL_GameControllerGetJoystick(gameController.get());
 	joystickInstanceID = SDL_JoystickInstanceID(joy);
 
 
@@ -46,12 +49,10 @@ Controller::~Controller()
 {
 	if (haptic != nullptr)
 	{
-		SDL_HapticStopAll(haptic);
-		SDL_HapticClose(haptic);
-		haptic = nullptr;
+		SDL_HapticStopAll(haptic.get());
 	}
 
-	SDL_GameControllerClose(gameController);
+	//SDL_GameControllerClose(gameController);
 	gameController = nullptr;
 
 	buttons.clear();
@@ -60,12 +61,12 @@ Controller::~Controller()
 
 bool Controller::isValid()
 {
-	return (gameController != nullptr);
+	return (gameController.get() != nullptr);
 }
 
 std::string Controller::getName()
 {
-	return std::string(SDL_GameControllerName(gameController));
+	return std::string(SDL_GameControllerName(gameController.get()));
 }
 
 int Controller::getJoystickID()
@@ -193,8 +194,8 @@ void Controller::initializeHaptics(SDL_Joystick* joystick)
 {
 	if (SDL_JoystickIsHaptic(joystick) == 1)
 	{
-		haptic = SDL_HapticOpenFromJoystick(joystick);
-		if (haptic != nullptr)
+		haptic = std::make_shared<SDL_Haptic>(SDL_HapticOpenFromJoystick(joystick), CustomDestructors::DeleteSDL_Haptic);
+		if (haptic.get() != nullptr)
 		{
 			Log::logI(this->getName() + "'s haptic features opened successfully");
 		}
@@ -212,7 +213,7 @@ void Controller::initializeHaptics(SDL_Joystick* joystick)
 	}
 
 	//Init Rumble
-	switch (SDL_HapticRumbleSupported(haptic))
+	switch (SDL_HapticRumbleSupported(haptic.get()))
 	{
 	case SDL_TRUE:
 		rumbleSupported = true;
@@ -233,7 +234,7 @@ void Controller::initializeHaptics(SDL_Joystick* joystick)
 
 	}
 
-	if (SDL_HapticRumbleInit(haptic) != 0)
+	if (SDL_HapticRumbleInit(haptic.get()) != 0)
 	{
 		Log::logW(this->getName() + " had an error occur when initializing Rumble haptic: "
 			+ SDL_GetError());
@@ -247,7 +248,7 @@ void Controller::rumblePlay(float strength, uint32_t lengthMS)
 {
 	if (rumbleSupported)
 	{
-		if (SDL_HapticRumblePlay(haptic, strength, lengthMS) != 0)
+		if (SDL_HapticRumblePlay(haptic.get(), strength, lengthMS) != 0)
 		{
 			Log::logW(this->getName() + " had an error occur when trying to play a rumble haptic: "
 				+ SDL_GetError());
@@ -259,7 +260,7 @@ void Controller::rumbleStop()
 {
 	if (rumbleSupported)
 	{
-		if (SDL_HapticRumbleStop(haptic) != 0)
+		if (SDL_HapticRumbleStop(haptic.get()) != 0)
 		{
 			Log::logW(this->getName() + " had an error occur when trying to stop a rumble haptic: "
 				+ SDL_GetError());

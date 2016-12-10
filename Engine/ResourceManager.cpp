@@ -16,7 +16,7 @@ std::unordered_map<std::string, std::shared_ptr<Audio>> ResourceManager::audio;
 std::unordered_map<std::string, std::shared_ptr<Texture>> ResourceManager::textures;
 std::unordered_map<std::string, std::vector<std::shared_ptr<Material>>> ResourceManager::materials;
 
-Assimp::Importer* ResourceManager::modelImporter = new Assimp::Importer();
+std::shared_ptr<Assimp::Importer> ResourceManager::modelImporter = std::make_shared<Assimp::Importer>();
 Utility::SimpleTimer ResourceManager::updateDelayTimer(UPDATE_DELAY);
 
 
@@ -42,8 +42,6 @@ void ResourceManager::cleanUp()
 		delete texture.second;
 	}*/
 	textures.clear();
-	
-	delete modelImporter;
 }
 
 std::weak_ptr<Audio> ResourceManager::getAudio(std::string audioFilename, bool isMusic, bool defaultPath)
@@ -77,8 +75,10 @@ std::weak_ptr<Audio> ResourceManager::getAudio(std::string audioFilename, bool i
 	return audioFile;
 }
 
-void ResourceManager::loadMaterials(std::string materialName, const aiScene* scene)
+void ResourceManager::loadMaterialsFromAssimp(std::string materialName, std::weak_ptr<aiScene> scenePtr)
 {
+	std::shared_ptr<aiScene> scene = scenePtr.lock();
+
 	materials[materialName].reserve(scene->mNumMaterials);
 
 	for (unsigned int curMaterial = 0; curMaterial < scene->mNumMaterials; curMaterial++)
@@ -185,7 +185,7 @@ std::weak_ptr<GameModel> ResourceManager::getModel(std::string modelFilename, bo
 		aiProcess_CalcTangentSpace |
 		aiProcess_GenNormals
 		);
-	const aiScene* rawModelData = modelImporter->ReadFile(modelFilename, flags);
+	std::shared_ptr<aiScene> rawModelData = std::make_shared<aiScene>(modelImporter->ReadFile(modelFilename, flags));
 
 	if (rawModelData == nullptr)
 	{
@@ -193,20 +193,17 @@ std::weak_ptr<GameModel> ResourceManager::getModel(std::string modelFilename, bo
 		return std::weak_ptr<GameModel>();
 	}
 
-	//TEMP get the first mesh only
-	//aiMesh* mesh = rawModelData->mMeshes[0];
-
-
-	std::shared_ptr<GameModel> modelData = std::make_shared<GameModel>();
-	modelData->processAssimpScene(rawModelData);
+	//Load Model
+	std::shared_ptr<GameModel> modelData = std::make_shared<GameModel>(rawModelData);
 	
-	loadMaterials(modelFilename, rawModelData);
+	//Load Relevant Materials
+	loadMaterialsFromAssimp(modelFilename, rawModelData);
 
 	//We've converted the data to our formats so delete the raw version.
 	modelImporter->FreeScene();
 
+	//Store and return model
 	models[modelFilename] = modelData;
-
 	return modelData;
 }
 

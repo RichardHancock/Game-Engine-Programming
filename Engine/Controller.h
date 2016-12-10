@@ -4,6 +4,7 @@
 #include <functional>
 #include <unordered_map>
 #include <SDL.h>
+#include <memory>
 
 #include "misc/Vec2.h"
 
@@ -98,7 +99,7 @@ private:
 	
 	void updateButtons(SDL_Event& e);
 
-	SDL_GameController* gameController;
+	std::shared_ptr<SDL_GameController> gameController;
 
 	int joystickID;
 
@@ -116,9 +117,15 @@ private:
 	std::unordered_map<Button, ButtonState, hash_Button> buttons;
 
 	//Haptics
+
+	/**
+	 @brief	Initializes the haptics subsystem for this controller.
+	
+	 @param [in,out]	joystick	The SDL joystick (Passed as pointer as it should never be memory managed as it is an internal pointer to SDL).
+	 */
 	void initializeHaptics(SDL_Joystick* joystick);
 
-	SDL_Haptic* haptic;
+	std::shared_ptr<SDL_Haptic> haptic;
 
 	bool rumbleSupported;
 };

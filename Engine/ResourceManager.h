@@ -38,7 +38,7 @@ public:
 	 */
 	static std::weak_ptr<Audio> getAudio(std::string audioFilename, bool isMusic, bool defaultPath = true);
 
-	static void loadMaterials(std::string materialName, const aiScene* scene);
+	static void loadMaterialsFromAssimp(std::string materialName, std::weak_ptr<aiScene> scenePtr);
 
 	static std::weak_ptr<Material> getMaterial(std::string materialName, unsigned int index);
 
@@ -104,7 +104,7 @@ private:
 
 	
 	/** @brief The model importer from Assimp. */
-	static Assimp::Importer* modelImporter;
+	static std::shared_ptr<Assimp::Importer> modelImporter;
 
 
 	/** @brief Only check the internal resources every 10 seconds. */
