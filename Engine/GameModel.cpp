@@ -10,7 +10,7 @@
 
 
 
-GameModel::GameModel(std::weak_ptr<aiScene> scene)
+GameModel::GameModel(const aiScene* scene)
 {
 	indexBuffer = 0;
 	numVertices = 0;
@@ -67,11 +67,9 @@ GameModel::~GameModel()
 
 }
 
-std::vector<unsigned int> GameModel::extractMeshIndexData(std::weak_ptr<aiMesh> meshPtr)
+std::vector<unsigned int> GameModel::extractMeshIndexData(aiMesh* mesh)
 {
 	std::vector<unsigned int> indexArray;
-
-	std::shared_ptr<aiMesh> mesh = meshPtr.lock();
 	
 	//Loop through every face
 	for (unsigned int i = 0; i < mesh->mNumFaces; i++)
@@ -122,10 +120,8 @@ void GameModel::calculateAABB(std::vector<glm::vec3> vertices)
 	bounds = AABB(center, size);
 }
 
-void GameModel::processAssimpScene(std::weak_ptr<aiScene> scenePtr)
+void GameModel::processAssimpScene(const aiScene* scene)
 {
-	std::shared_ptr<aiScene> scene = scenePtr.lock();
-
 	assert(scene->HasMeshes());
 
 	//Pre allocate space
@@ -176,7 +172,7 @@ void GameModel::processAssimpScene(std::weak_ptr<aiScene> scenePtr)
 
 	for (unsigned int currentMeshIndex = 0; currentMeshIndex < scene->mNumMeshes; currentMeshIndex++)
 	{
-		std::shared_ptr<aiMesh> mesh = std::make_shared<aiMesh>(scene->mMeshes[currentMeshIndex]);
+		aiMesh* mesh = scene->mMeshes[currentMeshIndex];
 		
 		initMeshFromAssimp(
 			mesh,
@@ -208,11 +204,9 @@ void GameModel::processAssimpScene(std::weak_ptr<aiScene> scenePtr)
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
-void GameModel::initMeshFromAssimp(std::weak_ptr<aiMesh> meshPtr, std::vector<glm::vec3>& positions, std::vector<glm::vec3>& normals, 
+void GameModel::initMeshFromAssimp(aiMesh* mesh, std::vector<glm::vec3>& positions, std::vector<glm::vec3>& normals, 
 	std::vector<glm::vec2>& uvs, std::vector<glm::vec3>& tangents, std::vector<glm::vec3>& biTangents, std::vector<unsigned int>& indicies)
 {
-	std::shared_ptr<aiMesh> mesh = meshPtr.lock();
-
 	//Vertices
 	for (unsigned int i = 0; i < mesh->mNumVertices; i++)
 	{

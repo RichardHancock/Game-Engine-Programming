@@ -24,7 +24,7 @@ class ResourceManager;
 class GameModel : public Resource
 {
 public:
-	GameModel(std::weak_ptr<aiScene> scene);
+	GameModel(const aiScene* scene);
 
 	GameModel(
 		std::vector<glm::vec3>* vertices,
@@ -59,7 +59,7 @@ private:
 	GLuint indexBuffer;
 	
 	void initMeshFromAssimp(
-		std::weak_ptr<aiMesh> meshPtr,
+		aiMesh* mesh,
 		std::vector<glm::vec3>& positions,
 		std::vector<glm::vec3>& normals,
 		std::vector<glm::vec2>& uvs,
@@ -75,9 +75,9 @@ private:
 	void addIndexBuffer(std::vector<unsigned int> &indices);
 
 	
-	void processAssimpScene(std::weak_ptr<aiScene> scenePtr);
+	void processAssimpScene(const aiScene* scene);
 
-	std::vector<unsigned int> extractMeshIndexData(std::weak_ptr<aiMesh> meshPtr);
+	std::vector<unsigned int> extractMeshIndexData(aiMesh* mesh);
 
 	/// Number of vertices in the model
 	unsigned int numVertices;

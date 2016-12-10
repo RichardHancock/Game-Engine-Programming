@@ -7,6 +7,7 @@
 #include <memory>
 
 #include "misc/Vec2.h"
+#include "CustomDestructors.h"
 
 class Controller
 {
@@ -99,7 +100,7 @@ private:
 	
 	void updateButtons(SDL_Event& e);
 
-	std::shared_ptr<SDL_GameController> gameController;
+	std::unique_ptr<SDL_GameController, CustomDestructors::SDL_Deleter> gameController;
 
 	int joystickID;
 
@@ -125,7 +126,7 @@ private:
 	 */
 	void initializeHaptics(SDL_Joystick* joystick);
 
-	std::shared_ptr<SDL_Haptic> haptic;
+	std::unique_ptr<SDL_Haptic, CustomDestructors::SDL_Deleter> haptic;
 
 	bool rumbleSupported;
 };

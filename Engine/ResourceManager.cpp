@@ -75,10 +75,8 @@ std::weak_ptr<Audio> ResourceManager::getAudio(std::string audioFilename, bool i
 	return audioFile;
 }
 
-void ResourceManager::loadMaterialsFromAssimp(std::string materialName, std::weak_ptr<aiScene> scenePtr)
+void ResourceManager::loadMaterialsFromAssimp(std::string materialName, const aiScene* scene)
 {
-	std::shared_ptr<aiScene> scene = scenePtr.lock();
-
 	materials[materialName].reserve(scene->mNumMaterials);
 
 	for (unsigned int curMaterial = 0; curMaterial < scene->mNumMaterials; curMaterial++)
@@ -185,7 +183,8 @@ std::weak_ptr<GameModel> ResourceManager::getModel(std::string modelFilename, bo
 		aiProcess_CalcTangentSpace |
 		aiProcess_GenNormals
 		);
-	std::shared_ptr<aiScene> rawModelData = std::make_shared<aiScene>(modelImporter->ReadFile(modelFilename, flags));
+	//I tried to convert these into shared_ptrs but the internals of Assimp really do not suit it and was causing random memory errors.
+	const aiScene* rawModelData = modelImporter->ReadFile(modelFilename, flags);
 
 	if (rawModelData == nullptr)
 	{

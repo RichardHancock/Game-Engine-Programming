@@ -38,7 +38,7 @@ public:
 	 */
 	static std::weak_ptr<Audio> getAudio(std::string audioFilename, bool isMusic, bool defaultPath = true);
 
-	static void loadMaterialsFromAssimp(std::string materialName, std::weak_ptr<aiScene> scenePtr);
+	static void loadMaterialsFromAssimp(std::string materialName, const aiScene* scene);
 
 	static std::weak_ptr<Material> getMaterial(std::string materialName, unsigned int index);
 

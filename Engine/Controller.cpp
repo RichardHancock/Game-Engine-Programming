@@ -4,7 +4,6 @@
 
 #include "misc/Log.h"
 #include "misc/Utility.h"
-#include "CustomDestructors.h"
 
 Controller::Controller(int joyID)
 	: joystickID(joyID), leftStick(0), rightStick(0), leftTrigger(0), rightTrigger(0), 
@@ -29,7 +28,8 @@ Controller::Controller(int joyID)
 		{ DPAD_RIGHT , None }
 	};
 
-	gameController = std::make_shared<SDL_GameController>(SDL_GameControllerOpen(joyID), CustomDestructors::DeleteSDL_GameController);
+	gameController = std::unique_ptr<SDL_GameController, CustomDestructors::SDL_Deleter>(SDL_GameControllerOpen(joyID));
+	
 	if (gameController.get() == nullptr)
 	{
 		Log::logE("Controller (" + Utility::intToString(joyID) + ") did not Init");
@@ -194,7 +194,7 @@ void Controller::initializeHaptics(SDL_Joystick* joystick)
 {
 	if (SDL_JoystickIsHaptic(joystick) == 1)
 	{
-		haptic = std::make_shared<SDL_Haptic>(SDL_HapticOpenFromJoystick(joystick), CustomDestructors::DeleteSDL_Haptic);
+		haptic = std::unique_ptr<SDL_Haptic, CustomDestructors::SDL_Deleter>(SDL_HapticOpenFromJoystick(joystick));
 		if (haptic.get() != nullptr)
 		{
 			Log::logI(this->getName() + "'s haptic features opened successfully");
