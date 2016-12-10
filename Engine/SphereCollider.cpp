@@ -1,5 +1,8 @@
 #include "SphereCollider.h"
 
+#include <vector>
+#include <memory>
+
 SphereCollider::SphereCollider()
 {
 	colliding = false;

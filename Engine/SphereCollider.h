@@ -1,5 +1,7 @@
 #pragma once
 
+#include <memory>
+
 #include "Collider.h"
 
 class SphereCollider : public Collider

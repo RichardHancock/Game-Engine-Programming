@@ -3,6 +3,7 @@
 #include <unordered_map>
 #include <memory>
 #include <cassert>
+#include <vector>
 
 #include "Component.h"
 #include "misc/Log.h"

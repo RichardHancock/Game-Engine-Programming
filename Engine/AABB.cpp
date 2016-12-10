@@ -2,7 +2,11 @@
 
 AABB::AABB()
 {
-	AABB::AABB(glm::vec3(0.0f), glm::vec3(0.0f));
+	size = glm::vec3(0);
+	center = glm::vec3(0);
+	halfSize = glm::vec3(0);
+	min = glm::vec3(0);
+	max = glm::vec3(0);
 }
 
 AABB::AABB(glm::vec3 center, glm::vec3 size)
