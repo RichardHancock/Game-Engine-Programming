@@ -19,12 +19,6 @@
     <Filter Include="Header Files\States">
       <UniqueIdentifier>{6f2f1dde-c171-4960-9ed1-53be819aad62}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\UI">
-      <UniqueIdentifier>{9bc978b3-26de-4d6c-b623-5a15e823dea0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\UI">
-      <UniqueIdentifier>{2d7dbee4-7e2c-447c-b1e4-77b0412eb8e3}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Misc">
       <UniqueIdentifier>{fea9350c-2f77-4f80-9290-04eb7aa03f81}</UniqueIdentifier>
     </Filter>
@@ -71,9 +65,6 @@
     </ClCompile>
     <ClCompile Include="ResourceManager.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ui\UI.cpp">
-      <Filter>Source Files\UI</Filter>
     </ClCompile>
     <ClCompile Include="Audio.cpp">
       <Filter>Source Files</Filter>
@@ -163,9 +154,6 @@
     </ClInclude>
     <ClInclude Include="ResourceManager.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ui\UI.h">
-      <Filter>Header Files\UI</Filter>
     </ClInclude>
     <ClInclude Include="Audio.h">
       <Filter>Header Files</Filter>

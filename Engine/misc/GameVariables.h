@@ -9,6 +9,7 @@ class GameObject;
 struct GameVariableData
 {
 	std::weak_ptr<Camera> currentCamera;
+	std::weak_ptr<GameObject> currentLight;
 	std::unordered_map<std::string, std::shared_ptr<GameObject>> gameObjs;
 };
 

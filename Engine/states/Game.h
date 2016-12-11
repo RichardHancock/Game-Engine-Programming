@@ -39,14 +39,10 @@ public:
 	virtual void render();
 
 private:
-	void cameraControls(float dt);
+	void movementControls(float dt);
 
 	void collisionResponse();
 
-	//UIElement* ui;
-
-	//UITextElement* text;
-
-	//TTF_Font* font;
+	bool controllingCamera;
 
 };

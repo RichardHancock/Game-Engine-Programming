@@ -1,0 +1,4 @@
+newmtl temp
+map_Kd space_frigate_6_color.png
+map_Ks space_frigate_6_specular.png
+bump space_frigate_6_normal.png

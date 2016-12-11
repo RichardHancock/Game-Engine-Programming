@@ -15,13 +15,7 @@ Game::Game()
 {
 	stateName = "Game";
 
-	//ui = new UIElement(Vec2(-1.0f, 1.0f), Vec2(0.3f, -0.2f));
-	//ui->addTexture(ResourceManager::getTexture("uiTest.png"), "gSampler");
-
-	//font = TTF_OpenFont("resources/fonts/OpenSans-Regular.ttf", 32);
-	//text = new UITextElement(Vec2(0.0f), Vec2(0.5f, -0.5f ), "Testing", Colour(128), font);
-	//text->addTexture(ResourceManager::getTexture("uiTest.png"), "gSampler");
-
+	controllingCamera = true;
 
 	//Camera
 	auto cameraObj = GameObject::create("Camera").lock();
@@ -52,10 +46,10 @@ Game::Game()
 	transform2->setScale(glm::vec3(1));
 
 	ship->addComponent<MeshComponent>("MeshComponent").lock()->setMesh(
-		ResourceManager::getModel("Viper-mk-IV-fighter.obj"));
+		ResourceManager::getModel("space_frigate_6.obj"));
 
 	ship->addComponent<MeshRenderer>("MeshRenderer").lock()->setMaterials(
-		ResourceManager::getMaterials("Viper-mk-IV-fighter.obj")
+		ResourceManager::getMaterials("space_frigate_6.obj")
 	);
 
 	auto earth = GameObject::create("earth").lock();
@@ -84,31 +78,33 @@ Game::Game()
 	);
 
 
-	//Bowls
-	auto bowl1 = GameObject::create("bowl1").lock();
-	auto b1Transform = bowl1->addComponent<Transform>("Transform").lock();
-	b1Transform->setPostion(glm::vec3(-50.0f, 10.0f, -5.0f));
+	//spheres
+	auto light = GameObject::create("light").lock();
+	auto lightT = light->addComponent<Transform>("Transform").lock();
+	lightT->setPostion(glm::vec3(-50.0f, 10.0f, -5.0f));
 
-	bowl1->addComponent<MeshComponent>("MeshComponent").lock()->setMesh(
+	light->addComponent<MeshComponent>("MeshComponent").lock()->setMesh(
 		ResourceManager::getModel("bowl.obj"));
 
-	bowl1->addComponent<MeshRenderer>("MeshRenderer").lock()->setMaterials(
+	light->addComponent<MeshRenderer>("MeshRenderer").lock()->setMaterials(
 		ResourceManager::getMaterials("bowl.obj")
 	);
-	bowl1->addComponent<SphereCollider>("SphereCollider");
+	light->addComponent<SphereCollider>("SphereCollider");
+	GameVariables::data->currentLight = light;
 
 	
-	auto bowl2 = GameObject::create("bowl2").lock();
-	auto b2Transform = bowl2->addComponent<Transform>("Transform").lock();
-	b2Transform->setPostion(glm::vec3(-40.0f, 0.0f, -5.0f));
+	//Need to load second as I currently don't support loading the material individually.
+	auto sphere = GameObject::create("ball").lock();
+	auto sphereT = sphere->addComponent<Transform>("Transform").lock();
+	sphereT->setPostion(glm::vec3(-40.0f, 0.0f, -5.0f));
 
-	bowl2->addComponent<MeshComponent>("MeshComponent").lock()->setMesh(
+	sphere->addComponent<MeshComponent>("MeshComponent").lock()->setMesh(
 		ResourceManager::getModel("bowl2.obj"));
 
-	bowl2->addComponent<MeshRenderer>("MeshRenderer").lock()->setMaterials(
+	sphere->addComponent<MeshRenderer>("MeshRenderer").lock()->setMaterials(
 		ResourceManager::getMaterials("bowl2.obj")
 	);
-	bowl2->addComponent<SphereCollider>("SphereCollider");
+	sphere->addComponent<SphereCollider>("SphereCollider");
 
 
 
@@ -116,8 +112,8 @@ Game::Game()
 	ship->onAwake();
 	earth->onAwake();
 	flatPlane->onAwake();
-	bowl1->onAwake();
-	bowl2->onAwake();
+	light->onAwake();
+	sphere->onAwake();
 	cameraObj->onAwake();
 }
 
@@ -173,7 +169,7 @@ bool Game::eventHandler()
 
 void Game::update(float dt)
 {
-	cameraControls(dt);
+	movementControls(dt);
 
 	InputManager::printDebugInfo();
 
@@ -183,6 +179,18 @@ void Game::update(float dt)
 		ResourceManager::getAudio("Item Place.wav", false).lock()->play(0,0);
 	}
 	
+	//reset scene
+	if (InputManager::wasKeyReleased(SDLK_SPACE) || InputManager::wasControllerButtonPressed(0, Controller::Button::B))
+	{
+		std::shared_ptr<Transform> camera = GameVariables::data->currentCamera.lock()->getGameObject().lock()
+			->getComponent<Transform>("Transform").lock();
+
+		camera->setRotation(glm::vec3(0.0f));
+		camera->setPostion(glm::vec3(0, -3, -10));
+
+		GameVariables::data->gameObjs["light"]->getComponent<Transform>().lock()->setPostion(glm::vec3(-50.0f, 10.0f, -5.0f));
+		GameVariables::data->gameObjs["sphere"]->getComponent<Transform>().lock()->setPostion(glm::vec3(-40.0f, 0.0f, -5.0f));
+	}
 	
 	collisionResponse();
 
@@ -204,94 +212,83 @@ void Game::render()
 		object.second->onRender();
 	}
 
-	//UI
-	/*if (!hideGUI)
-	{
-		ui->draw(shader2D);
-		text->draw(shader2D);
-	}*/
 }
 
-void Game::cameraControls(float dt)
+void Game::movementControls(float dt)
 {
-	std::shared_ptr<Transform> camera = GameVariables::data->currentCamera.lock()
-		->getGameObject().lock()->getComponent<Transform>("Transform").lock();
+	//If camera control mode get pointer to camera transform, else get the light's transform instead
+	std::shared_ptr<Transform> object = (controllingCamera ? 
+		GameVariables::data->currentCamera.lock()
+		->getGameObject().lock()->getComponent<Transform>("Transform").lock()
+		:
+		GameVariables::data->currentLight.lock()->getComponent<Transform>("Transform").lock());
 
 	float speed = 50.0f;
 
-	//move along camera along x
+	//move along object along x
 	if (InputManager::isKeyHeld(SDLK_a))
 	{
-		camera->translate(glm::vec3(speed * dt, 0, 0));
+		object->translate(glm::vec3(speed * dt, 0, 0));
 	}
 	else if (InputManager::isKeyHeld(SDLK_d))
 	{
-		camera->translate(glm::vec3(-speed * dt, 0, 0));
+		object->translate(glm::vec3(-speed * dt, 0, 0));
 	}
 
-	//move camera along y
+	//move object along y
 	if (InputManager::isKeyHeld(SDLK_q))
 	{
-		camera->translate(glm::vec3(0, speed * dt, 0));
+		object->translate(glm::vec3(0, speed * dt, 0));
 	}
 	else if (InputManager::isKeyHeld(SDLK_e))
 	{
-		camera->translate(glm::vec3(0, -speed * dt, 0));
+		object->translate(glm::vec3(0, -speed * dt, 0));
 	}
 
-	//move camera along z
+	//move object along z
 	if (InputManager::isKeyHeld(SDLK_w))
 	{
-		camera->translate(glm::vec3(0, 0, speed * dt));
+		object->translate(glm::vec3(0, 0, speed * dt));
 	}
 	if (InputManager::isKeyHeld(SDLK_s))
 	{
-		camera->translate(glm::vec3(0, 0, -speed * dt));
+		object->translate(glm::vec3(0, 0, -speed * dt));
 	}
 
 	float speedRadians = Utility::convertAngleToRadian(speed * dt);
 
-	//rotate along camera along x
+	//rotate along object along x
 	if (InputManager::isKeyHeld(SDLK_UP))
 	{
-		camera->rotate(glm::vec3(-speedRadians, 0, 0));
+		object->rotate(glm::vec3(-speedRadians, 0, 0));
 	}
 	else if (InputManager::isKeyHeld(SDLK_DOWN))
 	{
-		camera->rotate(glm::vec3(speedRadians, 0, 0));
+		object->rotate(glm::vec3(speedRadians, 0, 0));
 	}
-	//rotate camera along y
+	//rotate object along y
 	if (InputManager::isKeyHeld(SDLK_LEFT))
 	{
-		camera->rotate(glm::vec3(0, -speedRadians, 0));
+		object->rotate(glm::vec3(0, -speedRadians, 0));
 	}
 	if (InputManager::isKeyHeld(SDLK_RIGHT))
 	{
-		camera->rotate(glm::vec3(0, speedRadians, 0));
+		object->rotate(glm::vec3(0, speedRadians, 0));
 	}
-	//rotate camera along z
+	//rotate object along z
 	if (InputManager::isKeyHeld(SDLK_k))
 	{
-		camera->rotate(glm::vec3(0, 0, -speedRadians));
+		object->rotate(glm::vec3(0, 0, -speedRadians));
 	}
 	if (InputManager::isKeyHeld(SDLK_l))
 	{
-		camera->rotate(glm::vec3(0, 0, speedRadians));
+		object->rotate(glm::vec3(0, 0, speedRadians));
 	}
 
-	//reset camera to 0,0,0
-	if (InputManager::wasKeyReleased(SDLK_SPACE) || InputManager::wasControllerButtonPressed(0, Controller::Button::B))
-	{
-		camera->setRotation(glm::vec3(0.0f));
-		camera->setPostion(glm::vec3(0, -3, -10));
-
-		GameVariables::data->gameObjs["bowl1"]->getComponent<Transform>().lock()->setPostion(glm::vec3(-50.0f, 10.0f, -5.0f));
-		GameVariables::data->gameObjs["bowl2"]->getComponent<Transform>().lock()->setPostion(glm::vec3(-40.0f, 0.0f, -5.0f));
-	}
 
 	if (InputManager::isControllerAxisInUse(0, Controller::Axis2D::LeftStick))
 	{
-		camera->translate(glm::vec3(
+		object->translate(glm::vec3(
 			-InputManager::getControllerAxis2D(0, Controller::Axis2D::LeftStick).x * speed * dt,
 			0.0f, 
 			-InputManager::getControllerAxis2D(0, Controller::Axis2D::LeftStick).y * speed * dt));

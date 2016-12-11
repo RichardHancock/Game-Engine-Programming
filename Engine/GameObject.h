@@ -54,7 +54,7 @@ public:
 		c->gameObject = shared_from_this();
 		c->onAwake();
 
-		Log::logI("Addding Component: " + title);
+		Log::logI("Addding Component: " + title); 
 
 		return c;
 	}
