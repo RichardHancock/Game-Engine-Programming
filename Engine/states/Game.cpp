@@ -11,8 +11,7 @@
 #include "../GameVariables.h"
 #include "../SphereCollider.h"
 
-Game::Game(StateManager* manager, Platform* platform)
-	: State(manager, platform)
+Game::Game()
 {
 	stateName = "Game";
 
@@ -23,7 +22,6 @@ Game::Game(StateManager* manager, Platform* platform)
 	//text = new UITextElement(Vec2(0.0f), Vec2(0.5f, -0.5f ), "Testing", Colour(128), font);
 	//text->addTexture(ResourceManager::getTexture("uiTest.png"), "gSampler");
 
-	hideGUI = false;
 
 	//Camera
 	auto cameraObj = GameObject::create("Camera").lock();
@@ -179,8 +177,7 @@ void Game::update(float dt)
 
 	InputManager::printDebugInfo();
 
-	if (InputManager::wasKeyPressed(SDLK_g))
-		hideGUI = !hideGUI;
+
 	if (InputManager::wasKeyPressed(SDLK_1) || InputManager::wasControllerButtonPressed(0,Controller::Button::B))
 	{
 		ResourceManager::getAudio("Item Place.wav", false).lock()->play(0,0);

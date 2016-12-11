@@ -6,27 +6,33 @@
 #include "misc/Log.h"
 #include "misc/Utility.h"
 
+std::unique_ptr<SDL_Context, CustomDestructors::SDL_Deleter> Platform::sdlContext;
+Vec2 Platform::windowSize = Vec2(0.0f);
+std::string Platform::settingsFilename;
+std::string Platform::settingsFilePath;
+const std::string Platform::defaultSettingsPath = "resources/defaultSettings.xml";
+Setting::FullscreenMode Platform::fullscreenMode = Setting::FullscreenMode::Windowed;
+std::unordered_map<std::string, int> Platform::settings;
+std::unordered_map<std::string, bool> Platform::features;
 
-Platform::Platform(std::string settingsFilename)
-	: scale(Vec2(640, 480)),
-	settingsFilename(settingsFilename),
-	defaultSettingsPath("resources/defaultSettings.xml")
+
+void Platform::init(std::string settingsFilename)
 {
-	
+	Platform::settingsFilename = settingsFilename;
+
+	sdlContext = std::unique_ptr<SDL_Context, CustomDestructors::SDL_Deleter>(new SDL_Context());
+	sdlContext->glContext = nullptr;
+	sdlContext->window = nullptr;
 }
 
-Platform::~Platform()
+void Platform::cleanup()
 {
 	IMG_Quit();
 	Mix_CloseAudio();
 	Mix_Quit();
 	TTF_Quit();
 	
-	if (context != nullptr) {
-		SDL_GL_DeleteContext(context);
-	}
-
-	SDL_DestroyWindow(window);
+	sdlContext.reset();
 }
 
 bool Platform::initGLEW()
@@ -132,17 +138,17 @@ bool Platform::initSDL(bool openGL, std::string windowTitle)
 		break;
 	}
 
-	window = SDL_CreateWindow(
+	sdlContext->window = SDL_CreateWindow(
 		windowTitle.c_str(),
 		SDL_WINDOWPOS_CENTERED, 
 		SDL_WINDOWPOS_CENTERED,
 		(int) windowSize.x, 
 		(int) windowSize.y,
 		windowFlags
-		);
+	);
 
 
-	if (!window) 
+	if (sdlContext->window == nullptr) 
 	{ 
 		status = false;
 		Log::logE("Window failed to be created: " + 
@@ -152,14 +158,16 @@ bool Platform::initSDL(bool openGL, std::string windowTitle)
 
 	if (openGL) 
 	{
-		context = SDL_GL_CreateContext(window);
+		sdlContext->glContext = SDL_GL_CreateContext(sdlContext->window);
 
-		if (context == nullptr) {
+		if (sdlContext->glContext == nullptr) 
+		{
 			status = false;
 			Log::logE("GL context failed to be created: " + std::string(SDL_GetError()));
 		}
 
-		if (!initGLEW()) {
+		if (!initGLEW()) 
+		{
 			status = false;
 		}
 	}
@@ -167,7 +175,7 @@ bool Platform::initSDL(bool openGL, std::string windowTitle)
 	int width;
 	int height;
 
-	SDL_GetWindowSize(window, &width, &height);
+	SDL_GetWindowSize(sdlContext->window, &width, &height);
 
 	windowSize.x = (float)width;
 	windowSize.y = (float)height;
@@ -324,6 +332,11 @@ bool Platform::settingsFileExists()
 	return settingsFile.is_open();
 }
 
+
+void Platform::sdlSwapWindow()
+{
+	SDL_GL_SwapWindow(sdlContext->window);
+}
 
 int Platform::getSetting(std::string setting)
 {

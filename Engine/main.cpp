@@ -30,10 +30,10 @@ int main(int argc, char *argv[])
 
 	std::string settingsFilename = "settings.xml";
 
-	Platform* platform = new Platform(settingsFilename);
-	platform->loadSettingsFromFile("RH", "Engine");
+	Platform::init(settingsFilename);
+	Platform::loadSettingsFromFile("RH", "Engine");
 
-	if (!platform->initSDL(true, "Engine"))
+	if (!Platform::initSDL(true, "Engine"))
 	{
 		Log::logE("SDL Failed to initialize");
 		exit(1);
@@ -43,18 +43,12 @@ int main(int argc, char *argv[])
 	glEnable(GL_DEPTH_TEST);
 	
 	
-	if (platform->getSetting("MSAA") != 0)
+	if (Platform::getSetting("MSAA") != 0)
 		glEnable(GL_MULTISAMPLE);
-	
 	
 	Utility::randomInit();
 
-
-	SDL_Window* window = platform->getWindow();
-
-	StateManager* manager = new StateManager((int)platform->getWindowSize().x, (int)platform->getWindowSize().y);
-
-	manager->addState(new Game(manager, platform));
+	StateManager::addState(std::make_shared<Game>());
 
 
 	unsigned int lastTime = SDL_GetTicks();
@@ -62,7 +56,7 @@ int main(int argc, char *argv[])
 
 	while (!done)
 	{
-		done = manager->eventHandler();
+		done = StateManager::eventHandler();
 
 		// Update
 		//Calculate deltaTime
@@ -72,7 +66,7 @@ int main(int argc, char *argv[])
 
 		Utility::Timer::update(dt);
 
-		manager->update(dt);
+		StateManager::update(dt);
 		
 
 		InputManager::update();
@@ -84,9 +78,9 @@ int main(int argc, char *argv[])
 		// This writes the above colour to the colour part of the framebuffer
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		manager->render();
+		StateManager::render();
 
-		SDL_GL_SwapWindow(window);
+		Platform::sdlSwapWindow();
 
 		if (dt < (1.0f / 50.0f))
 		{
@@ -94,10 +88,10 @@ int main(int argc, char *argv[])
 		}
 	}
 
-	delete manager;
+	StateManager::cleanup();
 	InputManager::cleanup();
 	ResourceManager::cleanUp();
-	delete platform;
+	Platform::cleanup();
 	SDL_Quit();
 	
 	exit(0);

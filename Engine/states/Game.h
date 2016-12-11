@@ -16,11 +16,8 @@ public:
 
 	/**
 	@brief Create the State.
-	
-	@param [in,out] manager		    Pointer to the current state manager.
-	@param [in,out] platform	    Platform containing OS dependent data.
 	 */
-	Game(StateManager* manager, Platform* platform);
+	Game();
 
 	virtual ~Game();
 
@@ -51,5 +48,4 @@ private:
 
 	//TTF_Font* font;
 
-	bool hideGUI;
 };

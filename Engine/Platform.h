@@ -3,12 +3,14 @@
 #include <unordered_map>
 #include <pugixml.hpp>
 #include <GL/glew.h>
-
 #include <SDL.h>
 #include <SDL_image.h>
 #include <SDL_mixer.h>
 #include <SDL_ttf.h>
+#include <memory>
+
 #include "misc/Vec2.h"
+#include "CustomDestructors.h"
 
 //Quick Pre-processor key 
 #ifdef _WIN32
@@ -47,10 +49,10 @@ public:
 	
 	@param settingsFilename Exact filename of the settings file (Not including Path).
 	 */
-	Platform(std::string settingsFilename);
+	static void init(std::string settingsFilename);
 
 	/** @brief Destructor, Calls SDL's cleanup features for itself and its add ons. */
-	~Platform();
+	static void cleanup();
 
 	/**
 	 @brief	Initialises the SDL library and its plugins, for the current platform.
@@ -60,7 +62,7 @@ public:
 	
 	 @return	true if it succeeds, false if it fails.
 	 */
-	bool initSDL(bool openGL, std::string windowTitle);
+	static bool initSDL(bool openGL, std::string windowTitle);
 
 	/**
 	 @brief	Loads game's settings from the settings file.
@@ -68,29 +70,18 @@ public:
 	 @param	org	The organisation name, will be the root directory of the setting file.
 	 @param	app	The application name, will be a subfolder in the above directory.
 	 */
-	void loadSettingsFromFile(std::string org, std::string app);
+	static void loadSettingsFromFile(std::string org, std::string app);
 
-
-	/**
-	 @brief Gets the SDL window.
-	
-	 @return null if it fails, else the window.
-	 */
-	SDL_Window* getWindow() { return window; }
-
-	/**
-	@brief Gets the GL context.
-	
-	@return null if it fails, else the context.
-	 */
-	SDL_GLContext getContext() { return context; }
 
 	/**
 	 @brief Gets a Vec2 containing the windows size.
 	
 	 @return The window size.
 	 */
-	Vec2 getWindowSize() { return windowSize; }
+	static Vec2 getWindowSize() { return windowSize; }
+
+	static void sdlSwapWindow();
+
 
 	/**
 	 @brief	Gets a specified setting value.
@@ -99,7 +90,7 @@ public:
 	
 	 @return	The setting's value.
 	 */
-	int getSetting(std::string setting);
+	static int getSetting(std::string setting);
 
 	/**
 	 @brief	Query if 'feature' is supported using SDLs CPU feature checks.
@@ -108,7 +99,7 @@ public:
 	
 	 @return	true if feature supported, false if not.
 	 */
-	bool isFeatureSupported(std::string feature);
+	static bool isFeatureSupported(std::string feature);
 	
 private:
 
@@ -117,56 +108,49 @@ private:
 
 	@return true if it succeeds, false if it fails.
 	*/
-	bool initGLEW();
+	static bool initGLEW();
 
 	/** @brief The window. */
-	SDL_Window* window;
-
-	/** @brief The GL context. */
-	SDL_GLContext context;
+	static std::unique_ptr<SDL_Context, CustomDestructors::SDL_Deleter> sdlContext;
 
 	/** @brief Size of the window. */
-	Vec2 windowSize;
-
-	/** @brief The resolution everything is scaled from */
-	const Vec2 scale;
+	static Vec2 windowSize;
 
 
 	//Settings
 
 	/** @brief	Create a local settings file from the default settings file. */
-	void initSettingsFile();
+	static void initSettingsFile();
 
 	/**
 	 @brief	Checks if a local settings file already exists.
 	
 	 @return	true if it exist, false if it does not.
 	 */
-	bool settingsFileExists();
+	static bool settingsFileExists();
 
 	/** @brief	Filename of the settings file. */
-	const std::string settingsFilename;
+	static std::string settingsFilename;
 
 	/** @brief	Full pathname of the settings file. */
-	std::string settingsFilePath;
+	static std::string settingsFilePath;
 
 	/** @brief	The path of the default settings file in the resource folder. */
-	const std::string defaultSettingsPath;
+	static const std::string defaultSettingsPath;
 
 	/** @brief	The current fullscreen mode specified by the settings file. */
-	Setting::FullscreenMode fullscreenMode;
+	static Setting::FullscreenMode fullscreenMode;
 	
 	/** @brief	Array containing all the setting data */
-	std::unordered_map<std::string, int> settings;
+	static std::unordered_map<std::string, int> settings;
 
 
 	//Platform Feature Support (Wraps SDL CPU feature detection)
 	
 	/** @brief	Array containing all the system features and their availability */
-	std::unordered_map<std::string, bool> features;
+	static std::unordered_map<std::string, bool> features;
 
 	/** @brief	Populate the features array by checking all of SDL's feature functions */
-	void checkFeatureSupport();
+	static void checkFeatureSupport();
 
-	
 };

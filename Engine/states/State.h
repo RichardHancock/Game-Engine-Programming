@@ -18,11 +18,8 @@ public:
 
 	/**
 	@brief Create the State.
-	
-	@param [in,out] manager		    Pointer to the current state manager.
-	@param [in,out] platform	    Pointer to platform.
 	 */
-	State(StateManager* manager, Platform* platform);
+	State();
 
 	virtual ~State() {}
 
@@ -49,11 +46,6 @@ public:
 	*/
 	std::string getStateName() { return stateName; }
 protected:
-	///Pointer to state manager
-	StateManager* stateManager;
-
-	///Platform
-	Platform* platform;
 
 	///This states name
 	std::string stateName;

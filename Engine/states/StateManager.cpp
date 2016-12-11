@@ -3,27 +3,19 @@
 #include "../misc/Utility.h"
 #include "../misc/Log.h"
 
-StateManager::StateManager(int windowWidth, int windowHeight)
-	: WINDOW_WIDTH(windowWidth), WINDOW_HEIGHT(windowHeight)
-{
+std::vector<std::shared_ptr<State>> StateManager::states;
 
-}
-
-StateManager::~StateManager()
+void StateManager::cleanup()
 {
 	clearStates();
 }
 
 void StateManager::clearStates()
 {
-	for (auto s : states)
-	{
-		delete s;
-	}
 	states.clear();
 }
 
-void StateManager::addState(State* state)
+void StateManager::addState(std::shared_ptr<State> state)
 {
 	states.push_back(state);
 	Log::logI("StateManager: Switched to the " + state->getStateName());
@@ -34,7 +26,7 @@ void StateManager::prepareToChangeState()
 	Utility::Timer::cleanup();
 }
 
-void StateManager::changeState(State* state)
+void StateManager::changeState(std::shared_ptr<State> state)
 {
 	clearStates();
 	addState(state);
@@ -42,7 +34,6 @@ void StateManager::changeState(State* state)
 
 void StateManager::popLastState()
 {
-	delete states.back();
 	states.pop_back();
 }
 
