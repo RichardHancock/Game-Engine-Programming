@@ -2,8 +2,8 @@
 
 #include <assert.h>
 
-#include "Transform.h"
-#include "GameVariables.h"
+#include "components/Transform.h"
+#include "misc/GameVariables.h"
 
 GameObject::GameObject(std::string name)
 	: name(name)

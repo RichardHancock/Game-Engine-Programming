@@ -1,10 +1,10 @@
 #include "MeshRenderer.h"
 
 #include "MeshComponent.h"
-#include "GameModel.h"
+#include "../GameModel.h"
 #include "Transform.h"
-#include "Graphics.h"
-#include "GameVariables.h"
+#include "../Graphics.h"
+#include "../misc/GameVariables.h"
 #include "Camera.h"
 
 MeshRenderer::~MeshRenderer()

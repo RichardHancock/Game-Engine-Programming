@@ -2,9 +2,10 @@
 
 #include <SDL.h>
 #include <string>
+
 #include "../Platform.h"
 #include "../ResourceManager.h"
-#include "../InputManager.h"
+#include "../input/InputManager.h"
 
 class StateManager;
 

@@ -1,6 +1,8 @@
 #include "Transform.h"
-#include "glm/gtc/matrix_transform.hpp"
-#include "misc/Utility.h"
+
+#include <glm/gtc/matrix_transform.hpp>
+
+#include "../misc/Utility.h"
 
 Transform::~Transform()
 {

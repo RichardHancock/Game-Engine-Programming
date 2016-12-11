@@ -70,7 +70,7 @@ int main(int argc, char *argv[])
 		
 
 		InputManager::update();
-		ResourceManager::update(dt);
+		//ResourceManager::update(dt);
 
 		//Render
 		// Specify the colour to clear the framebuffer to

@@ -1,6 +1,6 @@
 #include "Collider.h"
 
-#include "misc/Log.h"
+#include "../misc/Log.h"
 #include "Transform.h"
 #include "MeshComponent.h"
 

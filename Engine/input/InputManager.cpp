@@ -1,7 +1,9 @@
 #include "InputManager.h"
+
 #include <assert.h>
-#include "misc/Utility.h"
-#include "misc/Log.h"
+
+#include "../misc/Utility.h"
+#include "../misc/Log.h"
 
 //Static Declarations
 std::unordered_map<SDL_Keycode, InputManager::ButtonState> InputManager::keys = {

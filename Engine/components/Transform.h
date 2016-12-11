@@ -2,10 +2,11 @@
 
 #include <memory>
 #include <vector>
+#include <glm/matrix.hpp>
 
 #include "Component.h"
-#include "misc/Vec3.h"
-#include "glm/matrix.hpp"
+#include "../misc/Vec3.h"
+
 
 class Transform : public Component, public std::enable_shared_from_this<Transform>
 {

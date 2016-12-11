@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Component.h"
-#include "AABB.h"
+#include "../misc/AABB.h"
 #include "Transform.h"
 
 class Collider : public Component

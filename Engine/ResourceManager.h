@@ -74,7 +74,7 @@ public:
 	
 	@todo implement some way of limiting this, as it's not needed every frame.
 	 */
-	static void update(float dt);
+	//static void update(float dt);
 
 	/** @brief Values that represent resource types. */
 	enum ResourceTypes

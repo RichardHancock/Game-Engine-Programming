@@ -4,7 +4,7 @@
 #include <unordered_map>
 #include <SDL.h>
 
-#include "misc/Vec2.h"
+#include "../misc/Vec2.h"
 #include "Controller.h"
 
 /** @brief	Manager for keyboard, mouse and game controller inputs. */

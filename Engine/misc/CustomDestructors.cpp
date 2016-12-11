@@ -1,6 +1,6 @@
 #include "CustomDestructors.h"
 
-#include "misc/Log.h"
+#include "Log.h"
 
 void CustomDestructors::SDL_Deleter::operator()(SDL_GameController* gamepad)
 {

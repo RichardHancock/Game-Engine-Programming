@@ -228,9 +228,10 @@ std::weak_ptr<Texture> ResourceManager::getTexture(std::string textureFilename, 
 	return textureData;
 }
 
+/*
 void ResourceManager::update(float dt)
 {
-	/*
+	
 	//I use a timer here so the code is only run occasionally
 	updateDelayTimer.update(dt);
 	
@@ -242,8 +243,9 @@ void ResourceManager::update(float dt)
 
 		updateDelayTimer.restart();
 	}
-	*/
+	
 }
+*/
 
 /*
 template<class R>

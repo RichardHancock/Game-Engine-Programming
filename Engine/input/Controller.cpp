@@ -2,8 +2,8 @@
 
 #include <assert.h>
 
-#include "misc/Log.h"
-#include "misc/Utility.h"
+#include "../misc/Log.h"
+#include "../misc/Utility.h"
 
 Controller::Controller(int joyID)
 	: joystickID(joyID), leftStick(0), rightStick(0), leftTrigger(0), rightTrigger(0), 

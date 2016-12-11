@@ -6,8 +6,8 @@
 #include <SDL.h>
 #include <memory>
 
-#include "misc/Vec2.h"
-#include "CustomDestructors.h"
+#include "../misc/Vec2.h"
+#include "../misc/CustomDestructors.h"
 
 class Controller
 {

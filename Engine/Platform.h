@@ -10,7 +10,7 @@
 #include <memory>
 
 #include "misc/Vec2.h"
-#include "CustomDestructors.h"
+#include "misc/CustomDestructors.h"
 
 //Quick Pre-processor key 
 #ifdef _WIN32
@@ -47,9 +47,9 @@ public:
 	/**
 	@brief Constructor.
 	
-	@param settingsFilename Exact filename of the settings file (Not including Path).
+	@param newSettingsFilename Exact filename of the settings file (Not including Path).
 	 */
-	static void init(std::string settingsFilename);
+	static void init(std::string newSettingsFilename);
 
 	/** @brief Destructor, Calls SDL's cleanup features for itself and its add ons. */
 	static void cleanup();

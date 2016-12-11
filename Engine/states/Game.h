@@ -1,13 +1,14 @@
 #pragma once
 
 #include "State.h"
-#include "../Shader.h"
-#include "../Camera.h"
 
+#include <SDL.h>
+
+#include "../Shader.h"
+#include "../components/Camera.h"
 #include "../GameModel.h"
 #include "../Audio.h"
 #include "../misc/Vec3.h"
-#include <SDL.h>
 #include "../ui/UI.h"
 
 class Game : public State

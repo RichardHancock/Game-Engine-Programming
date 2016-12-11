@@ -14,7 +14,7 @@
 #include "Resource.h"
 #include "misc/Vertex.h"
 #include "Mesh.h"
-#include "AABB.h"
+#include "misc/AABB.h"
 
 //Forward Declaration
 class ResourceManager;

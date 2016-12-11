@@ -3,7 +3,7 @@
 #include <memory>
 #include <string>
 
-#include "GameObject.h"
+#include "../GameObject.h"
 
 class GameObject; //Forward Specifier
 

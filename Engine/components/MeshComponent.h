@@ -2,7 +2,7 @@
 
 #include "Component.h"
 
-#include "GameModel.h"
+#include "../GameModel.h"
 
 class MeshComponent : public Component
 {

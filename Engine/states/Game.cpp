@@ -4,12 +4,12 @@
 
 #include "../misc/Log.h"
 #include "../misc/Utility.h"
-#include "../Transform.h"
-#include "../MeshComponent.h"
+#include "../components/Transform.h"
+#include "../components/MeshComponent.h"
 #include "../Material.h"
-#include "../MeshRenderer.h"
-#include "../GameVariables.h"
-#include "../SphereCollider.h"
+#include "../components/MeshRenderer.h"
+#include "../misc/GameVariables.h"
+#include "../components/SphereCollider.h"
 
 Game::Game()
 {

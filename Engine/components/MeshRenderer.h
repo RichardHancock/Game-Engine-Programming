@@ -5,7 +5,7 @@
 #include <vector>
 #include <memory>
 
-#include "Material.h"
+#include "../Material.h"
 
 class MeshRenderer : public Component
 {

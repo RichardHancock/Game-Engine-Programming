@@ -1,6 +1,6 @@
 #include "MeshComponent.h"
 
-#include "misc/Log.h"
+#include "../misc/Log.h"
 
 MeshComponent::~MeshComponent()
 {

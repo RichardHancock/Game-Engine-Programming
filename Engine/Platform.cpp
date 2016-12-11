@@ -16,9 +16,9 @@ std::unordered_map<std::string, int> Platform::settings;
 std::unordered_map<std::string, bool> Platform::features;
 
 
-void Platform::init(std::string settingsFilename)
+void Platform::init(std::string newSettingsFilename)
 {
-	Platform::settingsFilename = settingsFilename;
+	Platform::settingsFilename = newSettingsFilename;
 
 	sdlContext = std::unique_ptr<SDL_Context, CustomDestructors::SDL_Deleter>(new SDL_Context());
 	sdlContext->glContext = nullptr;

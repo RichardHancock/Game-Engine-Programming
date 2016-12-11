@@ -5,9 +5,9 @@
 #include <cassert>
 #include <vector>
 
-#include "Component.h"
+#include "components/Component.h"
 #include "misc/Log.h"
-#include "GameVariables.h"
+#include "misc/GameVariables.h"
 
 class GameVariables;
 class Component; //Forward Specifier
