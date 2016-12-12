@@ -40,8 +40,6 @@ public:
 private:
 	void movementControls(float dt);
 
-	void collisionResponse();
-
 	bool controllingCamera;
 
 };

@@ -44,19 +44,9 @@ void main()
 {
 	DirLight dirLight;
 	dirLight.direction = vec3(-0.2f, -0.7f, -0.3f);
-	dirLight.ambient = vec3(0.25f, 0.25f, 0.25f);
+	dirLight.ambient = vec3(0.4f, 0.4f, 0.4f);
 	dirLight.diffuse = vec3(0.6f, 0.6f, 0.6f);
 	dirLight.specular = vec3(0.4f, 0.4f, 0.4f);
-
-	//PointLight pl;
-	//pl.position = vec3(0.0f, 10.0f, 5.0f);
-	//pl.ambient = vec3(0.9f, 0.5f, 0.0f);
-	//pl.diffuse = vec3(0.8f, 0.5f, 0.2f);
-	//pl.specular = vec3(0.5f, 0.5f, 0.5f);
-	//pl.constant = 1.0f;
-	//pl.linear = 0.027f;
-	//pl.quadratic = 0.0028f;
-
 
 	vec2 flipTexCoords = vec2(fs_in.TexCoords.x, 1.0 - fs_in.TexCoords.y);
 

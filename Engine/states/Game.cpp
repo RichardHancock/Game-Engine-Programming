@@ -105,7 +105,7 @@ Game::Game()
 		0.027f,
 		0.0028f,
 		glm::vec3(0.9f, 0.0f, 0.0f),
-		glm::vec3(0.6f, 0.6f, 0.6f),
+		glm::vec3(0.8f, 0.4f, 0.4f),
 		glm::vec3(0.5f)
 	);
 
@@ -183,7 +183,6 @@ bool Game::eventHandler()
 
 void Game::update(float dt)
 {
-	movementControls(dt);
 
 	InputManager::printDebugInfo();
 
@@ -210,10 +209,10 @@ void Game::update(float dt)
 		GameVariables::data->gameObjs["light"]->getComponent<Transform>().lock()->setPostion(glm::vec3(-50.0f, 10.0f, -5.0f));
 		GameVariables::data->gameObjs["sphere"]->getComponent<Transform>().lock()->setPostion(glm::vec3(-40.0f, 0.0f, -5.0f));
 	}
-	
-	collisionResponse();
 
 	GameVariables::data->gameObjs["fighter"]->getComponent<Transform>("Transform").lock()->rotate(glm::vec3(0.0f, 1.0f * dt, 0.0f));
+
+	movementControls(dt);
 
 	for (auto object : GameVariables::data->gameObjs)
 	{
@@ -239,39 +238,41 @@ void Game::movementControls(float dt)
 		:
 		GameVariables::data->currentLight.lock()->getComponent<Transform>("Transform").lock());
 
-	float speed = 50.0f;
+	//Precompute the move distance
+	const float speed = 30.0f;
+	float speedDT = speed * dt;
 
 	//move along object along x
 	if (InputManager::isKeyHeld(SDLK_a))
 	{
-		object->translate(glm::vec3(-speed * dt, 0, 0));
+		object->translate(glm::vec3(-speedDT, 0, 0));
 	}
 	else if (InputManager::isKeyHeld(SDLK_d))
 	{
-		object->translate(glm::vec3(speed * dt, 0, 0));
+		object->translate(glm::vec3(speedDT, 0, 0));
 	}
 
 	//move object along y
 	if (InputManager::isKeyHeld(SDLK_q))
 	{
-		object->translate(glm::vec3(0, -speed * dt, 0));
+		object->translate(glm::vec3(0, -speedDT, 0));
 	}
 	else if (InputManager::isKeyHeld(SDLK_e))
 	{
-		object->translate(glm::vec3(0, speed * dt, 0));
+		object->translate(glm::vec3(0, speedDT, 0));
 	}
 
 	//move object along z
 	if (InputManager::isKeyHeld(SDLK_w))
 	{
-		object->translate(glm::vec3(0, 0, -speed * dt));
+		object->translate(glm::vec3(0, 0, -speedDT));
 	}
 	if (InputManager::isKeyHeld(SDLK_s))
 	{
-		object->translate(glm::vec3(0, 0, speed * dt));
+		object->translate(glm::vec3(0, 0, speedDT));
 	}
 
-	float speedRadians = Utility::convertAngleToRadian(speed * dt);
+	float speedRadians = Utility::convertAngleToRadian(speedDT);
 
 	//rotate along object along x
 	if (InputManager::isKeyHeld(SDLK_UP))
@@ -301,7 +302,7 @@ void Game::movementControls(float dt)
 		object->rotate(glm::vec3(0, 0, -speedRadians));
 	}
 
-
+	//Controller Movement
 	if (InputManager::isControllerAxisInUse(0, Controller::Axis2D::LeftStick))
 	{
 		object->translate(glm::vec3(
@@ -310,27 +311,28 @@ void Game::movementControls(float dt)
 			-InputManager::getControllerAxis2D(0, Controller::Axis2D::LeftStick).y * speed * dt));
 	}
 
-}
 
-void Game::collisionResponse()
-{
-	/*
+
+	//Check if any collisions are active with the light
 	if (GameVariables::data->gameObjs["light"]->getComponent<SphereCollider>().lock()->isColliding())
 	{
+		InputManager::playControllerRumble(0, 1, 100);
 		GameVariables::data->gameObjs["light"]->getComponent<MeshRenderer>().lock()->
-			setMaterial(ResourceManager::getMaterial("red", 0, false));
-		GameVariables::data->gameObjs["sphere"]->getComponent<MeshRenderer>().lock()->
-			setMaterial(ResourceManager::getMaterial("red", 0, false));
-
-		InputManager::playControllerRumble(0, 1, 10);
+			setMaterial(ResourceManager::getMaterial("blue", 0, false));
+		
+		//Set Light emit colour to blue
+		std::shared_ptr<Light> light = GameVariables::data->gameObjs["light"]->getComponent<Light>().lock();
+		light->setAmbient(glm::vec3(0.0f, 0.0f, 0.9f));
+		light->setDiffuse(glm::vec3(0.4f, 0.4f, 0.8f));
 	}
 	else
 	{
 		GameVariables::data->gameObjs["light"]->getComponent<MeshRenderer>().lock()->
-			setMaterial(ResourceManager::getMaterial("blue", 0, false));
-		GameVariables::data->gameObjs["sphere"]->getComponent<MeshRenderer>().lock()->
-			setMaterial(ResourceManager::getMaterial("blue", 0, false));
+			setMaterial(ResourceManager::getMaterial("red", 0, false));
+
+		//Set Light emit colour to red
+		std::shared_ptr<Light> light = GameVariables::data->gameObjs["light"]->getComponent<Light>().lock();
+		light->setAmbient(glm::vec3(0.9f, 0.0f, 0.0f));
+		light->setDiffuse(glm::vec3(0.8f, 0.4f, 0.4f));
 	}
-	*/
-	
 }

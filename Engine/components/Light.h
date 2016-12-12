@@ -26,6 +26,9 @@ public:
 	glm::vec3 getDiffuse() { return diffuse; }
 	glm::vec3 getSpecular() { return specular; }
 
+	void setAmbient(glm::vec3 newAmbient) { ambient = newAmbient; }
+	void setDiffuse(glm::vec3 newDiffuse) { diffuse = newDiffuse; }
+	void setSpecular(glm::vec3 newSpecular) { specular = newSpecular; }
 protected:
 
 	float constant;
