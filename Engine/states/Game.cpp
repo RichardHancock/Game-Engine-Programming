@@ -303,9 +303,9 @@ void Game::movementControls(float dt)
 	if (InputManager::isControllerAxisInUse(0, Controller::Axis2D::LeftStick))
 	{
 		object->translate(glm::vec3(
-			-InputManager::getControllerAxis2D(0, Controller::Axis2D::LeftStick).x * speed * dt,
+			InputManager::getControllerAxis2D(0, Controller::Axis2D::LeftStick).x * speed * dt,
 			0.0f, 
-			-InputManager::getControllerAxis2D(0, Controller::Axis2D::LeftStick).y * speed * dt));
+			InputManager::getControllerAxis2D(0, Controller::Axis2D::LeftStick).y * speed * dt));
 	}
 
 
