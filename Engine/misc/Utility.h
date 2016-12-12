@@ -12,13 +12,14 @@
 #include "Vec2.h"
 #include "Vec3.h"
 
-
+//Ref: Was used in previous assignment but alterations made
 
 /**
 @brief An assortment of useful functions (random numbers, logging) that don't fit elsewhere.
 */
 namespace Utility
 {
+	/** @brief 2 PI constant. */
 	const float TWO_PI = 6.28318530718f;
 
 	/** @brief PI constant. */
@@ -38,6 +39,7 @@ namespace Utility
 	*/
 	void randomInit();
 
+	/** @brief	Has srand been initialized. */
 	static bool randomInitialized = false;
 
 	/**
@@ -90,6 +92,13 @@ namespace Utility
 	 */
 	std::string vec2ToString(Vec2 num);
 
+	/**
+	 @brief	Vector 3 to glm vec3.
+	
+	 @param	vector	The vector.
+	
+	 @return	A glm::vec3.
+	 */
 	glm::vec3 vec3ToGLM(Vec3 vector);
 
 	/**

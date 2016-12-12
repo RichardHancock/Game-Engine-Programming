@@ -8,19 +8,30 @@
 
 #include "misc/Log.h"
 
+/** @brief	A material resource representing the lighting values. */
 class Material : public Resource
 {
 private:
+	/** @brief	Representation of a OpenGL texture. */
 	struct GLTextureInfo
 	{
+		/** @brief	The texture data. */
 		std::weak_ptr<Texture> data;
+		/** @brief	Zero-based index of the texture in OpenGL. */
 		GLuint index;
 
+		/** @brief	Default constructor. */
 		GLTextureInfo()
 		{
 
 		}
 
+		/**
+		 @brief	Constructor.
+		
+		 @param	data 	The texture data.
+		 @param	index	Zero-based index of the texture in OpenGL.
+		 */
 		GLTextureInfo(std::weak_ptr<Texture> data, GLuint index)
 		{
 			this->data = data;
@@ -30,21 +41,37 @@ private:
 
 public:
 
+	/**
+	 @brief	Constructor.
+	
+	 @param	vShaderFilename	Filename of the shader file.
+	 @param	fShaderFilename	Filename of the shader file.
+	 */
 	Material(std::string vShaderFilename, std::string fShaderFilename);
 
+	/**
+	 @brief	Gets the shader.
+	
+	 @return	The shader.
+	 */
 	std::weak_ptr<Shader> getShader();
 
+	/**
+	 @brief	Adds a texture to the named shader uniform.
+	
+	 @param	name   	The name.
+	 @param	texture	The texture.
+	 */
 	void addTexture(std::string name, std::weak_ptr<Texture> texture);
 
+	/** @brief	Uses shader program. */
 	void useProgram();
 
 private:
 
-
+	/** @brief	The shader. */
 	std::shared_ptr<Shader> shader;
 
+	/** @brief	The textures. */
 	std::unordered_map<std::string, GLTextureInfo> textures;
-
-
-	///TODO Remember to check available texture units: GL_MAX_TEXTURE_UNITS
 };

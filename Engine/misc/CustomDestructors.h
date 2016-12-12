@@ -2,12 +2,14 @@
 
 #include <SDL.h>
 
+/** @brief	Contains two SDL variables that can't easily be wrapped in unique_ptrs by themselves. */
 struct SDL_Context
 {
 	SDL_Window* window;
 	SDL_GLContext glContext;
 };
 
+/** @brief	Contains deletor functions for Unique pointers. */
 namespace CustomDestructors
 {
 	struct SDL_Deleter

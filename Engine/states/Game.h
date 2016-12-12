@@ -10,6 +10,7 @@
 #include "../Audio.h"
 #include "../misc/Vec3.h"
 
+/** @brief	The main game state. */
 class Game : public State
 {
 public:
@@ -19,6 +20,7 @@ public:
 	 */
 	Game();
 
+	/** @brief	Destructor. */
 	virtual ~Game();
 
 	/**
@@ -38,8 +40,15 @@ public:
 	virtual void render();
 
 private:
+
+	/**
+	 @brief	Handles all movement of objects by checking if a button or key has been pressed.
+	
+	 @param	dt	Deltatime.
+	 */
 	void movementControls(float dt);
 
+	/** @brief	true if currently controlling camera. */
 	bool controllingCamera;
 
 };

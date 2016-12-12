@@ -109,8 +109,6 @@ Game::Game()
 		glm::vec3(0.5f)
 	);
 
-	
-	//Need to load second as I currently don't support loading the material individually.
 	auto sphere = GameObject::create("sphere").lock();
 	auto sphereT = sphere->addComponent<Transform>("Transform").lock();
 	sphereT->setPostion(glm::vec3(-40.0f, 0.0f, -5.0f));
@@ -122,7 +120,6 @@ Game::Game()
 		ResourceManager::getMaterial("red" , 0, false)
 	);
 	sphere->addComponent<SphereCollider>("SphereCollider");
-
 
 
 	gameO->onAwake();
@@ -187,7 +184,7 @@ void Game::update(float dt)
 	InputManager::printDebugInfo();
 
 
-	if (InputManager::wasKeyPressed(SDLK_1) || InputManager::wasControllerButtonPressed(0,Controller::Button::B))
+	if (InputManager::wasKeyPressed(SDLK_1) || InputManager::wasControllerButtonPressed(0,Controller::Button::A))
 	{
 		ResourceManager::getAudio("Item Place.wav", false).lock()->play(0,0);
 	}
@@ -204,7 +201,7 @@ void Game::update(float dt)
 			->getComponent<Transform>("Transform").lock();
 
 		camera->setRotation(glm::vec3(0.0f));
-		camera->setPostion(glm::vec3(0, -3, -10));
+		camera->setPostion(glm::vec3(0, 0, 40));
 
 		GameVariables::data->gameObjs["light"]->getComponent<Transform>().lock()->setPostion(glm::vec3(-50.0f, 10.0f, -5.0f));
 		GameVariables::data->gameObjs["sphere"]->getComponent<Transform>().lock()->setPostion(glm::vec3(-40.0f, 0.0f, -5.0f));

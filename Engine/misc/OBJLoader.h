@@ -10,6 +10,8 @@
 #include "Vec2.h"
 #include "Vec3.h"
 
+//Ref: Was used in previous assignment
+
 ///Contains methods used to load an OBJ File (no MTL support (MTL lines are ignored))
 namespace OBJLoader
 {

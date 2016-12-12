@@ -204,8 +204,21 @@ public:
 	 */
 	static uint8_t getNumControllers();
 
+	/**
+	 @brief	Query if controller's specified axis is in use.
+	
+	 @param	controller	The controller index.
+	 @param	axis	  	The axis.
+	
+	 @return	true if controller axis in use, false if not.
+	 */
 	static bool isControllerAxisInUse(int controller, Controller::Axis2D axis);
 
+	/**
+	 @brief	Sets dead zone.
+	
+	 @param	newDeadzone	The new deadzone.
+	 */
 	static void setDeadZone(float newDeadzone);
 
 
@@ -234,6 +247,7 @@ public:
 	static void processGameControllerEvent(SDL_Event& e);
 
 
+	/** @brief	Prints debug information to the console to test that input devices are working. */
 	static void printDebugInfo();
 
 
@@ -267,6 +281,7 @@ private:
 	/** @brief	The maximum number of gamepads that can be handled. */
 	static const unsigned int MAX_GAMEPADS = 4;
 
+	/** @brief	Default constructor. */
 	InputManager();
 
 
@@ -275,6 +290,10 @@ private:
 	/** @brief	The mouse's current position this frame. */
 	static Vec2 mousePos;
 
+	/** 
+	@brief	The deadzones of all controllers. 
+	@todo Make this configurable for each controller individually
+	*/
 	static float deadzone;
 
 	/**

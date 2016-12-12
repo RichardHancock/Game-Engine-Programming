@@ -13,6 +13,7 @@ struct GameVariableData
 	std::unordered_map<std::string, std::shared_ptr<GameObject>> gameObjs;
 };
 
+/** @brief	Contains any game wide data that need to be accessable semi-globally. */
 class GameVariables
 {
 public:

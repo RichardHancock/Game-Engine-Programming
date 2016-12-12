@@ -8,6 +8,8 @@
 #include "misc/Vec2.h"
 #include "Resource.h"
 
+//Ref: Was used in previous assignment but with massive changes
+
 /**
 @class Texture
 @brief Encapsulates an SDL_Texture
@@ -64,6 +66,11 @@ public:
 	 */
 	SDL_Surface* getSurface() { return surface; }
 
+	/**
+	 @brief	Gets OpenGL texture identifier.
+	
+	 @return	The OpenGL tex identifier.
+	 */
 	GLuint getGLTexID();
 
 private:
@@ -71,8 +78,10 @@ private:
 	/** @brief The surface. */
 	SDL_Surface* surface;
 
+	/** @brief	Loads for openGL. */
 	void loadForOpenGL();
 
+	/** @brief	Identifier for the texture in OpenGL. */
 	GLuint texID;
 };
 

@@ -12,6 +12,8 @@
 #include "misc/Vec2.h"
 #include "misc/CustomDestructors.h"
 
+//Ref: Was used in previous assignment but with massive changes
+
 //Quick Pre-processor key 
 #ifdef _WIN32
 	//Windows 32/64 bit
@@ -80,6 +82,7 @@ public:
 	 */
 	static Vec2 getWindowSize() { return windowSize; }
 
+	/** @brief	Swap buffer for OpenGL double buffering. */
 	static void sdlSwapWindow();
 
 
@@ -110,7 +113,7 @@ private:
 	*/
 	static bool initGLEW();
 
-	/** @brief The window. */
+	/** @brief The window and GL Context. */
 	static std::unique_ptr<SDL_Context, CustomDestructors::SDL_Deleter> sdlContext;
 
 	/** @brief Size of the window. */

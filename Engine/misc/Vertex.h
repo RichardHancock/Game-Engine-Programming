@@ -3,6 +3,8 @@
 #include "Vec2.h"
 #include "Vec3.h"
 
+//Ref: Was used in previous assignment
+
 /** @brief A vertex. */
 struct Vertex
 {

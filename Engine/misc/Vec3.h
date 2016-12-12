@@ -4,6 +4,8 @@
 #include <math.h>
 #include <assimp/vector3.h>
 
+//Ref: Was used in previous assignment
+
 /**
 @brief Stores a 3D Vector or Position, as floats
 */
@@ -93,27 +95,6 @@ public:
 		z -= b.z;
 		return this;
 	}
-	/*
-	inline float* operator [] (unsigned int index)
-	{
-		//ONLY USED FOR LEGACY OBJ LOADER
-		//Not the best solution, in future rewrite to be an array of floats
-		switch (index)
-		{
-		case 0:
-			return &x;
-			break;
-		case 1:
-			return &y;
-			break;
-		case 2:
-			return &z;
-			break;
-		default:
-			return nullptr;
-			break;
-		}
-	}*/
 };
 
 inline Vec3 operator + (Vec3 a, Vec3 b)

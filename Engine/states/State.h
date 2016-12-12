@@ -7,6 +7,8 @@
 #include "../ResourceManager.h"
 #include "../input/InputManager.h"
 
+//Ref: Was used in previous assignment with changes
+
 class StateManager;
 
 /**

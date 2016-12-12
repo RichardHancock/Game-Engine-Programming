@@ -4,6 +4,8 @@
 #include <vector>
 #include <SDL.h>
 
+//Ref: Was used in previous assignment but massive changes
+
 /**
 @class StateManager
 @brief Manages the creation, switching and function forwarding for States
@@ -12,6 +14,7 @@ class StateManager
 {
 public:
 	
+	/** @brief	Cleanups this StateManager. */
 	static void cleanup();
 
 	/**

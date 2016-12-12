@@ -5,6 +5,8 @@
 
 #include "Resource.h"
 
+//Ref: Was used in previous assignment
+
 class Resource;
 
 /**

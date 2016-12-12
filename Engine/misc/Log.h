@@ -2,6 +2,8 @@
 
 #include <string>
 
+//Ref: Was used in previous assignment
+
 /** @brief	Contains the Engine's logging features.
 	@todo Add a Debug/Verbose variant that only displays if debuging is turned on.
 */

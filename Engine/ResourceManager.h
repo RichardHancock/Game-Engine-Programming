@@ -12,12 +12,13 @@
 #include "misc/Utility.h"
 #include "Material.h"
 
+//Ref: Was used in previous assignment but with massive changes
+
 // Forward Declaration
 class GameModel;
 
 /**
 @brief Manager for resources of most types.
-@todo Update comments as ptr converted to smart
 Loads and manages any resources.
 */
 class ResourceManager
@@ -38,24 +39,54 @@ public:
 	 */
 	static std::weak_ptr<Audio> getAudio(std::string audioFilename, bool isMusic, bool defaultPath = true);
 
-	static void loadMaterialsFromAssimp(std::string materialName, const aiScene* scene);
+	/**
+	 @brief	Loads materials from assimp.
 	
+	 @param	materialName	Name of the material set.
+	 @param	scene			The Assimp scene.
+	 */
+	static void loadMaterialsFromAssimp(std::string materialName, const aiScene* scene);
+
+	/**
+	 @brief	Creates a material manually.
+	
+	 @param	materialName	  	Name of the material.
+	 @param	texture			  	The texture.
+	 @param	vertShaderFilename	Filename of the vertical shader file.
+	 @param	fragShaderFilename	Filename of the fragment shader file.
+	 */
 	static void createMaterial(std::string materialName, std::weak_ptr<Texture> texture, 
 		std::string vertShaderFilename, std::string fragShaderFilename);
 
+	/**
+	 @brief	Gets the material associated with the passed in name at the index location or the first if not specified.
+	
+	 @param	materialName	Name of the material set.
+	 @param	index			(Optional) zero-based index of the material.
+	 @param	defaultPath 	(Optional) true to default path.
+	
+	 @return	The material.
+	 */
 	static std::weak_ptr<Material> getMaterial(std::string materialName, unsigned int index = 0, bool defaultPath = true);
 
+	/**
+	 @brief	Gets the material set associated with the passed in name.
+	
+	 @param	materialName	Name of the material set.
+	 @param	defaultPath 	(Optional) true to use default path.
+	
+	 @return	The materials.
+	 */
 	static std::vector<std::weak_ptr<Material>> getMaterials(std::string materialName, bool defaultPath = true);
 
 	/**
-	@brief Gets a model, loads the model if not already loaded.
+	 @brief	Gets a model, loads the model if not already loaded.
 	
-	@param modelFilename    Filename of the model file.
-	@param defaultPath	    true to use default model path.
+	 @param	modelFilename	Filename of the model file.
+	 @param	useAssimp	 	(Optional) true to use assimp for loading, else uses Legacy OBJ loader.
+	 @param	defaultPath  	(Optional) true to use default model path.
 	
-	@return null if it fails, else the model.
-	
-	@todo Support multi mesh models.
+	 @return	null if it fails, else the model.
 	 */
 	static std::weak_ptr<GameModel> getModel(std::string modelFilename, bool useAssimp = true, bool defaultPath = true);
 
@@ -97,6 +128,7 @@ private:
 	/** @brief The models. */
 	static std::unordered_map<std::string, std::shared_ptr<GameModel>> models;
 
+	/** @brief	The materials. */
 	static std::unordered_map<std::string, std::vector<std::shared_ptr<Material>>> materials;
 
 	/** @brief The audio. */
@@ -105,9 +137,22 @@ private:
 	/** @brief The textures. */
 	static std::unordered_map<std::string, std::shared_ptr<Texture>> textures;
 
+	/**
+	 @brief	Loads model from assimp.
 	
+	 @param	modelFilename	Filename of the model file.
+	
+	 @return	The model from assimp.
+	 */
 	static std::weak_ptr<GameModel> loadModelFromAssimp(std::string modelFilename);
 
+	/**
+	 @brief	Loads model with object loader.
+	
+	 @param	modelFilename	Filename of the model file.
+	
+	 @return	The model.
+	 */
 	static std::weak_ptr<GameModel> loadModelWithOBJLoader(std::string modelFilename);
 
 	/** @brief The model importer from Assimp. */
