@@ -90,6 +90,8 @@ namespace Utility
 	 */
 	std::string vec2ToString(Vec2 num);
 
+	glm::vec3 vec3ToGLM(Vec3 vector);
+
 	/**
 	 @brief Scale a Vec2 relative to the passed in screen size (Bases everything on a base resolution of 640,480).
 	

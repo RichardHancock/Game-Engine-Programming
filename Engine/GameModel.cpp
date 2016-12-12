@@ -53,6 +53,17 @@ GameModel::GameModel(std::vector<glm::vec3>* vertices, std::vector<glm::vec3>* n
 		addIndexBuffer(*indices);
 }
 
+GameModel::GameModel(std::vector<Vertex> advVertices)
+{
+	indexBuffer = 0;
+	numVertices = 0;
+	numIndices = 0;
+
+	glGenVertexArrays(1, &VAO);
+	
+	initModelFromAdvVertices(advVertices);
+}
+
 GameModel::~GameModel()
 {
 	//Just incase the below VAO deletion doesn't cover it, delete all other data
@@ -84,40 +95,6 @@ std::vector<unsigned int> GameModel::extractMeshIndexData(aiMesh* mesh)
 	}
 
 	return indexArray;
-}
-
-void GameModel::calculateAABB(std::vector<glm::vec3> vertices)
-{
-	if (vertices.size() < 1)
-	{
-		bounds = AABB(glm::vec3(0), glm::vec3(0));
-		return;
-	}
-
-
-	glm::vec3 min(vertices[0]);
-	glm::vec3 max(min);
-
-	for (glm::vec3 vertex : vertices)
-	{
-		//Rolled into loop for hopefully better performance
-		for (unsigned int axis = 0; axis < 3; axis++)
-		{
-			if (vertex[axis] < min[axis])
-			{
-				min[axis] = vertex[axis];
-			}
-			else if (vertex[axis] > max[axis])
-			{
-				max[axis] = vertex[axis];
-			}
-		}
-	}
-
-	glm::vec3 center = (max + min) / 2.0f;
-	glm::vec3 size = (max - min);
-
-	bounds = AABB(center, size);
 }
 
 void GameModel::processAssimpScene(const aiScene* scene)
@@ -234,6 +211,65 @@ void GameModel::initMeshFromAssimp(aiMesh* mesh, std::vector<glm::vec3>& positio
 	}
 }
 
+void GameModel::initModelFromAdvVertices(std::vector<Vertex> advVertices)
+{
+	glBindVertexArray(VAO);
+
+	const int vertexCount = advVertices.size() * 8;
+	numVertices = advVertices.size();
+	GLfloat* vertexData = new GLfloat[vertexCount];
+	
+	for (unsigned int i = 0; i < advVertices.size(); i++)
+	{
+		unsigned int aPos = i * 8; // Position in the GLfloat array
+
+		vertexData[aPos] =	   advVertices[i].v.x;
+		vertexData[aPos + 1] = advVertices[i].v.y;
+		vertexData[aPos + 2] = advVertices[i].v.z;
+
+		vertexData[aPos + 3] = advVertices[i].vn.x;
+		vertexData[aPos + 4] = advVertices[i].vn.y;
+		vertexData[aPos + 5] = advVertices[i].vn.z;
+
+		vertexData[aPos + 6] = advVertices[i].vt.x;
+		vertexData[aPos + 7] = advVertices[i].vt.y;
+
+	}
+
+	meshes.push_back(Mesh(
+		0,
+		0,
+		0,
+		0
+	));
+
+	GLuint vertexBuffer = 0;
+	
+	glGenBuffers(1, &vertexBuffer);
+	
+	glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+	
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * vertexCount, vertexData, GL_STATIC_DRAW);
+
+
+	glEnableVertexAttribArray(0);
+	glEnableVertexAttribArray(1);
+	glEnableVertexAttribArray(2);
+
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(0 + offsetof(Vertex, v)));
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(0 + offsetof(Vertex, vn)));
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(0 + offsetof(Vertex, vt)));
+
+	VBOs.push_back(vertexBuffer);
+	
+	//Calculate AABB bounds
+	calculateAABB(advVertices);
+
+	glBindVertexArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+}
+
 void GameModel::addVBO(std::vector<glm::vec3> &data)
 {
 	GLuint VBO;
@@ -332,4 +368,87 @@ Mesh GameModel::getSubmesh(unsigned int index)
 AABB GameModel::getAABB()
 {
 	return bounds;
+}
+
+void GameModel::calculateAABB(std::vector<glm::vec3> vertices)
+{
+	if (vertices.size() < 1)
+	{
+		bounds = AABB(glm::vec3(0), glm::vec3(0));
+		return;
+	}
+
+
+	glm::vec3 min(vertices[0]);
+	glm::vec3 max(min);
+
+	for (glm::vec3 vertex : vertices)
+	{
+		//Rolled into loop for hopefully better performance
+		for (unsigned int axis = 0; axis < 3; axis++)
+		{
+			if (vertex[axis] < min[axis])
+			{
+				min[axis] = vertex[axis];
+			}
+			else if (vertex[axis] > max[axis])
+			{
+				max[axis] = vertex[axis];
+			}
+		}
+	}
+
+	glm::vec3 center = (max + min) / 2.0f;
+	glm::vec3 size = (max - min);
+
+	bounds = AABB(center, size);
+}
+
+void GameModel::calculateAABB(std::vector<Vertex> advVertices)
+{
+	if (advVertices.size() < 1)
+	{
+		bounds = AABB(glm::vec3(0), glm::vec3(0));
+		return;
+	}
+
+
+	Vec3 min(advVertices[0].v);
+	Vec3 max(min);
+
+	for (Vertex vertex : advVertices)
+	{
+		//X
+		if (vertex.v.x < min.x)
+		{
+			min.x = vertex.v.x;
+		}
+		else if (vertex.v.x > max.x)
+		{
+			max.x = vertex.v.x;
+		}
+		//Y
+		if (vertex.v.y < min.y)
+		{
+			min.y = vertex.v.y;
+		}
+		else if (vertex.v.y > max.y)
+		{
+			max.y = vertex.v.y;
+		}
+		//Z
+		if (vertex.v.z < min.z)
+		{
+			min.z = vertex.v.z;
+		}
+		else if (vertex.v.z > max.z)
+		{
+			max.z = vertex.v.z;
+		}
+	}
+
+	Vec3 center = (max + min) / 2.0f;
+	Vec3 size = (max - min);
+
+	bounds = AABB(Utility::vec3ToGLM(center), Utility::vec3ToGLM(size));
 }

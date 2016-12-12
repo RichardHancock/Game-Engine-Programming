@@ -7,7 +7,7 @@
 /**
 @brief Stores a 3D Vector or Position, as floats
 */
-class Vec3
+struct Vec3
 {
 public:
 	Vec3() { }
@@ -93,7 +93,27 @@ public:
 		z -= b.z;
 		return this;
 	}
-
+	/*
+	inline float* operator [] (unsigned int index)
+	{
+		//ONLY USED FOR LEGACY OBJ LOADER
+		//Not the best solution, in future rewrite to be an array of floats
+		switch (index)
+		{
+		case 0:
+			return &x;
+			break;
+		case 1:
+			return &y;
+			break;
+		case 2:
+			return &z;
+			break;
+		default:
+			return nullptr;
+			break;
+		}
+	}*/
 };
 
 inline Vec3 operator + (Vec3 a, Vec3 b)

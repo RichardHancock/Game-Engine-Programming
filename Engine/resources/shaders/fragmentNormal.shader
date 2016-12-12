@@ -30,13 +30,15 @@ struct PointLight {
     vec3 specular;
 };
 
+uniform PointLight pointlight;
+
 uniform sampler2D diffuseMap;
 uniform sampler2D normalMap;
 uniform sampler2D specularMap;
 float shininess = 32.0f;
 
-vec3 CalcDirLight(DirLight light, vec3 normal, vec3 texCoords, vec3 viewDir);
-vec3 CalcPointLight(PointLight light, vec3 normal, vec3 texCoords, vec3 fragPos, vec3 viewDir);
+vec3 CalcDirLight(DirLight light, vec3 normal, vec2 texCoords, vec3 viewDir);
+vec3 CalcPointLight(PointLight light, vec3 normal, vec2 texCoords, vec3 fragPos, vec3 viewDir);
 
 void main()
 {
@@ -46,14 +48,14 @@ void main()
 	dirLight.diffuse = vec3(0.6f, 0.6f, 0.6f);
 	dirLight.specular = vec3(0.4f, 0.4f, 0.4f);
 
-	PointLight pl;
-	pl.position = vec3(0.0f, 10.0f, 5.0f);
-	pl.ambient = vec3(0.9f, 0.5f, 0.0f);
-	pl.diffuse = vec3(0.8f, 0.5f, 0.2f);
-	pl.specular = vec3(0.5f, 0.5f, 0.5f);
-	pl.constant = 1.0f;
-	pl.linear = 0.027f;
-	pl.quadratic = 0.0028f;
+	//PointLight pl;
+	//pl.position = vec3(0.0f, 10.0f, 5.0f);
+	//pl.ambient = vec3(0.9f, 0.5f, 0.0f);
+	//pl.diffuse = vec3(0.8f, 0.5f, 0.2f);
+	//pl.specular = vec3(0.5f, 0.5f, 0.5f);
+	//pl.constant = 1.0f;
+	//pl.linear = 0.027f;
+	//pl.quadratic = 0.0028f;
 
 
 	vec2 flipTexCoords = vec2(fs_in.TexCoords.x, 1.0 - fs_in.TexCoords.y);
@@ -66,12 +68,12 @@ void main()
 	vec3 viewDir = normalize(fs_in.TangentViewPos - fs_in.TangentFragPos);
 
 	vec3 result = CalcDirLight(dirLight, normal, flipTexCoords, viewDir);
-	result += CalcPointLight(pl, normal, flipTexCoords, fs_in.FragPos, viewDir);
+	result += CalcPointLight(pointlight, normal, flipTexCoords, fs_in.FragPos, viewDir);
 	FragColor = vec4(result, 1.0f);
 }
 
 // Calculates the color when using a directional light.
-vec3 CalcDirLight(DirLight light, vec3 normal, vec3 texCoords, vec3 viewDir)
+vec3 CalcDirLight(DirLight light, vec3 normal, vec2 texCoords, vec3 viewDir)
 {
     vec3 lightDir = normalize(-light.direction);
     // Diffuse shading
@@ -88,7 +90,7 @@ vec3 CalcDirLight(DirLight light, vec3 normal, vec3 texCoords, vec3 viewDir)
 }
 
 // Calculates the color when using a point light.
-vec3 CalcPointLight(PointLight light, vec3 normal, vec3 texCoords, vec3 fragPos, vec3 viewDir)
+vec3 CalcPointLight(PointLight light, vec3 normal, vec2 texCoords, vec3 fragPos, vec3 viewDir)
 {
     vec3 lightDir = normalize(fs_in.TangentLightPos - fs_in.TangentFragPos);
     // Diffuse shading

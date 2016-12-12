@@ -10,6 +10,7 @@
 #include "../components/MeshRenderer.h"
 #include "../misc/GameVariables.h"
 #include "../components/SphereCollider.h"
+#include "../components/Light.h"
 
 Game::Game()
 {
@@ -20,7 +21,7 @@ Game::Game()
 	//Camera
 	auto cameraObj = GameObject::create("Camera").lock();
 	auto camTransform = cameraObj->addComponent<Transform>("Transform").lock();
-	camTransform->setPostion(glm::vec3(0, 0, -40));
+	camTransform->setPostion(glm::vec3(0, 0, 40));
 	camTransform->setRotation(glm::vec3(0, 0, 0));
 	camTransform->setScale(glm::vec3(1));
 
@@ -78,31 +79,47 @@ Game::Game()
 	);
 
 
-	//spheres
+	ResourceManager::createMaterial("blue", ResourceManager::getTexture("blue.png"),
+		"vertexMat.shader", "fragmentMat.shader");
+	ResourceManager::createMaterial("red", ResourceManager::getTexture("red.png"),
+		"vertexMat.shader", "fragmentMat.shader");
+
+
+	//ALL BELOW ARE LOADED WITH MY OWN OBJ LOADER
+	//spheres (Loaded using my own OBJ loader)
 	auto light = GameObject::create("light").lock();
 	auto lightT = light->addComponent<Transform>("Transform").lock();
 	lightT->setPostion(glm::vec3(-50.0f, 10.0f, -5.0f));
 
 	light->addComponent<MeshComponent>("MeshComponent").lock()->setMesh(
-		ResourceManager::getModel("bowl.obj"));
-
-	light->addComponent<MeshRenderer>("MeshRenderer").lock()->setMaterials(
-		ResourceManager::getMaterials("bowl.obj")
+		ResourceManager::getModel("bowl.obj", false));
+	
+	light->addComponent<MeshRenderer>("MeshRenderer").lock()->setMaterial(
+		ResourceManager::getMaterial("red", 0, false)
 	);
 	light->addComponent<SphereCollider>("SphereCollider");
 	GameVariables::data->currentLight = light;
+	
+	light->addComponent<Light>("Light").lock()->init(
+		1.0f,
+		0.027f,
+		0.0028f,
+		glm::vec3(0.9f, 0.0f, 0.0f),
+		glm::vec3(0.6f, 0.6f, 0.6f),
+		glm::vec3(0.5f)
+	);
 
 	
 	//Need to load second as I currently don't support loading the material individually.
-	auto sphere = GameObject::create("ball").lock();
+	auto sphere = GameObject::create("sphere").lock();
 	auto sphereT = sphere->addComponent<Transform>("Transform").lock();
 	sphereT->setPostion(glm::vec3(-40.0f, 0.0f, -5.0f));
 
 	sphere->addComponent<MeshComponent>("MeshComponent").lock()->setMesh(
-		ResourceManager::getModel("bowl2.obj"));
+		ResourceManager::getModel("bowl.obj", false));
 
-	sphere->addComponent<MeshRenderer>("MeshRenderer").lock()->setMaterials(
-		ResourceManager::getMaterials("bowl2.obj")
+	sphere->addComponent<MeshRenderer>("MeshRenderer").lock()->setMaterial(
+		ResourceManager::getMaterial("red" , 0, false)
 	);
 	sphere->addComponent<SphereCollider>("SphereCollider");
 
@@ -119,10 +136,7 @@ Game::Game()
 
 Game::~Game()
 {
-	//TTF_CloseFont(font);
-
-	//delete ui;
-	//delete text;
+	
 }
 
 bool Game::eventHandler()
@@ -178,6 +192,11 @@ void Game::update(float dt)
 	{
 		ResourceManager::getAudio("Item Place.wav", false).lock()->play(0,0);
 	}
+	if (InputManager::wasKeyPressed(SDLK_c) || InputManager::wasControllerButtonPressed(0, Controller::Button::Y))
+	{
+		controllingCamera = !controllingCamera;
+	}
+
 	
 	//reset scene
 	if (InputManager::wasKeyReleased(SDLK_SPACE) || InputManager::wasControllerButtonPressed(0, Controller::Button::B))
@@ -193,9 +212,6 @@ void Game::update(float dt)
 	}
 	
 	collisionResponse();
-
-	GameVariables::data->gameObjs["bowl1"]->getComponent<Transform>().lock()->translate(glm::vec3(1.0f * dt, -1.0f * dt, 0.0f));
-	GameVariables::data->gameObjs["bowl2"]->getComponent<Transform>().lock()->translate(glm::vec3(-1.0f * dt, 1.0f * dt, 0.0f));
 
 	GameVariables::data->gameObjs["fighter"]->getComponent<Transform>("Transform").lock()->rotate(glm::vec3(0.0f, 1.0f * dt, 0.0f));
 
@@ -228,31 +244,31 @@ void Game::movementControls(float dt)
 	//move along object along x
 	if (InputManager::isKeyHeld(SDLK_a))
 	{
-		object->translate(glm::vec3(speed * dt, 0, 0));
+		object->translate(glm::vec3(-speed * dt, 0, 0));
 	}
 	else if (InputManager::isKeyHeld(SDLK_d))
 	{
-		object->translate(glm::vec3(-speed * dt, 0, 0));
+		object->translate(glm::vec3(speed * dt, 0, 0));
 	}
 
 	//move object along y
 	if (InputManager::isKeyHeld(SDLK_q))
 	{
-		object->translate(glm::vec3(0, speed * dt, 0));
+		object->translate(glm::vec3(0, -speed * dt, 0));
 	}
 	else if (InputManager::isKeyHeld(SDLK_e))
 	{
-		object->translate(glm::vec3(0, -speed * dt, 0));
+		object->translate(glm::vec3(0, speed * dt, 0));
 	}
 
 	//move object along z
 	if (InputManager::isKeyHeld(SDLK_w))
 	{
-		object->translate(glm::vec3(0, 0, speed * dt));
+		object->translate(glm::vec3(0, 0, -speed * dt));
 	}
 	if (InputManager::isKeyHeld(SDLK_s))
 	{
-		object->translate(glm::vec3(0, 0, -speed * dt));
+		object->translate(glm::vec3(0, 0, speed * dt));
 	}
 
 	float speedRadians = Utility::convertAngleToRadian(speed * dt);
@@ -260,29 +276,29 @@ void Game::movementControls(float dt)
 	//rotate along object along x
 	if (InputManager::isKeyHeld(SDLK_UP))
 	{
-		object->rotate(glm::vec3(-speedRadians, 0, 0));
+		object->rotate(glm::vec3(speedRadians, 0, 0));
 	}
 	else if (InputManager::isKeyHeld(SDLK_DOWN))
 	{
-		object->rotate(glm::vec3(speedRadians, 0, 0));
+		object->rotate(glm::vec3(-speedRadians, 0, 0));
 	}
 	//rotate object along y
 	if (InputManager::isKeyHeld(SDLK_LEFT))
 	{
-		object->rotate(glm::vec3(0, -speedRadians, 0));
+		object->rotate(glm::vec3(0, speedRadians, 0));
 	}
 	if (InputManager::isKeyHeld(SDLK_RIGHT))
 	{
-		object->rotate(glm::vec3(0, speedRadians, 0));
+		object->rotate(glm::vec3(0, -speedRadians, 0));
 	}
 	//rotate object along z
 	if (InputManager::isKeyHeld(SDLK_k))
 	{
-		object->rotate(glm::vec3(0, 0, -speedRadians));
+		object->rotate(glm::vec3(0, 0, speedRadians));
 	}
 	if (InputManager::isKeyHeld(SDLK_l))
 	{
-		object->rotate(glm::vec3(0, 0, speedRadians));
+		object->rotate(glm::vec3(0, 0, -speedRadians));
 	}
 
 
@@ -298,23 +314,23 @@ void Game::movementControls(float dt)
 
 void Game::collisionResponse()
 {
-
-	if (GameVariables::data->gameObjs["bowl1"]->getComponent<SphereCollider>().lock()->isColliding())
+	/*
+	if (GameVariables::data->gameObjs["light"]->getComponent<SphereCollider>().lock()->isColliding())
 	{
-		GameVariables::data->gameObjs["bowl1"]->getComponent<MeshRenderer>().lock()->
-			setMaterials(ResourceManager::getMaterials("bowl2.obj"));
-		GameVariables::data->gameObjs["bowl2"]->getComponent<MeshRenderer>().lock()->
-			setMaterials(ResourceManager::getMaterials("bowl2.obj"));
+		GameVariables::data->gameObjs["light"]->getComponent<MeshRenderer>().lock()->
+			setMaterial(ResourceManager::getMaterial("red", 0, false));
+		GameVariables::data->gameObjs["sphere"]->getComponent<MeshRenderer>().lock()->
+			setMaterial(ResourceManager::getMaterial("red", 0, false));
 
 		InputManager::playControllerRumble(0, 1, 10);
 	}
 	else
 	{
-		GameVariables::data->gameObjs["bowl1"]->getComponent<MeshRenderer>().lock()->
-			setMaterials(ResourceManager::getMaterials("bowl.obj"));
-		GameVariables::data->gameObjs["bowl2"]->getComponent<MeshRenderer>().lock()->
-			setMaterials(ResourceManager::getMaterials("bowl.obj"));
+		GameVariables::data->gameObjs["light"]->getComponent<MeshRenderer>().lock()->
+			setMaterial(ResourceManager::getMaterial("blue", 0, false));
+		GameVariables::data->gameObjs["sphere"]->getComponent<MeshRenderer>().lock()->
+			setMaterial(ResourceManager::getMaterial("blue", 0, false));
 	}
-
+	*/
 	
 }

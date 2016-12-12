@@ -6,6 +6,7 @@
 #include "../Graphics.h"
 #include "../misc/GameVariables.h"
 #include "Camera.h"
+#include "Light.h"
 
 MeshRenderer::~MeshRenderer()
 {
@@ -89,13 +90,21 @@ void MeshRenderer::onRender()
 
 	std::shared_ptr<Camera> camera = GameVariables::data->currentCamera.lock();
 
-	glm::mat4 viewMat = camera->getTransformMat();
+	glm::mat4 viewMat = glm::inverse(camera->getTransformMat());
 	glm::mat4 modelMat = transform->getTransformMat();
 
 	if (materials.size() == 0)
 		return;
 
-	///TODO Implement sub meshes
+	//Fetch the light
+	std::weak_ptr<GameObject> lightObj = GameVariables::data->currentLight;
+	if (lightObj.expired())
+	{
+		Log::logE("No lights in scene, this can cause unforceen behaviour");
+		return;
+	}
+	std::shared_ptr<Light> light = lightObj.lock()->getComponent<Light>().lock();
+
 	for (unsigned int curMesh = 0; curMesh < mesh->getMeshCount(); curMesh++)
 	{
 		//Material
@@ -114,10 +123,16 @@ void MeshRenderer::onRender()
 		shader->setUniform("modelMat", modelMat);
 		shader->setUniform("viewMat", viewMat);
 		shader->setUniform("projMat", camera->getProjMat());
-		shader->setUniform("lightPos", glm::vec3(0.0f, 3.0f, 5.0f));
-		shader->setUniform("viewPos", glm::vec3(viewMat[0][3], viewMat[1][3], viewMat[2][3]));
-		//shader->setUniform("viewPos", glm::vec3(viewMat[3][0], viewMat[3][1], viewMat[3][2]));
+		shader->setUniform("lightPos", light->getPosition());
+		shader->setUniform("viewPos", glm::vec3(viewMat[3][0], viewMat[3][1], viewMat[3][2]));
 
+		shader->setUniform("pointlight.constant", light->getConstant());
+		shader->setUniform("pointlight.linear", light->getLinear());
+		shader->setUniform("pointlight.quadratic", light->getQuadratic());
+		shader->setUniform("pointlight.ambient", light->getAmbient());
+		shader->setUniform("pointlight.diffuse", light->getDiffuse());
+		shader->setUniform("pointlight.specular", light->getSpecular());
+		shader->setUniform("pointlight.position", light->getPosition());
 		
 		Graphics::renderMesh(mesh, curMesh, material);
 	}

@@ -4,6 +4,7 @@
 #include "ResourceManager.h"
 #include "Audio.h"
 #include "misc/Log.h"
+#include "misc/OBJLoader.h"
 
 //Static Declarations
 const std::string ResourceManager::modelDir = "resources/models/";
@@ -118,9 +119,20 @@ void ResourceManager::loadMaterialsFromAssimp(std::string materialName, const ai
 	}
 }
 
-std::weak_ptr<Material> ResourceManager::getMaterial(std::string materialName, unsigned int index)
+void ResourceManager::createMaterial(std::string materialName, std::weak_ptr<Texture> texture, std::string vertShaderFilename, std::string fragShaderFilename)
 {
-	materialName = modelDir + materialName;
+	std::shared_ptr<Material> newMaterial = std::make_shared<Material>(
+		shaderDir + vertShaderFilename, shaderDir + fragShaderFilename);
+
+	newMaterial->addTexture("diffuseMap", texture);
+
+	materials[materialName].push_back(newMaterial);
+}
+
+std::weak_ptr<Material> ResourceManager::getMaterial(std::string materialName, unsigned int index, bool defaultPath)
+{
+	if (defaultPath)
+		materialName = modelDir + materialName;
 
 	if (materials.count(materialName) > 0)
 	{
@@ -139,9 +151,10 @@ std::weak_ptr<Material> ResourceManager::getMaterial(std::string materialName, u
 	return std::weak_ptr<Material>();
 }
 
-std::vector<std::weak_ptr<Material>> ResourceManager::getMaterials(std::string materialName)
+std::vector<std::weak_ptr<Material>> ResourceManager::getMaterials(std::string materialName, bool defaultPath)
 {
-	materialName = modelDir + materialName;
+	if (defaultPath)
+		materialName = modelDir + materialName;
 
 	if (materials.count(materialName) > 0)
 	{
@@ -159,7 +172,7 @@ std::vector<std::weak_ptr<Material>> ResourceManager::getMaterials(std::string m
 	return std::vector<std::weak_ptr<Material>>();
 }
 
-std::weak_ptr<GameModel> ResourceManager::getModel(std::string modelFilename, bool defaultPath)
+std::weak_ptr<GameModel> ResourceManager::getModel(std::string modelFilename, bool useAssimp, bool defaultPath)
 {
 	//Should we use the default path for this type of resource or just use the provided filename
 	if (defaultPath) {
@@ -176,34 +189,7 @@ std::weak_ptr<GameModel> ResourceManager::getModel(std::string modelFilename, bo
 	
 	Log::logI("Loading model: " + modelFilename);
 
-	//Read in the model file and apply Post processing flags
-	int flags = (
-		aiProcess_JoinIdenticalVertices | 
-		aiProcess_Triangulate |
-		aiProcess_CalcTangentSpace |
-		aiProcess_GenNormals
-		);
-	//I tried to convert these into shared_ptrs but the internals of Assimp really do not suit it and was causing random memory errors.
-	const aiScene* rawModelData = modelImporter->ReadFile(modelFilename, flags);
-
-	if (rawModelData == nullptr)
-	{
-		Log::logE(modelFilename + " import failed: " + modelImporter->GetErrorString());
-		return std::weak_ptr<GameModel>();
-	}
-
-	//Load Model
-	std::shared_ptr<GameModel> modelData = std::make_shared<GameModel>(rawModelData);
-	
-	//Load Relevant Materials
-	loadMaterialsFromAssimp(modelFilename, rawModelData);
-
-	//We've converted the data to our formats so delete the raw version.
-	modelImporter->FreeScene();
-
-	//Store and return model
-	models[modelFilename] = modelData;
-	return modelData;
+	return (useAssimp ? loadModelFromAssimp(modelFilename) : loadModelWithOBJLoader(modelFilename));
 }
 
 std::weak_ptr<Texture> ResourceManager::getTexture(std::string textureFilename, bool defaultPath)
@@ -226,6 +212,54 @@ std::weak_ptr<Texture> ResourceManager::getTexture(std::string textureFilename, 
 	textures[textureFilename] = textureData;
 
 	return textureData;
+}
+
+std::weak_ptr<GameModel> ResourceManager::loadModelFromAssimp(std::string modelFilename)
+{
+	//Read in the model file and apply Post processing flags
+	int flags = (
+		aiProcess_JoinIdenticalVertices |
+		aiProcess_Triangulate |
+		aiProcess_CalcTangentSpace |
+		aiProcess_GenNormals
+		);
+	//I tried to convert these into shared_ptrs but the internals of Assimp really do not suit it and was causing random memory errors.
+	const aiScene* rawModelData = modelImporter->ReadFile(modelFilename, flags);
+
+	if (rawModelData == nullptr)
+	{
+		Log::logE(modelFilename + " import failed: " + modelImporter->GetErrorString());
+		return std::weak_ptr<GameModel>();
+	}
+
+	//Load Model
+	std::shared_ptr<GameModel> modelData = std::make_shared<GameModel>(rawModelData);
+
+	//Load Relevant Materials
+	loadMaterialsFromAssimp(modelFilename, rawModelData);
+
+	//We've converted the data to our formats so delete the raw version.
+	modelImporter->FreeScene();
+
+	//Store and return model
+	models[modelFilename] = modelData;
+	return modelData;
+}
+
+std::weak_ptr<GameModel> ResourceManager::loadModelWithOBJLoader(std::string modelFilename)
+{
+	std::vector<Vertex> vertexData;
+	
+	if (!OBJLoader::load(vertexData, modelFilename))
+	{
+		Log::logE(modelFilename + " failed to load using Legacy OBJ Loader");
+		return std::weak_ptr<GameModel>();
+	}
+
+	std::shared_ptr<GameModel> gameModel = std::make_shared<GameModel>(vertexData);
+	
+	models[modelFilename] = gameModel;
+	return gameModel;
 }
 
 /*

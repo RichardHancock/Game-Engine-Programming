@@ -72,6 +72,11 @@ std::string Utility::vec2ToString(Vec2 num)
 
 }
 
+glm::vec3 Utility::vec3ToGLM(Vec3 vector)
+{
+	return glm::vec3(vector.x, vector.y, vector.z);
+}
+
 Vec2 Utility::scaleTo(Vec2 vecToScale, Vec2 screenSize)
 {
 	vecToScale.x /= 640;

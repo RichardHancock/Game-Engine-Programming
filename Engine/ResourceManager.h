@@ -39,10 +39,13 @@ public:
 	static std::weak_ptr<Audio> getAudio(std::string audioFilename, bool isMusic, bool defaultPath = true);
 
 	static void loadMaterialsFromAssimp(std::string materialName, const aiScene* scene);
+	
+	static void createMaterial(std::string materialName, std::weak_ptr<Texture> texture, 
+		std::string vertShaderFilename, std::string fragShaderFilename);
 
-	static std::weak_ptr<Material> getMaterial(std::string materialName, unsigned int index);
+	static std::weak_ptr<Material> getMaterial(std::string materialName, unsigned int index = 0, bool defaultPath = true);
 
-	static std::vector<std::weak_ptr<Material>> getMaterials(std::string materialName);
+	static std::vector<std::weak_ptr<Material>> getMaterials(std::string materialName, bool defaultPath = true);
 
 	/**
 	@brief Gets a model, loads the model if not already loaded.
@@ -54,7 +57,7 @@ public:
 	
 	@todo Support multi mesh models.
 	 */
-	static std::weak_ptr<GameModel> getModel(std::string modelFilename, bool defaultPath = true);
+	static std::weak_ptr<GameModel> getModel(std::string modelFilename, bool useAssimp = true, bool defaultPath = true);
 
 	/**
 	@brief Gets a texture, loads the texture if not already loaded.
@@ -103,6 +106,10 @@ private:
 	static std::unordered_map<std::string, std::shared_ptr<Texture>> textures;
 
 	
+	static std::weak_ptr<GameModel> loadModelFromAssimp(std::string modelFilename);
+
+	static std::weak_ptr<GameModel> loadModelWithOBJLoader(std::string modelFilename);
+
 	/** @brief The model importer from Assimp. */
 	static std::shared_ptr<Assimp::Importer> modelImporter;
 

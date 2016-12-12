@@ -8,9 +8,6 @@
 
 #include <SDL.h>
 #include <SDL_ttf.h>
-#include "Shader.h"
-#include "Texture.h"
-#include "ResourceManager.h"
 #include "Resource.h"
 #include "misc/Vertex.h"
 #include "Mesh.h"
@@ -32,6 +29,8 @@ public:
 		std::vector<glm::vec2>* uvs,
 		std::vector<unsigned int>* indices);
 	
+	GameModel(std::vector<Vertex> advVertices);
+
 	~GameModel();
 
 	GLuint getVAO();
@@ -68,6 +67,8 @@ private:
 		std::vector<unsigned int>& indicies
 	);
 
+	void initModelFromAdvVertices(std::vector<Vertex> advVertices);
+
 
 	void addVBO(std::vector<glm::vec3> &data);
 	void addVBO(std::vector<glm::vec2> &data);
@@ -90,4 +91,5 @@ private:
 	AABB bounds;
 
 	void calculateAABB(std::vector<glm::vec3> vertices);
+	void calculateAABB(std::vector<Vertex> advVertices);
 };
