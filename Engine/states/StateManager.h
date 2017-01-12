@@ -47,9 +47,8 @@ public:
 
 	/**
 	@brief Calls the update in the current state
-	@param dt delta time
 	*/
-	static void update(float dt);
+	static void update();
 
 	///Calls the render for all loaded states
 	static void render();

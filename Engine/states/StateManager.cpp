@@ -42,9 +42,9 @@ bool StateManager::eventHandler()
 	return states.back()->eventHandler();
 }
 
-void StateManager::update(float dt)
+void StateManager::update()
 {
-	states.back()->update(dt);
+	states.back()->update();
 }
 
 void StateManager::render()

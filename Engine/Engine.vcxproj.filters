@@ -135,6 +135,12 @@
     <ClCompile Include="components\Light.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="misc\DeltaTime.cpp">
+      <Filter>Source Files\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="misc\Random.cpp">
+      <Filter>Source Files\Misc</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Platform.h">
@@ -238,6 +244,12 @@
     </ClInclude>
     <ClInclude Include="components\Light.h">
       <Filter>Header Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="misc\DeltaTime.h">
+      <Filter>Header Files\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="misc\Random.h">
+      <Filter>Header Files\Misc</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

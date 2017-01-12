@@ -11,6 +11,7 @@
 #include "../misc/GameVariables.h"
 #include "../components/SphereCollider.h"
 #include "../components/Light.h"
+#include "../misc/DeltaTime.h"
 
 Game::Game()
 {
@@ -178,7 +179,7 @@ bool Game::eventHandler()
 	return false;
 }
 
-void Game::update(float dt)
+void Game::update()
 {
 
 	InputManager::printDebugInfo();
@@ -207,9 +208,9 @@ void Game::update(float dt)
 		GameVariables::data->gameObjs["sphere"]->getComponent<Transform>().lock()->setPostion(glm::vec3(-40.0f, 0.0f, -5.0f));
 	}
 
-	GameVariables::data->gameObjs["fighter"]->getComponent<Transform>("Transform").lock()->rotate(glm::vec3(0.0f, 1.0f * dt, 0.0f));
+	GameVariables::data->gameObjs["fighter"]->getComponent<Transform>("Transform").lock()->rotate(glm::vec3(0.0f, 1.0f * DeltaTime::getDT(), 0.0f));
 
-	movementControls(dt);
+	movementControls();
 
 	for (auto object : GameVariables::data->gameObjs)
 	{
@@ -226,7 +227,7 @@ void Game::render()
 
 }
 
-void Game::movementControls(float dt)
+void Game::movementControls()
 {
 	//If camera control mode get pointer to camera transform, else get the light's transform instead
 	std::shared_ptr<Transform> object = (controllingCamera ? 
@@ -237,7 +238,7 @@ void Game::movementControls(float dt)
 
 	//Precompute the move distance
 	const float speed = 30.0f;
-	float speedDT = speed * dt;
+	float speedDT = speed * DeltaTime::getDT();
 
 	//move along object along x
 	if (InputManager::isKeyHeld(SDLK_a))
@@ -303,9 +304,9 @@ void Game::movementControls(float dt)
 	if (InputManager::isControllerAxisInUse(0, Controller::Axis2D::LeftStick))
 	{
 		object->translate(glm::vec3(
-			InputManager::getControllerAxis2D(0, Controller::Axis2D::LeftStick).x * speed * dt,
+			InputManager::getControllerAxis2D(0, Controller::Axis2D::LeftStick).x * speed * DeltaTime::getDT(),
 			0.0f, 
-			InputManager::getControllerAxis2D(0, Controller::Axis2D::LeftStick).y * speed * dt));
+			InputManager::getControllerAxis2D(0, Controller::Axis2D::LeftStick).y * speed * DeltaTime::getDT()));
 	}
 
 

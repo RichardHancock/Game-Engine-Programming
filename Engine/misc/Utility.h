@@ -31,37 +31,6 @@ namespace Utility
 	/** @brief Quarter PI constant. */
 	const float QUARTER_PI = PI * 0.25f;
 
-	/**
-	@brief Initialize the Random Number functions
-
-	Call this before any random functions, else random will be the same
-	sequence of numbers for each program execution.
-	*/
-	void randomInit();
-
-	/** @brief	Has srand been initialized. */
-	static bool randomInitialized = false;
-
-	/**
-	@brief Generate a random integer number between min and max.
-	
-	@param min - Minimum Number for the range.
-	@param max - Maximum Number for the range.
-	
-	@return int - Random int between min and max.
-	 */
-	int randomInt(int min, int max);
-
-	/**
-	@brief Generate a random float number between min and max.
-	
-	@param min - Minimum Number for the range.
-	@param max - Maximum Number for the range.
-	
-	@return float - Random float between min and max.
-	 */
-	float randomFloat(float min, float max);
-
 
 	/**
 	 @brief Converts int to a string 
@@ -216,10 +185,8 @@ namespace Utility
 
 		/**
 		@brief updates the time in the timer.
-		
-		@param dt - delta time.
 		 */
-		static void update(float dt);
+		static void update();
 
 		/**
 		@brief Creates a new timer with a unique id and a duration.
@@ -310,10 +277,8 @@ namespace Utility
 
 		/**
 		 @brief Updates the Timer (increments the timer).
-		
-		 @param dt The deltatime.
 		 */
-		void update(float dt);
+		void update();
 
 	private:
 		const float TIME_INTERVAL;

@@ -102,9 +102,11 @@
     <ClCompile Include="misc\AABB.cpp" />
     <ClCompile Include="misc\Colour.cpp" />
     <ClCompile Include="misc\CustomDestructors.cpp" />
+    <ClCompile Include="misc\DeltaTime.cpp" />
     <ClCompile Include="misc\GameVariables.cpp" />
     <ClCompile Include="misc\Log.cpp" />
     <ClCompile Include="misc\OBJLoader.cpp" />
+    <ClCompile Include="misc\Random.cpp" />
     <ClCompile Include="misc\Utility.cpp" />
     <ClCompile Include="Platform.cpp" />
     <ClCompile Include="Resource.cpp" />
@@ -135,9 +137,11 @@
     <ClInclude Include="misc\AABB.h" />
     <ClInclude Include="misc\Colour.h" />
     <ClInclude Include="misc\CustomDestructors.h" />
+    <ClInclude Include="misc\DeltaTime.h" />
     <ClInclude Include="misc\GameVariables.h" />
     <ClInclude Include="misc\Log.h" />
     <ClInclude Include="misc\OBJLoader.h" />
+    <ClInclude Include="misc\Random.h" />
     <ClInclude Include="misc\Utility.h" />
     <ClInclude Include="misc\Vec2.h" />
     <ClInclude Include="misc\Vec3.h" />

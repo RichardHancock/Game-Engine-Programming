@@ -34,9 +34,8 @@ public:
 
 	/**
 	@brief Update any internal values
-	@param dt delta time
 	*/
-	virtual void update(float dt) = 0;
+	virtual void update() = 0;
 
 	/**
 	@brief Render any sprites relevant to the state

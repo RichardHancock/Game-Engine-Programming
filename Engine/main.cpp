@@ -8,6 +8,8 @@
 #include "states/StateManager.h"
 #include "states/Game.h"
 #include "ResourceManager.h"
+#include "misc/Random.h"
+#include "misc/DeltaTime.h"
 
 #ifdef _WIN32
 #include <windows.h>
@@ -46,12 +48,13 @@ int main(int argc, char *argv[])
 	if (Platform::getSetting("MSAA") != 0)
 		glEnable(GL_MULTISAMPLE);
 	
-	Utility::randomInit();
+	Random::init();
 
 	StateManager::addState(std::make_shared<Game>());
 
 
-	unsigned int lastTime = SDL_GetTicks();
+	DeltaTime::init();
+
 	bool done = false;
 
 	while (!done)
@@ -60,16 +63,14 @@ int main(int argc, char *argv[])
 
 		// Update
 		//Calculate deltaTime
-		unsigned int current = SDL_GetTicks();
-		float dt = (float)(current - lastTime) / 1000.0f;
-		lastTime = current;
-
-		Utility::Timer::update(dt);
-
-		StateManager::update(dt);
-		
-
+		DeltaTime::update();
 		InputManager::update();
+
+
+		Utility::Timer::update();
+
+		StateManager::update();
+		
 		//ResourceManager::update(dt);
 
 		//Render
@@ -82,9 +83,9 @@ int main(int argc, char *argv[])
 
 		Platform::sdlSwapWindow();
 
-		if (dt < (1.0f / 50.0f))
+		if (DeltaTime::getDT() < (1.0f / 50.0f))
 		{
-			SDL_Delay((unsigned int)(((1.0f / 50.0f) - dt)*1000.0f));
+			SDL_Delay((unsigned int)(((1.0f / 50.0f) - DeltaTime::getDT())*1000.0f));
 		}
 	}
 

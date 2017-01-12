@@ -30,9 +30,8 @@ public:
 
 	/**
 	@brief Update any internal values
-	@param dt delta time
 	*/
-	virtual void update(float dt);
+	virtual void update();
 
 	/**
 	@brief Render any sprites relevant to the state
@@ -43,10 +42,8 @@ private:
 
 	/**
 	 @brief	Handles all movement of objects by checking if a button or key has been pressed.
-	
-	 @param	dt	Deltatime.
 	 */
-	void movementControls(float dt);
+	void movementControls();
 
 	/** @brief	true if currently controlling camera. */
 	bool controllingCamera;

@@ -1,41 +1,9 @@
 #include "Utility.h"
 
 #include <sstream>
-#include <time.h>
 
 #include "Log.h"
-
-void Utility::randomInit()
-{
-	srand((unsigned int) time(NULL));
-	randomInitialized = true;
-}
-
-int Utility::randomInt(int min, int max)
-{
-	if (!randomInitialized)
-	{
-		Log::logW("Random function called without calling randomInit(). Number returned is non-random.");
-	}
-
-	return rand() % (max - min + 1) + min;
-}
-
-float Utility::randomFloat(float min, float max)
-{
-	if (!randomInitialized)
-	{
-		Log::logW("Random function called without calling randomInit(). Number returned is non-random.");
-	}
-
-	// Not written by me it's from: http://stackoverflow.com/a/5289624
-	// Could have used C++11 for random floats, but I think this is adequate.
-	float random = ((float)rand()) / (float)RAND_MAX;
-	float diff = max - min;
-	float r = random * diff;
-	return min + r;
-}
-
+#include "DeltaTime.h"
 
 std::string Utility::intToString(int num)
 {
@@ -230,12 +198,12 @@ const float Utility::Timer::TIME_INTERVAL = 1.0f;
 
 Utility::Timer::Timer() {}
 
-void Utility::Timer::update(float dt)
+void Utility::Timer::update()
 {
 	//Need auto& to get a reference otherwise it's just a local copy (Really Fun Bug to Find)
 	for (auto& timer : timers)
 	{
-		timer.second.currentTime += (float)(TIME_INTERVAL * dt);
+		timer.second.currentTime += (float)(TIME_INTERVAL * DeltaTime::getDT());
 	}
 }
 
@@ -324,11 +292,11 @@ bool Utility::SimpleTimer::hasTimerFinished()
 	return false;
 }
 
-void Utility::SimpleTimer::update(float dt)
+void Utility::SimpleTimer::update()
 {
 	if (running)
 	{
-		timer.currentTime += dt;
+		timer.currentTime += DeltaTime::getDT();
 
 		if (timer.currentTime >= timer.duration)
 		{
