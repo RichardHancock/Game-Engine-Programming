@@ -29,13 +29,15 @@ Texture::~Texture()
 
 bool Texture::load(std::string filename)
 {
+	Log::logI("Loading Image: " + filename);
+
 	if (surface != nullptr)
 	{
 		Log::logE("Texture already loaded");
 		assert(false);
 		return false;
 	}
-
+	
 	surface = IMG_Load(filename.c_str());
 	if (!surface)
 	{
