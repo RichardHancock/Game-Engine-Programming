@@ -32,22 +32,22 @@ void Log::log(LogType type, std::string message)
 	{
 	case I:
 		finalMsg += (" " + message);
-		SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, finalMsg.c_str());
+		SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, "%s", finalMsg.c_str());
 		break;
 
 	case W:
 		finalMsg += (" " + message);
-		SDL_LogWarn(SDL_LOG_CATEGORY_APPLICATION, finalMsg.c_str());
+		SDL_LogWarn(SDL_LOG_CATEGORY_APPLICATION, "%s", finalMsg.c_str());
 		break;
 
 	case E:
 		finalMsg += (" " + message);
-		SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, finalMsg.c_str());
+		SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "%s", finalMsg.c_str());
 		break;
 
 	default:
 		finalMsg += (" Uncategorized: " + message);
-		SDL_Log(finalMsg.c_str());
+		SDL_Log("%s", finalMsg.c_str());
 		break;
 
 	}
