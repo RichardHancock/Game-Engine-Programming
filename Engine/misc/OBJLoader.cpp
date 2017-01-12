@@ -147,7 +147,12 @@ bool OBJLoader::load(std::vector<Vertex> &vertexData, std::string filename)
 			//NEED to handle (or at least throw a error) different types of faces (TRIs, QUADs ...)
 			readFace(line, tempIndicies);
 			break;
+		case Ignored:
+			//None
+			break;
+		case VP:
 		case Unhandled:
+		default:
 			/*
 			std::cout << "Unhandled Line reached: " << curLine << std::endl;
 			std::cout << "Loader will skip the line but the displayed model may be distorted." << std::endl;
