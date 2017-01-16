@@ -105,7 +105,7 @@ Game::Game()
 		1.0f,
 		0.027f,
 		0.0028f,
-		glm::vec3(0.9f, 0.0f, 0.0f),
+		glm::vec3(1.0f, 0.0f, 0.0f),
 		glm::vec3(0.8f, 0.4f, 0.4f),
 		glm::vec3(0.5f)
 	);
@@ -208,7 +208,8 @@ void Game::update()
 		GameVariables::data->gameObjs["sphere"]->getComponent<Transform>().lock()->setPostion(glm::vec3(-40.0f, 0.0f, -5.0f));
 	}
 
-	GameVariables::data->gameObjs["fighter"]->getComponent<Transform>("Transform").lock()->rotate(glm::vec3(0.0f, 1.0f * DeltaTime::getDT(), 0.0f));
+	//GameVariables::data->gameObjs["fighter"]->getComponent<Transform>("Transform").lock()->rotate(glm::vec3(0.0f, 1.0f * DeltaTime::getDT(), 0.0f));
+	GameVariables::data->gameObjs["earth"]->getComponent<Transform>("Transform").lock()->rotate(glm::vec3(0.0f, 0.01f * DeltaTime::getDT(), 0.0f));
 
 	movementControls();
 
@@ -234,40 +235,45 @@ void Game::movementControls()
 		GameVariables::data->currentCamera.lock()
 		->getGameObject().lock()->getComponent<Transform>("Transform").lock()
 		:
-		GameVariables::data->currentLight.lock()->getComponent<Transform>("Transform").lock());
+		//GameVariables::data->currentLight.lock()->getComponent<Transform>("Transform").lock()
+		GameVariables::data->gameObjs["fighter"]->getComponent<Transform>().lock());
 
 	//Precompute the move distance
 	const float speed = 30.0f;
 	float speedDT = speed * DeltaTime::getDT();
+	glm::vec3 forward = object->getForwardVector();
+	glm::vec3 right = object->getRightVector();
+	glm::vec3 up = object->getUpVector();
+
 
 	//move along object along x
 	if (InputManager::isKeyHeld(SDLK_a))
 	{
-		object->translate(glm::vec3(-speedDT, 0, 0));
+		object->translate(-speedDT * right);
 	}
 	else if (InputManager::isKeyHeld(SDLK_d))
 	{
-		object->translate(glm::vec3(speedDT, 0, 0));
+		object->translate(speedDT * right);
 	}
 
 	//move object along y
 	if (InputManager::isKeyHeld(SDLK_q))
 	{
-		object->translate(glm::vec3(0, -speedDT, 0));
+		object->translate(-speedDT * up);
 	}
 	else if (InputManager::isKeyHeld(SDLK_e))
 	{
-		object->translate(glm::vec3(0, speedDT, 0));
+		object->translate(speedDT * up);
 	}
 
 	//move object along z
 	if (InputManager::isKeyHeld(SDLK_w))
 	{
-		object->translate(glm::vec3(0, 0, -speedDT));
+		object->translate(-speedDT * forward);
 	}
 	if (InputManager::isKeyHeld(SDLK_s))
 	{
-		object->translate(glm::vec3(0, 0, speedDT));
+		object->translate(speedDT * forward);
 	}
 
 	float speedRadians = Utility::convertAngleToRadian(speedDT);

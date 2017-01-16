@@ -43,9 +43,9 @@ vec3 CalcPointLight(PointLight light, vec3 normal, vec2 texCoords, vec3 fragPos,
 void main()
 {
 	DirLight dirLight;
-	dirLight.direction = vec3(-0.2f, -0.7f, -0.3f);
-	dirLight.ambient = vec3(0.4f, 0.4f, 0.4f);
-	dirLight.diffuse = vec3(0.6f, 0.6f, 0.6f);
+	dirLight.direction = vec3(-0.2f, -0.4f, -0.3f);
+	dirLight.ambient = vec3(0.6f, 0.6f, 0.6f);
+	dirLight.diffuse = vec3(0.2f, 0.2f, 0.2f);
 	dirLight.specular = vec3(0.4f, 0.4f, 0.4f);
 
 	vec2 flipTexCoords = vec2(fs_in.TexCoords.x, 1.0 - fs_in.TexCoords.y);

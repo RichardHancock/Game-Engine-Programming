@@ -64,7 +64,6 @@ int main(int argc, char *argv[])
 		// Update
 		//Calculate deltaTime
 		DeltaTime::update();
-		InputManager::update();
 
 
 		Utility::Timer::update();
@@ -82,6 +81,8 @@ int main(int argc, char *argv[])
 		StateManager::render();
 
 		Platform::sdlSwapWindow();
+
+		InputManager::update();
 
 		if (DeltaTime::getDT() < (1.0f / 50.0f))
 		{

@@ -187,6 +187,13 @@ public:
 	glm::vec3 getForwardVector();
 
 	/**
+	@brief	Gets up vector.
+
+	@return	The up vector.
+	*/
+	glm::vec3 getUpVector();
+	
+	/**
 	 @brief	Gets right vector.
 	
 	 @return	The right vector.

@@ -232,6 +232,14 @@ glm::vec3 Transform::getForwardVector()
 	return vec4ToVec3(mat * vec);
 }
 
+glm::vec3 Transform::getUpVector()
+{
+	glm::mat4 mat = buildTransformMat(localPosition, localRotation, localScale);
+	glm::vec4 vec(0, 1, 0, 0);
+
+	return vec4ToVec3(mat * vec);
+}
+
 glm::vec3 Transform::getRightVector()
 {
 	glm::mat4 mat = buildTransformMat(localPosition, localRotation, localScale);
