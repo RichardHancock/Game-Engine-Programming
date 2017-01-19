@@ -43,6 +43,26 @@ namespace Utility
 	std::string intToString(int num);
 
 	/**
+	@brief Converts int to a string
+	Created because some compilers still don't support std::to_string()
+
+	@param num - Number to convert.
+
+	@return std::string - Converted string.
+	*/
+	std::string intToString(unsigned int num);
+
+	/**
+	@brief Converts int to a string
+	Created because some compilers still don't support std::to_string()
+
+	@param num - Number to convert.
+
+	@return std::string - Converted string.
+	*/
+	std::string intToString(Uint8 num);
+
+	/**
 	 @brief Converts float to a string 
 	 Created because some compilers still don't support std::to_string()
 	

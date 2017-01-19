@@ -46,7 +46,7 @@
       <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>C:\SDKs\SDL2015\include;C:\SDKs;C:\SDKs\assimp\include;C:\SDKs\bullet3-2.83.6\src;C:\SDKs\pugixml-1.7\src;C:\SDKs\glew-1.13.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\SDKs\SDL2015\include;C:\SDKs;C:\SDKs\assimp-3.3.1\include;C:\SDKs\bullet3-2.83.6\src;C:\SDKs\pugixml-1.7\src;C:\SDKs\glew-1.13.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>false</MultiProcessorCompilation>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <PreprocessorDefinitions>_MBCS;GLEW_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -54,8 +54,8 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\SDKs\SDL2015\lib\x86;C:\SDKs\assimp\bin\debug;C:\SDKs\bullet3-2.83.6\lib\Debug;%(AdditionalLibraryDirectories);C:\SDKs\pugixml-1.7\lib\x86;C:\SDKs\glew-1.13.0\lib\x86</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glew32sd.lib;SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2_mixer.lib;SDL2_ttf.lib;OpenGL32.lib;LinearMath.lib;BulletCollision.lib;Bullet3Collision.lib;BulletDynamics.lib;Bullet3Dynamics.lib;assimpd.lib;pugixmlDebug.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\SDKs\SDL2015\lib\x86;C:\SDKs\assimp-3.3.1\lib\debug;C:\SDKs\bullet3-2.83.6\lib\Debug;%(AdditionalLibraryDirectories);C:\SDKs\pugixml-1.7\lib\x86;C:\SDKs\glew-1.13.0\lib\x86</AdditionalLibraryDirectories>
+      <AdditionalDependencies>glew32sd.lib;SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2_mixer.lib;SDL2_ttf.lib;OpenGL32.lib;LinearMath.lib;BulletCollision.lib;Bullet3Collision.lib;BulletDynamics.lib;Bullet3Dynamics.lib;assimp-vc140-mt.lib;pugixmlDebug.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Console</SubSystem>
     </Link>
   </ItemDefinitionGroup>
@@ -66,7 +66,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>C:\SDKs\SDL2015\include;C:\SDKs;C:\SDKs\assimp\include;C:\SDKs\bullet3-2.83.6\src;C:\SDKs\pugixml-1.7\src;C:\SDKs\glew-1.13.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\SDKs\SDL2015\include;C:\SDKs;C:\SDKs\assimp-3.3.1\include;C:\SDKs\bullet3-2.83.6\src;C:\SDKs\pugixml-1.7\src;C:\SDKs\glew-1.13.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>false</MultiProcessorCompilation>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <PreprocessorDefinitions>_MBCS;GLEW_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -76,8 +76,8 @@
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>C:\SDKs\SDL2015\lib\x86;C:\SDKs\assimp\bin\release;C:\SDKs\bullet3-2.83.6\lib\Release;%(AdditionalLibraryDirectories);C:\SDKs\pugixml-1.7\lib\x86;C:\SDKs\glew-1.13.0\lib\x86</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glew32s.lib;SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2_mixer.lib;SDL2_ttf.lib;OpenGL32.lib;LinearMath.lib;BulletCollision.lib;Bullet3Collision.lib;BulletDynamics.lib;Bullet3Dynamics.lib;assimp.lib;pugixml.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\SDKs\SDL2015\lib\x86;C:\SDKs\assimp-3.3.1\lib\release;C:\SDKs\bullet3-2.83.6\lib\Release;%(AdditionalLibraryDirectories);C:\SDKs\pugixml-1.7\lib\x86;C:\SDKs\glew-1.13.0\lib\x86</AdditionalLibraryDirectories>
+      <AdditionalDependencies>glew32s.lib;SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2_mixer.lib;SDL2_ttf.lib;OpenGL32.lib;LinearMath.lib;BulletCollision.lib;Bullet3Collision.lib;BulletDynamics.lib;Bullet3Dynamics.lib;assimp-vc140-mt.lib;pugixml.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Console</SubSystem>
     </Link>
   </ItemDefinitionGroup>

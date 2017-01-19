@@ -16,6 +16,26 @@ std::string Utility::intToString(int num)
 	
 }
 
+std::string Utility::intToString(unsigned int num)
+{
+	std::stringstream stream;
+
+	stream << num;
+	std::string result = stream.str();
+
+	return result;
+}
+
+std::string Utility::intToString(Uint8 num)
+{
+	std::stringstream stream;
+
+	stream << (int)num;
+	std::string result = stream.str();
+
+	return result;
+}
+
 std::string Utility::floatToString(float num)
 {
 	std::stringstream stream;

@@ -120,6 +120,46 @@ private:
 	static Vec2 windowSize;
 
 
+	//Version Number
+	
+	static std::string versionStringConverter(SDL_version* version);
+
+	/** 
+	@brief Gets a version string of SDL
+	Using the parameter you can compare the runtime version to the version that you compiled with.
+
+	@param linked Return the linked version number, or the compiled version number.
+	@return Version String in this format "0.0.0" or "major.minor.patch".
+	*/
+	static std::string getSDLVersionString(bool linked);
+
+	/**
+	@brief Gets a version string of SDL_image
+	Using the parameter you can compare the runtime version to the version that you compiled with.
+
+	@param linked Return the linked version number, or the compiled version number.
+	@return Version String in this format "0.0.0" or "major.minor.patch".
+	*/
+	static std::string getSDLImageVersionString(bool linked);
+
+	/**
+	@brief Gets a version string of SDL_mixer
+	Using the parameter you can compare the runtime version to the version that you compiled with.
+
+	@param linked Return the linked version number, or the compiled version number.
+	@return Version String in this format "0.0.0" or "major.minor.patch".
+	*/
+	static std::string getSDLMixerVersionString(bool linked);
+
+	/**
+	@brief Gets a version string of SDL_ttf
+	Using the parameter you can compare the runtime version to the version that you compiled with.
+
+	@param linked Return the linked version number, or the compiled version number.
+	@return Version String in this format "0.0.0" or "major.minor.patch".
+	*/
+	static std::string getSDLTtfVersionString(bool linked);
+
 	//Settings
 
 	/** @brief	Create a local settings file from the default settings file. */

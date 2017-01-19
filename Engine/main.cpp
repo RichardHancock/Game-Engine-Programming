@@ -1,6 +1,7 @@
 #define GLM_FORCE_CXX11
 
 #include <SDL.h>
+#include <assimp/version.h>
 
 #include "Platform.h"
 #include "misc/Utility.h"
@@ -14,7 +15,7 @@
 #ifdef _WIN32
 #include <windows.h>
 
-//This forces NVIDIA hybrid GPU's (Intel and Nvidia integrated) to use the high performance NVidia chip rather than the Intel.
+//This forces NVIDIA hybrid GPU's (Intel and NVidia integrated) to use the high performance NVidia chip rather than the Intel.
 //This was recommended by NVidia's policies: http://developer.download.nvidia.com/devzone/devcenter/gamegraphics/files/OptimusRenderingPolicies.pdf
 extern "C" {
 	_declspec(dllexport) DWORD NvOptimusEnablement = 0x00000001;
@@ -48,6 +49,9 @@ int main(int argc, char *argv[])
 	if (Platform::getSetting("MSAA") != 0)
 		glEnable(GL_MULTISAMPLE);
 	
+	Log::logI("Assimp Version: " + Utility::intToString(aiGetVersionMajor()) + 
+		"." + Utility::intToString(aiGetVersionMinor())
+		+ "." + Utility::intToString(aiGetVersionRevision()));
 	Random::init();
 
 	StateManager::addState(std::make_shared<Game>());
@@ -73,9 +77,9 @@ int main(int argc, char *argv[])
 		//ResourceManager::update(dt);
 
 		//Render
-		// Specify the colour to clear the framebuffer to
+		// Specify the colour to clear the frame buffer to
 		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-		// This writes the above colour to the colour part of the framebuffer
+		// This writes the above colour to the colour part of the frame buffer
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		StateManager::render();

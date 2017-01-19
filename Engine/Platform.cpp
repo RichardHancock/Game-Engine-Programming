@@ -58,6 +58,7 @@ bool Platform::initGLEW()
 	return true;
 }
 
+
 bool Platform::initSDL(bool openGL, std::string windowTitle)
 {
 	///@todo abort program on every error rather than just waiting
@@ -71,12 +72,18 @@ bool Platform::initSDL(bool openGL, std::string windowTitle)
 		Log::logE("SDL Init failed: " + std::string(SDL_GetError()));
 	}
 	
+	Log::logI("SDL Version: Compiled: " + getSDLVersionString(false) + 
+		" / Linked: " + getSDLVersionString(true));
+
 	//SDL TTF Initialization
 	if (TTF_Init() < 0)
 	{
 		status = false;
 		Log::logE("SDL_ttf init failed: " + std::string(TTF_GetError()));
 	}
+
+	Log::logI("SDL_ttf Version: Compiled: " + getSDLTtfVersionString(false) +
+		" / Linked: " + getSDLTtfVersionString(true));
 
 	//SDL Mixer Initialization
 	Mix_Init(MIX_INIT_OGG);
@@ -87,6 +94,9 @@ bool Platform::initSDL(bool openGL, std::string windowTitle)
 		Log::logE("SDL_mixer init failed: " + std::string(Mix_GetError()));
 	}
 	
+	Log::logI("SDL_mixer Version: Compiled: " + getSDLMixerVersionString(false) +
+		" / Linked: " + getSDLMixerVersionString(true));
+
 	//SDL Image Initialization
 	int flags= IMG_INIT_PNG;
 	int result = IMG_Init(flags);
@@ -96,6 +106,9 @@ bool Platform::initSDL(bool openGL, std::string windowTitle)
 	{
 		Log::logE("Failed to Initialise SDL_Image and png support: "+ std::string(IMG_GetError()));
 	}
+
+	Log::logI("SDL_image Version: Compiled: " + getSDLImageVersionString(false) +
+		" / Linked: " + getSDLImageVersionString(true));
 
 
 	//Set OpenGL params
@@ -196,6 +209,104 @@ bool Platform::initSDL(bool openGL, std::string windowTitle)
 }
 
 
+std::string Platform::versionStringConverter(SDL_version * version)
+{
+	return (Utility::intToString(version->major) + "." + 
+		Utility::intToString(version->minor) + "." + 
+		Utility::intToString(version->patch));
+}
+
+std::string Platform::getSDLVersionString(bool linked)
+{
+	SDL_version* version = new SDL_version();
+
+	if (linked)
+	{
+		SDL_GetVersion(version);
+	}
+	else
+	{
+		SDL_VERSION(version);
+	}
+
+	std::string result = versionStringConverter(version);
+	SDL_free(version);
+	delete version;
+	return result;
+}
+
+std::string Platform::getSDLImageVersionString(bool linked)
+{
+	SDL_version* version = new SDL_version();
+
+	if (linked)
+	{
+		//Small hack to stop having to do bad const casts
+		const SDL_version* tempVersion = IMG_Linked_Version();
+		version->major = tempVersion->major;
+		version->minor = tempVersion->minor;
+		version->patch = tempVersion->patch;
+		//SDL_free(tempVersion); I don't know if this is necessary.
+	}
+	else
+	{
+		SDL_IMAGE_VERSION(version);
+	}
+
+	std::string result = versionStringConverter(version);
+	SDL_free(version);
+	delete version;
+	return result;
+}
+
+std::string Platform::getSDLMixerVersionString(bool linked)
+{
+	SDL_version* version = new SDL_version();
+
+	if (linked)
+	{
+		//Small hack to stop having to do bad const casts
+		const SDL_version* tempVersion = Mix_Linked_Version();
+		version->major = tempVersion->major;
+		version->minor = tempVersion->minor;
+		version->patch = tempVersion->patch;
+		//SDL_free(tempVersion); I don't know if this is necessary.
+	}
+	else
+	{
+		SDL_MIXER_VERSION(version);
+	}
+
+	std::string result = versionStringConverter(version);
+	SDL_free(version);
+	delete version;
+	return result;
+}
+
+std::string Platform::getSDLTtfVersionString(bool linked)
+{
+	SDL_version* version = new SDL_version();
+
+	if (linked)
+	{
+		//Small hack to stop having to do bad const casts
+		const SDL_version* tempVersion = TTF_Linked_Version();
+		version->major = tempVersion->major;
+		version->minor = tempVersion->minor;
+		version->patch = tempVersion->patch;
+		//SDL_free(tempVersion); I don't know if this is necessary.
+	}
+	else
+	{
+		SDL_TTF_VERSION(version);
+	}
+
+	std::string result = versionStringConverter(version);
+	SDL_free(version);
+	delete version;
+	return result;
+}
+
 void Platform::loadSettingsFromFile(std::string org, std::string app)
 {
 	//Get the path and combine with filename for settings file location
@@ -258,10 +369,10 @@ void Platform::loadSettingsFromFile(std::string org, std::string app)
 
 	if (tempFullscreenMode < 0 || tempFullscreenMode > 2)
 	{
-		Log::logE("Fullsceen Mode Setting is invalid, please reset to 0, 1 or 2 in settings file");
+		Log::logE("Fullscreen Mode Setting is invalid, please reset to 0, 1 or 2 in settings file");
 		SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR,
 			"Fullscreen Mode Invalid",
-			"Fullsceen Mode Setting is invalid, please reset to 0, 1 or 2 in settings file.",
+			"Fullscreen Mode Setting is invalid, please reset to 0, 1 or 2 in settings file.",
 			NULL);
 		exit(-1);
 	}
