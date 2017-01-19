@@ -217,7 +217,8 @@ void GameModel::initModelFromAdvVertices(std::vector<Vertex> advVertices)
 
 	const int vertexCount = advVertices.size() * 8;
 	numVertices = advVertices.size();
-	GLfloat* vertexData = new GLfloat[vertexCount];
+	std::vector<GLfloat> vertexData;
+	vertexData.resize(vertexCount);
 	
 	for (unsigned int i = 0; i < advVertices.size(); i++)
 	{
@@ -249,7 +250,7 @@ void GameModel::initModelFromAdvVertices(std::vector<Vertex> advVertices)
 	
 	glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
 	
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * vertexCount, vertexData, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * vertexCount, &vertexData[0], GL_STATIC_DRAW);
 
 
 	glEnableVertexAttribArray(0);

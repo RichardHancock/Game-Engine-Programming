@@ -38,4 +38,9 @@ void CustomDestructors::SDL_Deleter::operator()(SDL_Context* context)
 		SDL_DestroyWindow(context->window);
 		context->window = nullptr;
 	}
+
+	if (context != nullptr)
+	{
+		delete context;
+	}
 }
