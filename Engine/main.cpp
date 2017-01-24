@@ -35,6 +35,7 @@ int main(int argc, char *argv[])
 
 	Platform::init(settingsFilename);
 	Platform::loadSettingsFromFile("RH", "Engine");
+	Log::logI("Settings fully loaded.");
 
 	if (!Platform::initSDL(true, "Engine"))
 	{

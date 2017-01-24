@@ -65,6 +65,8 @@ bool Platform::initSDL(bool openGL, std::string windowTitle)
 
 	bool status = true;
 	
+	Log::logI("Initializing SDL and its plugins.");
+
 	//Android doesn't need this at SDL internally does this
 	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_GAMECONTROLLER | SDL_INIT_JOYSTICK | SDL_INIT_HAPTIC) < 0) 
 	{ 
