@@ -14,6 +14,7 @@ const std::string Platform::defaultSettingsPath = "resources/defaultSettings.xml
 Setting::FullscreenMode Platform::fullscreenMode = Setting::FullscreenMode::Windowed;
 std::unordered_map<std::string, int> Platform::settings;
 std::unordered_map<std::string, bool> Platform::features;
+Platform::Renderer Platform::currentRenderer;
 
 
 void Platform::init(std::string newSettingsFilename)
@@ -170,6 +171,7 @@ bool Platform::initSDL(bool openGL, std::string windowTitle)
 			std::string(SDL_GetError()));
 	}
 	
+	currentRenderer = Renderer::Dummy;
 
 	if (openGL) 
 	{
@@ -177,13 +179,21 @@ bool Platform::initSDL(bool openGL, std::string windowTitle)
 
 		if (sdlContext->glContext == nullptr) 
 		{
-			status = false;
-			Log::logE("GL context failed to be created: " + std::string(SDL_GetError()));
-		}
+			#ifdef NDEBUG
+			return false;
+			#endif // NDEBUG
 
-		if (!initGLEW()) 
+			Log::logE("GL context failed to be created: " + std::string(SDL_GetError()));
+			Log::logI("Dummy Renderer will be used instead. THIS PROVIDES NO DISPLAY OUTPUT");
+			currentRenderer = Renderer::Dummy;
+		}
+		else
 		{
-			status = false;
+			if (!initGLEW())
+			{
+				status = false;
+			}
+			currentRenderer = Renderer::OpenGL;
 		}
 	}
 
@@ -396,6 +406,16 @@ void Platform::loadSettingsFromFile(std::string org, std::string app)
 	
 }
 
+Platform::Renderer Platform::getCurrentRenderer()
+{
+	return currentRenderer;
+}
+
+bool Platform::isDummyRenderer()
+{
+	return currentRenderer == Renderer::Dummy;
+}
+
 void Platform::initSettingsFile()
 {
 	std::ifstream defaultSettings(defaultSettingsPath);
@@ -444,7 +464,10 @@ bool Platform::settingsFileExists()
 
 void Platform::sdlSwapWindow()
 {
-	SDL_GL_SwapWindow(sdlContext->window);
+	if (currentRenderer != Renderer::Dummy)
+	{
+		SDL_GL_SwapWindow(sdlContext->window);
+	}
 }
 
 int Platform::getSetting(std::string setting)

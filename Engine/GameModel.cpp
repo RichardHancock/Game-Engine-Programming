@@ -7,6 +7,7 @@
 #include "misc/Vertex.h"
 #include "misc/Utility.h"
 #include "misc/Log.h"
+#include "Platform.h"
 
 
 
@@ -15,8 +16,7 @@ GameModel::GameModel(const aiScene* scene)
 	indexBuffer = 0;
 	numVertices = 0;
 	numIndices = 0;
-
-	glGenVertexArrays(1, &VAO);
+	VAO = (GLuint)-1;
 
 	processAssimpScene(scene);
 }
@@ -28,10 +28,9 @@ GameModel::GameModel(std::vector<glm::vec3>* vertices, std::vector<glm::vec3>* n
 	indexBuffer = 0;
 	numVertices = 0;
 	numIndices = 0;
+	VAO = (GLuint)-1;
 
-	// Creates one VAO
-	glGenVertexArrays(1, &VAO);
-
+	
 	// Create the model
 	if (vertices == nullptr)
 	{
@@ -41,16 +40,25 @@ GameModel::GameModel(std::vector<glm::vec3>* vertices, std::vector<glm::vec3>* n
 	}
 
 	numVertices = vertices->size();
-	addVBO(*vertices);
+	
+	
+	if (!Platform::isDummyRenderer())
+	{
+		// Creates one VAO
+		glGenVertexArrays(1, &VAO);
 
-	if (normals != nullptr) 
-		addVBO(*normals);
 
-	if (uvs != nullptr)
-		addVBO(*uvs);
+		addVBO(*vertices);
 
-	if (indices != nullptr)
-		addIndexBuffer(*indices);
+		if (normals != nullptr)
+			addVBO(*normals);
+
+		if (uvs != nullptr)
+			addVBO(*uvs);
+
+		if (indices != nullptr)
+			addIndexBuffer(*indices);
+	}
 }
 
 GameModel::GameModel(std::vector<Vertex> advVertices)
@@ -58,8 +66,7 @@ GameModel::GameModel(std::vector<Vertex> advVertices)
 	indexBuffer = 0;
 	numVertices = 0;
 	numIndices = 0;
-
-	glGenVertexArrays(1, &VAO);
+	VAO = (GLuint)-1;
 	
 	initModelFromAdvVertices(advVertices);
 }
@@ -73,8 +80,9 @@ GameModel::~GameModel()
 	}
 	VBOs.clear();
 
-	//I believe this will delete all associated data, as once a VBO/Texture has nothing referencing it, it will be deleted
-	glDeleteVertexArrays(1, &VAO);
+	//I believe this will delete all associated data, as once a VBO has nothing referencing it, it will be deleted
+	if (VAO != -1)
+		glDeleteVertexArrays(1, &VAO);
 
 }
 
@@ -161,24 +169,30 @@ void GameModel::processAssimpScene(const aiScene* scene)
 			indices
 		);
 	}
-	
-	//Fill Buffers
-	glBindVertexArray(VAO);
-
-	addVBO(positions);
-	addVBO(normals);
-	addVBO(uvs);
-	addVBO(tangents);
-	addVBO(biTangents);
-
-	addIndexBuffer(indices);
 
 	//Calculate AABB bounds
 	calculateAABB(positions);
 
-	glBindVertexArray(0);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+	//OpenGL Buffer Creation
+	if (!Platform::isDummyRenderer())
+	{
+		glGenVertexArrays(1, &VAO);
+
+		//Fill Buffers
+		glBindVertexArray(VAO);
+
+		addVBO(positions);
+		addVBO(normals);
+		addVBO(uvs);
+		addVBO(tangents);
+		addVBO(biTangents);
+
+		addIndexBuffer(indices);
+
+		glBindVertexArray(0);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+	}
 }
 
 void GameModel::initMeshFromAssimp(aiMesh* mesh, std::vector<glm::vec3>& positions, std::vector<glm::vec3>& normals, 
@@ -213,8 +227,6 @@ void GameModel::initMeshFromAssimp(aiMesh* mesh, std::vector<glm::vec3>& positio
 
 void GameModel::initModelFromAdvVertices(std::vector<Vertex> advVertices)
 {
-	glBindVertexArray(VAO);
-
 	const int vertexCount = advVertices.size() * 8;
 	numVertices = advVertices.size();
 	std::vector<GLfloat> vertexData;
@@ -244,31 +256,39 @@ void GameModel::initModelFromAdvVertices(std::vector<Vertex> advVertices)
 		0
 	));
 
-	GLuint vertexBuffer = 0;
-	
-	glGenBuffers(1, &vertexBuffer);
-	
-	glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-	
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * vertexCount, &vertexData[0], GL_STATIC_DRAW);
-
-
-	glEnableVertexAttribArray(0);
-	glEnableVertexAttribArray(1);
-	glEnableVertexAttribArray(2);
-
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(0 + offsetof(Vertex, v)));
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(0 + offsetof(Vertex, vn)));
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(0 + offsetof(Vertex, vt)));
-
-	VBOs.push_back(vertexBuffer);
-	
 	//Calculate AABB bounds
 	calculateAABB(advVertices);
 
-	glBindVertexArray(0);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+	//OpenGL Buffer Creation
+	if (!Platform::isDummyRenderer())
+	{
+		glGenVertexArrays(1, &VAO);
+
+		glBindVertexArray(VAO);
+
+		GLuint vertexBuffer = 0;
+
+		glGenBuffers(1, &vertexBuffer);
+
+		glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+
+		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * vertexCount, &vertexData[0], GL_STATIC_DRAW);
+
+
+		glEnableVertexAttribArray(0);
+		glEnableVertexAttribArray(1);
+		glEnableVertexAttribArray(2);
+
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(0 + offsetof(Vertex, v)));
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(0 + offsetof(Vertex, vn)));
+		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(0 + offsetof(Vertex, vt)));
+
+		VBOs.push_back(vertexBuffer);
+
+		glBindVertexArray(0);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+	}
 }
 
 void GameModel::addVBO(std::vector<glm::vec3> &data)

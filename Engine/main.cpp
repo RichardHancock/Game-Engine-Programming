@@ -78,14 +78,18 @@ int main(int argc, char *argv[])
 		//ResourceManager::update(dt);
 
 		//Render
-		// Specify the colour to clear the frame buffer to
-		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-		// This writes the above colour to the colour part of the frame buffer
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		if (!Platform::isDummyRenderer())
+		{
+			// Specify the colour to clear the frame buffer to
+			glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+			// This writes the above colour to the colour part of the frame buffer
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		}
 
 		StateManager::render();
 
 		Platform::sdlSwapWindow();
+
 
 		InputManager::update();
 

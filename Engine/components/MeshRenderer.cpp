@@ -7,6 +7,7 @@
 #include "../misc/GameVariables.h"
 #include "Camera.h"
 #include "Light.h"
+#include "../Platform.h"
 
 MeshRenderer::~MeshRenderer()
 {
@@ -84,7 +85,7 @@ void MeshRenderer::onRender()
 	//Calculate Matrices
 	if (GameVariables::data->currentCamera.expired())
 	{
-		Log::logE("No camera availabe in MeshRenderer::render");
+		Log::logE("No camera available in MeshRenderer::render");
 		return;
 	}
 
@@ -100,7 +101,7 @@ void MeshRenderer::onRender()
 	std::weak_ptr<GameObject> lightObj = GameVariables::data->currentLight;
 	if (lightObj.expired())
 	{
-		Log::logE("No lights in scene, this can cause unforceen behaviour");
+		Log::logE("No lights in scene, this can cause unforeseen behaviour");
 		return;
 	}
 	std::shared_ptr<Light> light = lightObj.lock()->getComponent<Light>().lock();
@@ -118,22 +119,25 @@ void MeshRenderer::onRender()
 
 		std::shared_ptr<Material> material = materialRef.lock();
 
-		std::shared_ptr<Shader> shader = material->getShader().lock();
-		material->useProgram();
-		shader->setUniform("modelMat", modelMat);
-		shader->setUniform("viewMat", viewMat);
-		shader->setUniform("projMat", camera->getProjMat());
-		shader->setUniform("lightPos", light->getPosition());
-		shader->setUniform("viewPos", glm::vec3(viewMat[3][0], viewMat[3][1], viewMat[3][2]));
+		if (!Platform::isDummyRenderer())
+		{
+			std::shared_ptr<Shader> shader = material->getShader().lock();
+			material->useProgram();
+			shader->setUniform("modelMat", modelMat);
+			shader->setUniform("viewMat", viewMat);
+			shader->setUniform("projMat", camera->getProjMat());
+			shader->setUniform("lightPos", light->getPosition());
+			shader->setUniform("viewPos", glm::vec3(viewMat[3][0], viewMat[3][1], viewMat[3][2]));
 
-		shader->setUniform("pointlight.constant", light->getConstant());
-		shader->setUniform("pointlight.linear", light->getLinear());
-		shader->setUniform("pointlight.quadratic", light->getQuadratic());
-		shader->setUniform("pointlight.ambient", light->getAmbient());
-		shader->setUniform("pointlight.diffuse", light->getDiffuse());
-		shader->setUniform("pointlight.specular", light->getSpecular());
-		shader->setUniform("pointlight.position", light->getPosition());
-		
-		Graphics::renderMesh(mesh, curMesh, material);
+			shader->setUniform("pointlight.constant", light->getConstant());
+			shader->setUniform("pointlight.linear", light->getLinear());
+			shader->setUniform("pointlight.quadratic", light->getQuadratic());
+			shader->setUniform("pointlight.ambient", light->getAmbient());
+			shader->setUniform("pointlight.diffuse", light->getDiffuse());
+			shader->setUniform("pointlight.specular", light->getSpecular());
+			shader->setUniform("pointlight.position", light->getPosition());
+
+			Graphics::renderMesh(mesh, curMesh, material);
+		}
 	}
 }

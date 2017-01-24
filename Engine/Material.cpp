@@ -2,6 +2,8 @@
 
 #include <GL/glew.h>
 
+#include "Platform.h"
+
 Material::Material(std::string vShaderFilename, std::string fShaderFilename)
 {
 	shader = std::make_shared<Shader>(vShaderFilename, fShaderFilename);
@@ -25,11 +27,17 @@ void Material::addTexture(std::string name, std::weak_ptr<Texture> texture)
 		Log::logW(name + " already exists in texture array, this may cause undefined behaviours to occur");
 	}
 
-	GLint texID  = shader->getUniformLocation(name);
-	if (texID == -1)
+	GLint texID = -1;
+
+	//if dummy renderer just provide a invalid texID as it won't be used
+	if (shader->getProgram() != (GLuint)-1)
 	{
-		Log::logE(name + " could not be found in the shader uniforms");
-		return;
+		texID = shader->getUniformLocation(name);
+		if (texID == -1)
+		{
+			Log::logE(name + " could not be found in the shader uniforms");
+			return;
+		}
 	}
 
 	textures[name] = GLTextureInfo(texture, texID);
@@ -37,29 +45,31 @@ void Material::addTexture(std::string name, std::weak_ptr<Texture> texture)
 
 void Material::useProgram()
 {
-	glUseProgram(shader->getProgram());
-	
-	//As the texture array is an unordered map a standard for loop is not possible, so 'i' must be counted externally
-	GLuint currentTexUnit = 0;
-	for (auto texture : textures)
+	if (shader->getProgram() != -1)
 	{
-		glUniform1i(texture.second.index, currentTexUnit);
-		
-		///TODO Wrap in debug wrapper
-		//Check for the maximum available texture units
-		GLint maxAvailableTexUnits = 0;
-		glGetIntegerv(GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS, &maxAvailableTexUnits);
+		glUseProgram(shader->getProgram());
 
-		//Really unlikely but just to be safe
-		assert((GLint)currentTexUnit < maxAvailableTexUnits);
+		//As the texture array is an unordered map a standard for loop is not possible, so 'i' must be counted externally
+		GLuint currentTexUnit = 0;
+		for (auto texture : textures)
+		{
+			glUniform1i(texture.second.index, currentTexUnit);
 
-		//Activate the next available texture unit
-		glActiveTexture(GL_TEXTURE0 + currentTexUnit);
-		//Provide the texture data's ID
-		glBindTexture(GL_TEXTURE_2D, texture.second.data.lock()->getGLTexID());
+			///TODO Wrap in debug wrapper
+			//Check for the maximum available texture units
+			GLint maxAvailableTexUnits = 0;
+			glGetIntegerv(GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS, &maxAvailableTexUnits);
 
-		
-		currentTexUnit++;
+			//Really unlikely but just to be safe
+			assert((GLint)currentTexUnit < maxAvailableTexUnits);
+
+			//Activate the next available texture unit
+			glActiveTexture(GL_TEXTURE0 + currentTexUnit);
+			//Provide the texture data's ID
+			glBindTexture(GL_TEXTURE_2D, texture.second.data.lock()->getGLTexID());
+
+
+			currentTexUnit++;
+		}
 	}
-	
 }

@@ -1,17 +1,30 @@
 #include "Shader.h"
-#include "misc/Log.h"
+
 #include <fstream>
+
+#include "misc/Log.h"
+#include "Platform.h"
 
 Shader::Shader(std::string vShaderFilename, std::string fShaderFilename)
 {
-	initialiseShaders(vShaderFilename, fShaderFilename);
+	vShader = (GLuint)-1;
+	fShader = (GLuint)-1;
+	program = (GLuint)-1;
+
+	if (!Platform::isDummyRenderer())
+		initialiseShaders(vShaderFilename, fShaderFilename);
 }
 
 Shader::~Shader()
 {
-	glDeleteShader(vShader);
-	glDeleteShader(fShader);
-	glDeleteProgram(program);
+	if (vShader != -1)
+		glDeleteShader(vShader);
+
+	if (fShader != -1)
+		glDeleteShader(fShader);
+
+	if (program != -1)
+		glDeleteProgram(program);
 }
 
 void Shader::initialiseShaders(std::string vShaderFilename, std::string fShaderFilename)

@@ -46,6 +46,13 @@ class Platform
 {
 public:
 
+	enum Renderer
+	{
+		Dummy,
+		OpenGL
+		//OpenGL_Legacy
+	};
+
 	/**
 	@brief Constructor.
 	
@@ -74,6 +81,9 @@ public:
 	 */
 	static void loadSettingsFromFile(std::string org, std::string app);
 
+	static Renderer getCurrentRenderer();
+
+	static bool isDummyRenderer();
 
 	/**
 	 @brief Gets a Vec2 containing the windows size.
@@ -119,7 +129,8 @@ private:
 	/** @brief Size of the window. */
 	static Vec2 windowSize;
 
-
+	static Renderer currentRenderer;
+	
 	//Version Number
 	
 	static std::string versionStringConverter(SDL_version* version);

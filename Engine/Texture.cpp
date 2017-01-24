@@ -4,18 +4,19 @@
 #include <assert.h>
 
 #include "misc/Log.h"
+#include "Platform.h"
 
 Texture::Texture(std::string filename)
-	: Resource(), surface(nullptr), texID(0)
+	: Resource(), surface(nullptr), texID((GLuint)-1)
 {	
-	if (load(filename))
+	if (load(filename) && !Platform::isDummyRenderer())
 		loadForOpenGL();
 }
 
 Texture::Texture(SDL_Surface* surface)
-	: Resource(), surface(nullptr), texID(0)
+	: Resource(), surface(nullptr), texID((GLuint)-1)
 {
-	if (load(surface))
+	if (load(surface) && !Platform::isDummyRenderer())
 		loadForOpenGL();
 
 }
@@ -24,7 +25,8 @@ Texture::~Texture()
 {
 	SDL_FreeSurface(surface);
 
-	glDeleteTextures(1, &texID);
+	if (texID != -1)
+		glDeleteTextures(1, &texID);
 }
 
 bool Texture::load(std::string filename)
