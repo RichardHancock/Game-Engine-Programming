@@ -233,7 +233,6 @@ std::string Platform::getSDLVersionString(bool linked)
 
 	std::string result = versionStringConverter(version);
 	SDL_free(version);
-	delete version;
 	return result;
 }
 
@@ -257,7 +256,6 @@ std::string Platform::getSDLImageVersionString(bool linked)
 
 	std::string result = versionStringConverter(version);
 	SDL_free(version);
-	delete version;
 	return result;
 }
 
@@ -281,7 +279,6 @@ std::string Platform::getSDLMixerVersionString(bool linked)
 
 	std::string result = versionStringConverter(version);
 	SDL_free(version);
-	delete version;
 	return result;
 }
 
@@ -305,7 +302,6 @@ std::string Platform::getSDLTtfVersionString(bool linked)
 
 	std::string result = versionStringConverter(version);
 	SDL_free(version);
-	delete version;
 	return result;
 }
 
