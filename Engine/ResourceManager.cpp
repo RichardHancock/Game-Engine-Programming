@@ -232,6 +232,10 @@ std::weak_ptr<GameModel> ResourceManager::loadModelFromAssimp(std::string modelF
 		return std::weak_ptr<GameModel>();
 	}
 
+	aiMemoryInfo memory;
+	modelImporter->GetMemoryRequirements(memory);
+	printAssimpMemoryUsage(memory);
+
 	//Load Model
 	std::shared_ptr<GameModel> modelData = std::make_shared<GameModel>(rawModelData);
 
@@ -244,6 +248,19 @@ std::weak_ptr<GameModel> ResourceManager::loadModelFromAssimp(std::string modelF
 	//Store and return model
 	models[modelFilename] = modelData;
 	return modelData;
+}
+
+void ResourceManager::printAssimpMemoryUsage(aiMemoryInfo& memory)
+{
+	Log::logI("Assimp Memory Usage: ");
+	Log::logI("    Animations: " + Utility::floatToString(memory.animations / 1024.0f, 2) + "KB");
+	Log::logI("    Cameras: "    + Utility::floatToString(memory.cameras / 1024.0f, 2) + "KB");
+	Log::logI("    Lights: "     + Utility::floatToString(memory.lights / 1024.0f, 2) + "KB");
+	Log::logI("    Materials: "  + Utility::floatToString(memory.materials / 1024.0f, 2) + "KB");
+	Log::logI("    Meshes: "     + Utility::floatToString(memory.meshes / 1024.0f, 2) + "KB");
+	Log::logI("    Nodes: "      + Utility::floatToString(memory.nodes / 1024.0f, 2) + "KB");
+	Log::logI("    Textures: "   + Utility::floatToString(memory.textures / 1024.0f, 2) + "KB");
+	Log::logI("    TOTAL: "      + Utility::floatToString(memory.total / 1024.0f, 2) + "KB");
 }
 
 std::weak_ptr<GameModel> ResourceManager::loadModelWithOBJLoader(std::string modelFilename)
@@ -288,7 +305,7 @@ void ResourceManager::checkForExpiredResources(std::unordered_map<std::string, R
 	//Loop through the resource array
 	for (auto it = resourceArray.begin(); it != resourceArray.end(); )
 	{
-		//If the resource isn't being used and isn't flaged to stay loaded
+		//If the resource isn't being used and isn't flagged to stay loaded
 		if (it->second->getInstanceCount() == 0 &&
 			!it->second->keepLoaded())
 		{

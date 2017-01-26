@@ -73,6 +73,15 @@ namespace Utility
 	std::string floatToString(float num);
 
 	/**
+	@brief Converts float to a string
+	Created because some compilers still don't support std::to_string()
+	@param num - Number to convert.
+	@param precision - How many numbers after the decimal point
+	@return std::string - Converted string.
+	*/
+	std::string floatToString(float num, unsigned int precision);
+
+	/**
 	 @brief Converts a Vector 2 to a string.
 	
 	 @param num Vector2 to convert.

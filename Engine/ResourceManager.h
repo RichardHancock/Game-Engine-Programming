@@ -146,6 +146,8 @@ private:
 	 */
 	static std::weak_ptr<GameModel> loadModelFromAssimp(std::string modelFilename);
 
+	static void printAssimpMemoryUsage(aiMemoryInfo& memory);
+
 	/**
 	 @brief	Loads model with object loader.
 	
