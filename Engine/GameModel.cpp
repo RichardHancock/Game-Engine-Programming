@@ -47,6 +47,7 @@ GameModel::GameModel(std::vector<glm::vec3>* vertices, std::vector<glm::vec3>* n
 		// Creates one VAO
 		glGenVertexArrays(1, &VAO);
 
+		glBindVertexArray(VAO);
 
 		addVBO(*vertices);
 
@@ -58,6 +59,15 @@ GameModel::GameModel(std::vector<glm::vec3>* vertices, std::vector<glm::vec3>* n
 
 		if (indices != nullptr)
 			addIndexBuffer(*indices);
+
+		meshes.push_back(Mesh(
+			indices->size(),
+			0,
+			0,
+			0
+		));
+
+		glBindVertexArray(0);
 	}
 }
 

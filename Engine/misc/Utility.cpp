@@ -209,6 +209,11 @@ SDL_Colour Utility::newSDLColour(uint8_t r, uint8_t g, uint8_t b, uint8_t a)
 	return colour;
 }
 
+glm::vec3 Utility::calculateFaceNormal(glm::vec3 & a, glm::vec3 & b, glm::vec3 & c)
+{
+	return glm::cross((b - a),(c - a));
+}
+
 
 
 //Timer

@@ -94,6 +94,7 @@
     <ClCompile Include="GameModel.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="Graphics.cpp" />
+    <ClCompile Include="HeightMap.cpp" />
     <ClCompile Include="input\Controller.cpp" />
     <ClCompile Include="input\InputManager.cpp" />
     <ClCompile Include="main.cpp" />
@@ -130,6 +131,7 @@
     <ClInclude Include="GameModel.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="Graphics.h" />
+    <ClInclude Include="HeightMap.h" />
     <ClInclude Include="input\Controller.h" />
     <ClInclude Include="input\InputManager.h" />
     <ClInclude Include="Material.h" />

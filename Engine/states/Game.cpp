@@ -12,6 +12,7 @@
 #include "../components/SphereCollider.h"
 #include "../components/Light.h"
 #include "../misc/DeltaTime.h"
+#include "../HeightMap.h"
 
 Game::Game()
 {
@@ -19,6 +20,24 @@ Game::Game()
 
 	controllingCamera = true;
 
+	//Height Map Test
+	heightmap = HeightMap::load("resources/textures/heightmap.bmp", 0.20f, 5.5f);
+	auto hmap = GameObject::create("heightmap").lock();
+	auto transform58 = hmap->addComponent<Transform>("Transform").lock();
+	transform58->setPostion(glm::vec3(0.0f, 0.0f, 0.0f));
+	transform58->setScale(glm::vec3(1));
+
+	hmap->addComponent<MeshComponent>("MeshComponent").lock()->setMesh(
+		heightmap);
+
+	ResourceManager::createMaterial("hmapTex", ResourceManager::getTexture("heightmap.png"),
+		"vertexMat.shader", "fragmentMat.shader");
+
+	hmap->addComponent<MeshRenderer>("MeshRenderer").lock()->setMaterial(
+		ResourceManager::getMaterial("hmapTex", 0, false)
+	);
+
+	
 	//Camera
 	auto cameraObj = GameObject::create("Camera").lock();
 	auto camTransform = cameraObj->addComponent<Transform>("Transform").lock();
@@ -68,9 +87,9 @@ Game::Game()
 
 	auto flatPlane = GameObject::create("bg").lock();
 	auto transform4 = flatPlane->addComponent<Transform>("Transform").lock();
-	transform4->setPostion(glm::vec3(-20.0f, 50.0f, -150.0f));
+	transform4->setPostion(glm::vec3(-20.0f, 50.0f, -350.0f));
 	transform4->setRotation(glm::vec3(Utility::HALF_PI, 0.0f, 0.0f));
-	transform4->setScale(glm::vec3(50));
+	transform4->setScale(glm::vec3(100));
 
 	flatPlane->addComponent<MeshComponent>("MeshComponent").lock()->setMesh(
 		ResourceManager::getModel("flatPlane.obj"));
@@ -239,7 +258,7 @@ void Game::movementControls()
 		GameVariables::data->gameObjs["fighter"]->getComponent<Transform>().lock());
 
 	//Pre-compute the move distance
-	const float speed = 30.0f;
+	const float speed = 100.0f;
 	float speedDT = speed * DeltaTime::getDT();
 	glm::vec3 forward = object->getForwardVector();
 	glm::vec3 right = object->getRightVector();

@@ -48,4 +48,6 @@ private:
 	/** @brief	true if currently controlling camera. */
 	bool controllingCamera;
 
+	std::shared_ptr<GameModel> heightmap;
+
 };

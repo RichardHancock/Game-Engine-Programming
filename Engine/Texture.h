@@ -21,15 +21,17 @@ class Texture : public Resource
 public:
 	/**
 	@brief Create a Texture
-	@param path Path to image
+	@param path File path to image
+	@param loadOpenGL Should the texture be copied into a texture buffer,
 	*/
-	Texture(std::string path);
+	Texture(std::string path, bool loadOpenGL = true);
 
 	/**
 	@brief Create a Texture
 	@param surface A surface to convert into a texture (This is freed internally)
+	@param loadOpenGL Should the texture be copied into a texture buffer,
 	*/
-	Texture(SDL_Surface* surface);
+	Texture(SDL_Surface* surface, bool loadOpenGL = true);
 
 	~Texture();
 
@@ -42,7 +44,7 @@ public:
 
 	/**
 	@brief Load Image
-	@param path Path to image
+	@param path File path to image
 	*/
 	bool load(std::string path);
 
@@ -69,7 +71,7 @@ public:
 	/**
 	 @brief	Gets OpenGL texture identifier.
 	
-	 @return	The OpenGL tex identifier.
+	 @return	The OpenGL texture identifier. -1 if not loaded
 	 */
 	GLuint getGLTexID();
 

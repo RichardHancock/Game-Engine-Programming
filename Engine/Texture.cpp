@@ -6,17 +6,17 @@
 #include "misc/Log.h"
 #include "Platform.h"
 
-Texture::Texture(std::string filename)
+Texture::Texture(std::string filename, bool loadOpenGL)
 	: Resource(), surface(nullptr), texID((GLuint)-1)
 {	
-	if (load(filename) && !Platform::isDummyRenderer())
+	if (load(filename) && !Platform::isDummyRenderer() && loadOpenGL)
 		loadForOpenGL();
 }
 
-Texture::Texture(SDL_Surface* surface)
+Texture::Texture(SDL_Surface* surface, bool loadOpenGL)
 	: Resource(), surface(nullptr), texID((GLuint)-1)
 {
-	if (load(surface) && !Platform::isDummyRenderer())
+	if (load(surface) && !Platform::isDummyRenderer() && loadOpenGL)
 		loadForOpenGL();
 
 }
