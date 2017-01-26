@@ -117,7 +117,7 @@ public:
 private:
 
 	/**
-	@brief Initialises glew.
+	@brief Initialises GLEW.
 
 	@return true if it succeeds, false if it fails.
 	*/

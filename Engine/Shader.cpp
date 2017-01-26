@@ -7,9 +7,9 @@
 
 Shader::Shader(std::string vShaderFilename, std::string fShaderFilename)
 {
-	vShader = (GLuint)-1;
-	fShader = (GLuint)-1;
-	program = (GLuint)-1;
+	vShader = 0;
+	fShader = 0;
+	program = 0;
 
 	if (!Platform::isDummyRenderer())
 		initialiseShaders(vShaderFilename, fShaderFilename);
@@ -17,13 +17,13 @@ Shader::Shader(std::string vShaderFilename, std::string fShaderFilename)
 
 Shader::~Shader()
 {
-	if (vShader != -1)
+	if (vShader != 0)
 		glDeleteShader(vShader);
 
-	if (fShader != -1)
+	if (fShader != 0)
 		glDeleteShader(fShader);
 
-	if (program != -1)
+	if (program != 0)
 		glDeleteProgram(program);
 }
 

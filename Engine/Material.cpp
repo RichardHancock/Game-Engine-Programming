@@ -30,7 +30,7 @@ void Material::addTexture(std::string name, std::weak_ptr<Texture> texture)
 	GLint texID = -1;
 
 	//if dummy renderer just provide a invalid texID as it won't be used
-	if (shader->getProgram() != (GLuint)-1)
+	if (shader->getProgram() != 0)
 	{
 		texID = shader->getUniformLocation(name);
 		if (texID == -1)
@@ -45,7 +45,7 @@ void Material::addTexture(std::string name, std::weak_ptr<Texture> texture)
 
 void Material::useProgram()
 {
-	if (shader->getProgram() != -1)
+	if (shader->getProgram() != 0)
 	{
 		glUseProgram(shader->getProgram());
 

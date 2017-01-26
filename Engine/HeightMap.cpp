@@ -93,11 +93,9 @@ void HeightMap::calculateUVs(std::vector<glm::vec2>& uvs, SDL_Surface* map)
 	{
 		for (int x = 0; x < width; x++)
 		{
-			int index = y*width + x; //Calculate current pixel index address
-
 			glm::vec2 uv;
-			uv.x = 1.0f - Utility::normaliseFloat((float)x, 0, width - 1);
-			uv.y = Utility::normaliseFloat((float)y, 0, height - 1);
+			uv.x = 1.0f - Utility::normaliseFloat((float)x, 0.0f, (float)(width - 1));
+			uv.y = Utility::normaliseFloat((float)y, 0.0f, (float)(height - 1));
 
 			uvs.push_back(uv);
 		}
@@ -116,7 +114,7 @@ void HeightMap::calculateIndices(std::vector<unsigned int>& indices, SDL_Surface
 	for (int pixIndex = 0; pixIndex < pixelCount; pixIndex++)
 	{
 		// Skip the final X coordinates for each row to avoid extra triangles.
-		if ((pixIndex + 1) % width != 0 | pixIndex == 0)
+		if ((pixIndex + 1) % width != 0 || pixIndex == 0)
 		{
 			// Calculates the first Triangle of the square.
 			indices.push_back(pixIndex); // Top Left

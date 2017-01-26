@@ -16,7 +16,7 @@ GameModel::GameModel(const aiScene* scene)
 	indexBuffer = 0;
 	numVertices = 0;
 	numIndices = 0;
-	VAO = (GLuint)-1;
+	VAO = 0;
 
 	processAssimpScene(scene);
 }
@@ -28,13 +28,13 @@ GameModel::GameModel(std::vector<glm::vec3>* vertices, std::vector<glm::vec3>* n
 	indexBuffer = 0;
 	numVertices = 0;
 	numIndices = 0;
-	VAO = (GLuint)-1;
+	VAO = 0;
 
 	
 	// Create the model
 	if (vertices == nullptr)
 	{
-		Log::logW("A GameModel was loaded without any verticies");
+		Log::logW("A GameModel was loaded without any vertices");
 		assert(false);
 		return;
 	}
@@ -67,6 +67,8 @@ GameModel::GameModel(std::vector<glm::vec3>* vertices, std::vector<glm::vec3>* n
 			0
 		));
 
+		calculateAABB(*vertices);
+
 		glBindVertexArray(0);
 	}
 }
@@ -76,14 +78,14 @@ GameModel::GameModel(std::vector<Vertex> advVertices)
 	indexBuffer = 0;
 	numVertices = 0;
 	numIndices = 0;
-	VAO = (GLuint)-1;
+	VAO = 0;
 	
 	initModelFromAdvVertices(advVertices);
 }
 
 GameModel::~GameModel()
 {
-	//Just incase the below VAO deletion doesn't cover it, delete all other data
+	//Just in case the below VAO deletion doesn't cover it, delete all other data
 	for (auto VBO : VBOs)
 	{
 		glDeleteBuffers(1, &VBO);
@@ -91,7 +93,7 @@ GameModel::~GameModel()
 	VBOs.clear();
 
 	//I believe this will delete all associated data, as once a VBO has nothing referencing it, it will be deleted
-	if (VAO != -1)
+	if (VAO != 0)
 		glDeleteVertexArrays(1, &VAO);
 
 }
@@ -156,7 +158,7 @@ void GameModel::processAssimpScene(const aiScene* scene)
 	}
 
 
-	//Reserve Space in arrays (This saves a lot of processing time, thats why I do two loops)
+	//Reserve Space in arrays (This saves a lot of processing time, that's why I do two loops)
 	std::vector<glm::vec3> positions;   positions.reserve(numVertices);
 	std::vector<glm::vec3> normals;		normals.reserve(numVertices);
 	std::vector<glm::vec2> uvs;			uvs.reserve(numVertices);
@@ -310,11 +312,11 @@ void GameModel::addVBO(std::vector<glm::vec3> &data)
 
 	glBufferData(GL_ARRAY_BUFFER, data.size() * sizeof(glm::vec3), &data[0], GL_STATIC_DRAW);
 
-	//Enable the next available attrib array which is equal to (the number of VBOS - 1)
+	//Enable the next available attribute array which is equal to (the number of VBOS - 1)
 	GLuint attribArrayID = VBOs.size() - 1;
 	glEnableVertexAttribArray(attribArrayID);
 	glVertexAttribPointer(
-		attribArrayID, //Attrib ID
+		attribArrayID, //Attribute ID
 		3,			   //Size
 		GL_FLOAT,      //Type
 		GL_FALSE,      //Normalized?
@@ -335,11 +337,11 @@ void GameModel::addVBO(std::vector<glm::vec2> &data)
 
 	glBufferData(GL_ARRAY_BUFFER, data.size() * sizeof(glm::vec2), &data[0], GL_STATIC_DRAW);
 
-	//Enable the next available attrib array which is equal to (the number of VBOS - 1)
+	//Enable the next available attribute array which is equal to (the number of VBOS - 1)
 	GLuint attribArrayID = VBOs.size() - 1;
 	glEnableVertexAttribArray(attribArrayID);
 	glVertexAttribPointer(
-		attribArrayID, //Attrib ID
+		attribArrayID, //Attribute ID
 		2,			   //Size
 		GL_FLOAT,      //Type
 		GL_FALSE,      //Normalized?

@@ -7,14 +7,14 @@
 #include "Platform.h"
 
 Texture::Texture(std::string filename, bool loadOpenGL)
-	: Resource(), surface(nullptr), texID((GLuint)-1)
+	: Resource(), surface(nullptr), texID(0)
 {	
 	if (load(filename) && !Platform::isDummyRenderer() && loadOpenGL)
 		loadForOpenGL();
 }
 
 Texture::Texture(SDL_Surface* surface, bool loadOpenGL)
-	: Resource(), surface(nullptr), texID((GLuint)-1)
+	: Resource(), surface(nullptr), texID(0)
 {
 	if (load(surface) && !Platform::isDummyRenderer() && loadOpenGL)
 		loadForOpenGL();
@@ -25,7 +25,7 @@ Texture::~Texture()
 {
 	SDL_FreeSurface(surface);
 
-	if (texID != -1)
+	if (texID != 0)
 		glDeleteTextures(1, &texID);
 }
 
