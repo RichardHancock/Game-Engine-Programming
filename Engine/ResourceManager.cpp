@@ -252,15 +252,15 @@ std::weak_ptr<GameModel> ResourceManager::loadModelFromAssimp(std::string modelF
 
 void ResourceManager::printAssimpMemoryUsage(aiMemoryInfo& memory)
 {
-	Log::logI("Assimp Memory Usage: ");
-	Log::logI("    Animations: " + Utility::floatToString(memory.animations / 1024.0f, 2) + "KB");
-	Log::logI("    Cameras: "    + Utility::floatToString(memory.cameras / 1024.0f, 2) + "KB");
-	Log::logI("    Lights: "     + Utility::floatToString(memory.lights / 1024.0f, 2) + "KB");
-	Log::logI("    Materials: "  + Utility::floatToString(memory.materials / 1024.0f, 2) + "KB");
-	Log::logI("    Meshes: "     + Utility::floatToString(memory.meshes / 1024.0f, 2) + "KB");
-	Log::logI("    Nodes: "      + Utility::floatToString(memory.nodes / 1024.0f, 2) + "KB");
-	Log::logI("    Textures: "   + Utility::floatToString(memory.textures / 1024.0f, 2) + "KB");
-	Log::logI("    TOTAL: "      + Utility::floatToString(memory.total / 1024.0f, 2) + "KB");
+	Log::logD("Assimp Memory Usage: ");
+	Log::logD(" - Animations: " + Utility::floatToString(memory.animations / 1024.0f, 2) + "KB");
+	Log::logD(" - Cameras: "    + Utility::floatToString(memory.cameras / 1024.0f, 2) + "KB");
+	Log::logD(" - Lights: "     + Utility::floatToString(memory.lights / 1024.0f, 2) + "KB");
+	Log::logD(" - Materials: "  + Utility::floatToString(memory.materials / 1024.0f, 2) + "KB");
+	Log::logD(" - Meshes: "     + Utility::floatToString(memory.meshes / 1024.0f, 2) + "KB");
+	Log::logD(" - Nodes: "      + Utility::floatToString(memory.nodes / 1024.0f, 2) + "KB");
+	Log::logD(" - Textures: "   + Utility::floatToString(memory.textures / 1024.0f, 2) + "KB");
+	Log::logD(" - TOTAL: "      + Utility::floatToString(memory.total / 1024.0f, 2) + "KB");
 }
 
 std::weak_ptr<GameModel> ResourceManager::loadModelWithOBJLoader(std::string modelFilename)

@@ -29,12 +29,18 @@ int main(int argc, char *argv[]);
 
 int main(int argc, char *argv[])
 {
+	std::string organisation = "RH";
+	std::string application = "Engine";
+
+	//Init Log Subsystem first as everything uses it.
+	Log::init(true, organisation, application);
+
 	processCommandLine(argc, argv);
 
 	std::string settingsFilename = "settings.xml";
 
 	Platform::init(settingsFilename);
-	Platform::loadSettingsFromFile("RH", "Engine");
+	Platform::loadSettingsFromFile(organisation, application);
 	Log::logI("Settings fully loaded.");
 
 	if (!Platform::initSDL(true, "Engine"))
@@ -103,6 +109,7 @@ int main(int argc, char *argv[])
 	InputManager::cleanup();
 	ResourceManager::cleanUp();
 	Platform::cleanup();
+	Log::cleanup();
 	SDL_Quit();
 	
 	exit(0);
@@ -110,10 +117,10 @@ int main(int argc, char *argv[])
 
 void processCommandLine(int argc, char **argv)
 {
-	std::cout << "No command line arguments are handled currently" << std::endl;
-	std::cout << "These were the passed in args:" << std::endl;
-	for (int i = 1; i < argc; i++)
+	Log::logI("No command line arguments are handled currently");
+	Log::logI("These were the passed in args:");
+	for (int i = 0; i < argc; i++)
 	{
-		std::cout << argv[i];
+		Log::logI(" - " + std::string(argv[i]));
 	}
 }

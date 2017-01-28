@@ -21,7 +21,7 @@ std::weak_ptr<GameObject> GameObject::create(std::string name)
 	std::shared_ptr<GameObject> gameObj = std::make_shared<GameObject>(name);
 
 	GameVariables::data->gameObjs[name] = gameObj;
-
+	Log::logI("Creating Game Object: " + name);
 	return gameObj;
 }
 

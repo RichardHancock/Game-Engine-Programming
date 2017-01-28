@@ -90,6 +90,10 @@ namespace Utility
 	 */
 	std::string vec2ToString(Vec2 num);
 
+	std::string glmToString(glm::vec4& vec);
+	std::string glmToString(glm::vec2& vec);
+	std::string glmToString(glm::vec3& vec);
+
 	/**
 	 @brief	Vector 3 to glm vec3.
 	

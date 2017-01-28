@@ -14,6 +14,7 @@ void Random::init(unsigned int seed)
 
 	srand(seed);
 	initialized = true;
+	Log::logI("Random SubSystem Initialised");
 }
 
 int Random::getInt(int min, int max)

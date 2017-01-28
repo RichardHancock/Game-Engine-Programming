@@ -70,6 +70,21 @@ std::string Utility::vec2ToString(Vec2 num)
 
 }
 
+std::string Utility::glmToString(glm::vec2 & vec)
+{
+	return std::string("glm::vec2(" + floatToString(vec.x) + ", " + floatToString(vec.y) + ")");
+}
+
+std::string Utility::glmToString(glm::vec3 & vec)
+{
+	return std::string("glm::vec3(" + floatToString(vec.x) + ", " + floatToString(vec.y) + ", " + floatToString(vec.z) + ")");
+}
+
+std::string Utility::glmToString(glm::vec4 & vec)
+{
+	return std::string("glm::vec3(" + floatToString(vec.x) + ", " + floatToString(vec.y) + ", " + floatToString(vec.z) + ", " + floatToString(vec.w) + ")");
+}
+
 glm::vec3 Utility::vec3ToGLM(Vec3 vector)
 {
 	return glm::vec3(vector.x, vector.y, vector.z);
