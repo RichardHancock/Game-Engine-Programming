@@ -68,8 +68,10 @@ bool Platform::initSDL(bool openGL, std::string windowTitle)
 	
 	Log::logI("Initializing SDL and its plugins.");
 
-	//Android doesn't need this at SDL internally does this
-	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_GAMECONTROLLER | SDL_INIT_JOYSTICK | SDL_INIT_HAPTIC) < 0) 
+	int sdlFlags = SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_GAMECONTROLLER | SDL_INIT_JOYSTICK | SDL_INIT_HAPTIC;
+	int sdlResult = SDL_Init(sdlFlags); //Android doesn't need this at SDL internally does this
+	
+	if (sdlResult != 0)
 	{ 
 		status = false; 
 		Log::logE("SDL Init failed: " + std::string(SDL_GetError()));
@@ -79,7 +81,7 @@ bool Platform::initSDL(bool openGL, std::string windowTitle)
 		" / Linked: " + getSDLVersionString(true));
 
 	//SDL TTF Initialization
-	if (TTF_Init() < 0)
+	if (TTF_Init() == -1)
 	{
 		status = false;
 		Log::logE("SDL_ttf init failed: " + std::string(TTF_GetError()));
@@ -89,25 +91,34 @@ bool Platform::initSDL(bool openGL, std::string windowTitle)
 		" / Linked: " + getSDLTtfVersionString(true));
 
 	//SDL Mixer Initialization
-	Mix_Init(MIX_INIT_OGG);
-	//Initialize SDL_Mixer with some standard audio formats/freqs. Also set channels to 2 for stereo sound.
-	if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0)
+	int mixFlags = MIX_INIT_OGG | MIX_INIT_MP3 | MIX_INIT_FLAC;
+	int mixResult = Mix_Init(mixFlags);
+
+	//  If the inputed flags are not returned, an error has occurred
+	if ((mixResult & mixFlags) != mixFlags)
 	{
 		status = false;
-		Log::logE("SDL_mixer init failed: " + std::string(Mix_GetError()));
+		Log::logE("SDL_mixer init failed (or a requested format was not available): " + std::string(Mix_GetError()));
 	}
 	
+	//Initialize SDL_Mixer with some standard audio formats/freqs. Also set channels to 2 for stereo sound.
+	if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 4096) == -1)
+	{
+		status = false;
+		Log::logE("SDL_mixer could not open the audio device: " + std::string(Mix_GetError()));
+	}
+
 	Log::logI("SDL_mixer Version: Compiled: " + getSDLMixerVersionString(false) +
 		" / Linked: " + getSDLMixerVersionString(true));
 
 	//SDL Image Initialization
-	int flags= IMG_INIT_PNG;
-	int result = IMG_Init(flags);
+	int imgFlags = IMG_INIT_PNG |IMG_INIT_JPG | IMG_INIT_TIF;
+	int imgResult = IMG_Init(imgFlags);
 	
-	// If the inputed flags are not returned, an error has occurred
-	if((result & flags) != flags) 
+	//  If the inputed flags are not returned, an error has occurred
+	if((imgResult & imgFlags) != imgFlags) 
 	{
-		Log::logE("Failed to Initialise SDL_Image and png support: "+ std::string(IMG_GetError()));
+		Log::logE("SDL_image init failed (or a requested format was not available): "+ std::string(IMG_GetError()));
 	}
 
 	Log::logI("SDL_image Version: Compiled: " + getSDLImageVersionString(false) +

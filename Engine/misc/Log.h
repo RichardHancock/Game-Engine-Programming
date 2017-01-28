@@ -6,8 +6,8 @@
 
 //Ref: Was used in previous assignment
 
-/** @brief	Contains the Engine's logging features.
-	@todo Add a Debug/Verbose variant that only displays if debugging is turned on.
+/** 
+@brief	Contains the Engine's logging features.
 */
 class Log
 {

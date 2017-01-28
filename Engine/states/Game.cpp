@@ -229,8 +229,6 @@ void Game::update()
 
 	//GameVariables::data->gameObjs["fighter"]->getComponent<Transform>("Transform").lock()->rotate(glm::vec3(0.0f, 1.0f * DeltaTime::getDT(), 0.0f));
 	GameVariables::data->gameObjs["earth"]->getComponent<Transform>("Transform").lock()->rotate(glm::vec3(0.0f, 0.01f * DeltaTime::getDT(), 0.0f));
-	Log::logD(Utility::glmToString(GameVariables::data->gameObjs["earth"]->getComponent<Transform>("Transform").lock()->getRotation()));
-	Log::logD("Hi");
 
 	movementControls();
 
