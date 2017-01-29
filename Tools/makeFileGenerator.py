@@ -42,12 +42,12 @@ makeFileLines = [
     "",
     "debug:",
     "\t$(CC) $(SOURCES) $(FLAGS) $(DFLAGS) -o $(OUTPUT)",
-	"\trm -r \"../bin/resources\"",
+	"\trm -r -f \"../bin/resources\"",
 	"\tcp -r \"../Engine/resources\" \"../bin/\"",
     "",
     "release:",
     "\t$(CC) $(SOURCES) $(FLAGS) $(RFLAGS) -o $(OUTPUT)",
-	"\trm -r \"../bin/resources\"",
+	"\trm -r -f \"../bin/resources\"",
 	"\tcp -r \"../Engine/resources\" \"../bin/\"",
 ]
 
