@@ -11,6 +11,7 @@
 #include "ResourceManager.h"
 #include "misc/Random.h"
 #include "misc/DeltaTime.h"
+#include "Physics.h"
 
 #ifdef _WIN32
 #include <windows.h>
@@ -59,7 +60,9 @@ int main(int argc, char *argv[])
 	Log::logI("Assimp Version: " + Utility::intToString(aiGetVersionMajor()) + 
 		"." + Utility::intToString(aiGetVersionMinor())
 		+ "." + Utility::intToString(aiGetVersionRevision()));
+	
 	Random::init();
+	Physics::init();
 
 	StateManager::addState(std::make_shared<Game>());
 
