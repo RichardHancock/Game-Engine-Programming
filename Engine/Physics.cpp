@@ -1,23 +1,40 @@
 #include "Physics.h"
 
-std::shared_ptr<btDiscreteDynamicsWorld> Physics::world;
-std::shared_ptr<btSequentialImpulseConstraintSolver> Physics::solver;
-std::shared_ptr<btCollisionDispatcher> Physics::dispatcher;
-std::shared_ptr<btBroadphaseInterface> Physics::broadphase;
-std::shared_ptr<btDefaultCollisionConfiguration> Physics::collisionConfiguration;
+btDiscreteDynamicsWorld* Physics::world;
+btSequentialImpulseConstraintSolver* Physics::solver;
+btCollisionDispatcher* Physics::dispatcher;
+btBroadphaseInterface* Physics::broadphase;
+btDefaultCollisionConfiguration* Physics::collisionConfiguration;
+BulletDebugDrawer* Physics::debug;
+
 
 void Physics::init()
 {
-	broadphase = std::make_shared<btDbvtBroadphase>();
+	broadphase = new btDbvtBroadphase();
 
-	collisionConfiguration = std::make_shared<btDefaultCollisionConfiguration>();
+	collisionConfiguration = new btDefaultCollisionConfiguration();
 
-	dispatcher = std::make_shared<btCollisionDispatcher>(collisionConfiguration.get());
+	dispatcher = new btCollisionDispatcher(collisionConfiguration);
 
-	solver = std::make_shared<btSequentialImpulseConstraintSolver>();
+	solver = new btSequentialImpulseConstraintSolver();
 
-	world = std::make_shared<btDiscreteDynamicsWorld>(
-		dispatcher.get(), broadphase.get(), solver.get(), collisionConfiguration.get());
+	world = new btDiscreteDynamicsWorld(
+		dispatcher, broadphase, solver, collisionConfiguration
+	);
 
 	world->setGravity(btVector3(0, -1, 0));
+
+	debug = new BulletDebugDrawer();
+	debug->setDebugMode(BulletDebugDrawer::DBG_DrawWireframe);
+	world->setDebugDrawer((btIDebugDraw*)debug);
+}
+
+btDiscreteDynamicsWorld* Physics::getWorld()
+{
+	return world;
+}
+
+void Physics::addRigidBody(btRigidBody* rigidBody)
+{
+	world->addRigidBody(rigidBody);
 }

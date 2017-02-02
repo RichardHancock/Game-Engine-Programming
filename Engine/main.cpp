@@ -2,6 +2,7 @@
 
 #include <SDL.h>
 #include <assimp/version.h>
+#include <GL/glew.h>
 
 #include "Platform.h"
 #include "misc/Utility.h"
@@ -66,7 +67,6 @@ int main(int argc, char *argv[])
 
 	StateManager::addState(std::make_shared<Game>());
 
-
 	DeltaTime::init();
 
 	bool done = false;
@@ -83,19 +83,22 @@ int main(int argc, char *argv[])
 		Utility::Timer::update();
 
 		StateManager::update();
-		
+
+		Physics::getWorld()->stepSimulation(1 / 50.f, 10);
 		//ResourceManager::update(dt);
 
 		//Render
 		if (!Platform::isDummyRenderer())
 		{
 			// Specify the colour to clear the frame buffer to
-			glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+			glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 			// This writes the above colour to the colour part of the frame buffer
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		}
-
+		
 		StateManager::render();
+		Physics::getWorld()->debugDrawWorld();
+		//Physics::getWorld()->
 
 		Platform::sdlSwapWindow();
 

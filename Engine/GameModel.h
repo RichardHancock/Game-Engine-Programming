@@ -5,9 +5,10 @@
 #include <string>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
-
 #include <SDL.h>
 #include <SDL_ttf.h>
+#include <btBulletDynamicsCommon.h>
+
 #include "Resource.h"
 #include "misc/Vertex.h"
 #include "Mesh.h"
@@ -32,16 +33,16 @@ public:
 	/**
 	 @brief	Constructor.
 	
-	 @param [in,out]	vertices	If non-null, the vertices.
-	 @param [in,out]	normals 	If non-null, the normals.
-	 @param [in,out]	uvs			If non-null, the uvs.
-	 @param [in,out]	indices 	If non-null, the indices.
+	 @param [in,out]	inVertices	If non-null, the vertices.
+	 @param [in,out]	inNormals 	If non-null, the normals.
+	 @param [in,out]	inUvs		If non-null, the uvs.
+	 @param [in,out]	inIndices 	If non-null, the indices.
 	 */
 	GameModel(
-		std::vector<glm::vec3>* vertices,
-		std::vector<glm::vec3>* normals,
-		std::vector<glm::vec2>* uvs,
-		std::vector<unsigned int>* indices);
+		std::vector<glm::vec3>* inVertices,
+		std::vector<glm::vec3>* inNormals,
+		std::vector<glm::vec2>* inUvs,
+		std::vector<unsigned int>* inIndices);
 
 	/**
 	 @brief	Constructor.
@@ -89,11 +90,11 @@ public:
 	unsigned int getMeshCount();
 
 	/**
-	 @brief	Gets a submesh.
+	 @brief	Gets a sub-mesh.
 	
-	 @param	index	Zero-based index of the submesh.
+	 @param	index	Zero-based index of the sub-mesh.
 	
-	 @return	The submesh.
+	 @return	The sub-mesh.
 	 */
 	Mesh getSubmesh(unsigned int index);
 
@@ -103,6 +104,10 @@ public:
 	 @return	AABB.
 	 */
 	AABB getAABB();
+
+	std::vector<glm::vec3>& getVertices() { return vertices; }
+
+	std::vector<unsigned int>& getIndices() { return indices; }
 private:
 
 	/// Vertex Array Object for model in OpenGL
@@ -172,7 +177,7 @@ private:
 
 	/**
 	 @brief	Extracts the mesh index data described by mesh.
-	 Converts Assimp faces into uints
+	 Converts Assimp faces into unsigned ints
 	 @param [in,out]	mesh	If non-null, the mesh.
 	
 	 @return	The extracted mesh index data.
@@ -182,9 +187,11 @@ private:
 	/// Number of vertices in the model
 	unsigned int numVertices;
 
-	/** @brief	The submeshes. */
+	/** @brief	The sub-meshes. */
 	std::vector<Mesh> meshes;
 
+	std::vector<glm::vec3> vertices;
+	std::vector<unsigned int> indices;
 
 	/** @brief	Number of indices. */
 	unsigned int numIndices;

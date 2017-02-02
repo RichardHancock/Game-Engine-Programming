@@ -3,6 +3,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 #include "../misc/Utility.h"
+#include "RigidBody.h"
 
 Transform::~Transform()
 {
@@ -45,6 +46,13 @@ void Transform::setPostion(glm::vec3 position)
 	{
 		localPosition = position;
 	}
+
+	auto rigidbodyRef = getGameObject().lock()->getComponent<RigidBody>("RigidBody");
+
+	if (rigidbodyRef.expired())
+		return;
+
+	rigidbodyRef.lock()->setPosition(localPosition);
 }
 
 void Transform::setRotation(glm::vec3 rotation)
@@ -95,6 +103,13 @@ glm::vec3 Transform::getLocalRotation()
 void Transform::setLocalPosition(glm::vec3 position)
 {
 	localPosition = position;
+
+	auto rigidbodyRef = getGameObject().lock()->getComponent<RigidBody>("RigidBody");
+
+	if (rigidbodyRef.expired())
+		return;
+
+	rigidbodyRef.lock()->setPosition(localPosition);
 }
 
 void Transform::setLocalRotation(glm::vec3 rotation)
@@ -192,6 +207,13 @@ std::weak_ptr<Transform> Transform::findTransformNode(std::string query)
 void Transform::translate(glm::vec3 translation)
 {
 	localPosition += translation;
+
+	auto rigidbodyRef = getGameObject().lock()->getComponent<RigidBody>("RigidBody");
+
+	if (rigidbodyRef.expired())
+		return;
+
+	rigidbodyRef.lock()->setPosition(localPosition);
 }
 
 void Transform::rotate(glm::vec3 rotation)

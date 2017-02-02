@@ -13,6 +13,8 @@
 #include "../components/Light.h"
 #include "../misc/DeltaTime.h"
 #include "../HeightMap.h"
+#include "../components/CollisionShape.h"
+#include "../components/RigidBody.h"
 
 Game::Game()
 {
@@ -21,14 +23,16 @@ Game::Game()
 	controllingCamera = true;
 
 	//Height Map Test
-	heightmap = HeightMap::load("resources/textures/heightmap.bmp", 0.20f, 5.5f);
+	heightmap = HeightMap::load("resources/textures/heightmap.bmp", 0.60f, 4.0f);
 	auto hmap = GameObject::create("heightmap").lock();
 	auto transform58 = hmap->addComponent<Transform>("Transform").lock();
-	transform58->setPostion(glm::vec3(0.0f, 0.0f, 0.0f));
+	transform58->setPostion(glm::vec3(30.0f, 0.0f, 0.0f));
 	transform58->setScale(glm::vec3(1));
 
 	hmap->addComponent<MeshComponent>("MeshComponent").lock()->setMesh(
 		heightmap);
+	//hmap->addComponent<CollisionShape>("CollisionShape").lock()->generateStaticMeshShape();
+	//hmap->addComponent<RigidBody>("RigidBody").lock();
 
 	ResourceManager::createMaterial("hmapTex", ResourceManager::getTexture("heightmap.png"),
 		"vertexMat.shader", "fragmentMat.shader");
@@ -61,6 +65,12 @@ Game::Game()
 		ResourceManager::getMaterials("dark_fighter_6.obj")
 	);
 
+	gameO->addComponent<CollisionShape>("CollisionShape").lock()->generateStaticMeshShape();
+	auto rbGameO = gameO->addComponent<RigidBody>("RigidBody").lock();
+	//rbGameO->setPosition(glm::vec3(40, 0, 10));
+	rbGameO->init();
+
+
 	auto ship = GameObject::create("ship").lock();
 	auto transform2 = ship->addComponent<Transform>("Transform").lock();
 	transform2->setPostion(glm::vec3(0.0f, 30.0f, 10.0f));
@@ -72,6 +82,11 @@ Game::Game()
 	ship->addComponent<MeshRenderer>("MeshRenderer").lock()->setMaterials(
 		ResourceManager::getMaterials("space_frigate_6.obj")
 	);
+
+	ship->addComponent<CollisionShape>("CollisionShape").lock()->generateStaticMeshShape();
+	auto rbShip = ship->addComponent<RigidBody>("RigidBody").lock();
+	//rbShip->setPosition(glm::vec3(40, 30, 15));
+	rbShip->init();
 
 	auto earth = GameObject::create("earth").lock();
 	auto transform3 = earth->addComponent<Transform>("Transform").lock();

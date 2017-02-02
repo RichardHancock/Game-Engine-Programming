@@ -85,10 +85,12 @@
     <ClCompile Include="Audio.cpp" />
     <ClCompile Include="components\Camera.cpp" />
     <ClCompile Include="components\Collider.cpp" />
+    <ClCompile Include="components\CollisionShape.cpp" />
     <ClCompile Include="components\Component.cpp" />
     <ClCompile Include="components\Light.cpp" />
     <ClCompile Include="components\MeshComponent.cpp" />
     <ClCompile Include="components\MeshRenderer.cpp" />
+    <ClCompile Include="components\RigidBody.cpp" />
     <ClCompile Include="components\SphereCollider.cpp" />
     <ClCompile Include="components\Transform.cpp" />
     <ClCompile Include="GameModel.cpp" />
@@ -101,6 +103,7 @@
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="misc\AABB.cpp" />
+    <ClCompile Include="misc\BulletDebugDrawer.cpp" />
     <ClCompile Include="misc\Colour.cpp" />
     <ClCompile Include="misc\CustomDestructors.cpp" />
     <ClCompile Include="misc\DeltaTime.cpp" />
@@ -123,10 +126,12 @@
     <ClInclude Include="Audio.h" />
     <ClInclude Include="components\Camera.h" />
     <ClInclude Include="components\Collider.h" />
+    <ClInclude Include="components\CollisionShape.h" />
     <ClInclude Include="components\Component.h" />
     <ClInclude Include="components\Light.h" />
     <ClInclude Include="components\MeshComponent.h" />
     <ClInclude Include="components\MeshRenderer.h" />
+    <ClInclude Include="components\RigidBody.h" />
     <ClInclude Include="components\SphereCollider.h" />
     <ClInclude Include="components\Transform.h" />
     <ClInclude Include="GameModel.h" />
@@ -138,6 +143,7 @@
     <ClInclude Include="Material.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="misc\AABB.h" />
+    <ClInclude Include="misc\BulletDebugDrawer.h" />
     <ClInclude Include="misc\Colour.h" />
     <ClInclude Include="misc\CustomDestructors.h" />
     <ClInclude Include="misc\DeltaTime.h" />

@@ -21,8 +21,8 @@ GameModel::GameModel(const aiScene* scene)
 	processAssimpScene(scene);
 }
 
-GameModel::GameModel(std::vector<glm::vec3>* vertices, std::vector<glm::vec3>* normals, std::vector<glm::vec2>* uvs,
-	std::vector<unsigned int>* indices) : Resource()
+GameModel::GameModel(std::vector<glm::vec3>* inVertices, std::vector<glm::vec3>* inNormals, std::vector<glm::vec2>* inUvs,
+	std::vector<unsigned int>* inIndices) : Resource()
 {
 	// Initialise variables
 	indexBuffer = 0;
@@ -32,14 +32,14 @@ GameModel::GameModel(std::vector<glm::vec3>* vertices, std::vector<glm::vec3>* n
 
 	
 	// Create the model
-	if (vertices == nullptr)
+	if (inVertices == nullptr)
 	{
 		Log::logW("A GameModel was loaded without any vertices");
 		assert(false);
 		return;
 	}
 
-	numVertices = vertices->size();
+	numVertices = inVertices->size();
 	
 	
 	if (!Platform::isDummyRenderer())
@@ -49,25 +49,28 @@ GameModel::GameModel(std::vector<glm::vec3>* vertices, std::vector<glm::vec3>* n
 
 		glBindVertexArray(VAO);
 
-		addVBO(*vertices);
+		addVBO(*inVertices);
 
-		if (normals != nullptr)
-			addVBO(*normals);
+		if (inNormals != nullptr)
+			addVBO(*inNormals);
 
-		if (uvs != nullptr)
-			addVBO(*uvs);
+		if (inUvs != nullptr)
+			addVBO(*inUvs);
 
-		if (indices != nullptr)
-			addIndexBuffer(*indices);
+		if (inIndices != nullptr)
+			addIndexBuffer(*inIndices);
 
 		meshes.push_back(Mesh(
-			indices->size(),
+			inIndices->size(),
 			0,
 			0,
 			0
 		));
 
-		calculateAABB(*vertices);
+		calculateAABB(*inVertices);
+
+		vertices = *inVertices;
+		indices = *inIndices;
 
 		glBindVertexArray(0);
 	}
@@ -165,7 +168,7 @@ void GameModel::processAssimpScene(const aiScene* scene)
 	std::vector<glm::vec3> tangents;	tangents.reserve(numVertices);
 	std::vector<glm::vec3> biTangents;  biTangents.reserve(numVertices);
 
-	std::vector<unsigned int> indices;  indices.reserve(numIndices);
+	indices.reserve(numIndices);
 
 	for (unsigned int currentMeshIndex = 0; currentMeshIndex < scene->mNumMeshes; currentMeshIndex++)
 	{
@@ -205,6 +208,8 @@ void GameModel::processAssimpScene(const aiScene* scene)
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	}
+
+	vertices = positions;
 }
 
 void GameModel::initMeshFromAssimp(aiMesh* mesh, std::vector<glm::vec3>& positions, std::vector<glm::vec3>& normals, 
@@ -259,6 +264,7 @@ void GameModel::initModelFromAdvVertices(std::vector<Vertex> advVertices)
 		vertexData[aPos + 6] = advVertices[i].vt.x;
 		vertexData[aPos + 7] = advVertices[i].vt.y;
 
+		vertices.push_back(Utility::vec3ToGLM(advVertices[i].v));
 	}
 
 	meshes.push_back(Mesh(

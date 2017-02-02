@@ -3,23 +3,29 @@
 #include <memory>
 #include <btBulletDynamicsCommon.h>
 
+#include "misc/BulletDebugDrawer.h"
+
 class Physics
 {
 public:
 
 	static void init();
 
+	static btDiscreteDynamicsWorld* getWorld();
+
+	static void addRigidBody(btRigidBody* rigidBody);
+
 private:
 
-	static std::shared_ptr<btDiscreteDynamicsWorld> world;
+	static btDiscreteDynamicsWorld* world;
 
-	static std::shared_ptr<btSequentialImpulseConstraintSolver> solver;
+	static btSequentialImpulseConstraintSolver* solver;
 
-	static std::shared_ptr<btCollisionDispatcher> dispatcher;
+	static btCollisionDispatcher* dispatcher;
 
-	static std::shared_ptr<btBroadphaseInterface> broadphase;
+	static btBroadphaseInterface* broadphase;
 
-	static std::shared_ptr<btDefaultCollisionConfiguration> collisionConfiguration;
+	static btDefaultCollisionConfiguration* collisionConfiguration;
 
-	
+	static BulletDebugDrawer* debug;
 };
