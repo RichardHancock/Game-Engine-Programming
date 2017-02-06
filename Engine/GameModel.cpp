@@ -360,15 +360,15 @@ void GameModel::addVBO(std::vector<glm::vec2> &data)
 }
 
 
-void GameModel::addIndexBuffer(std::vector<unsigned int> &indices)
+void GameModel::addIndexBuffer(std::vector<unsigned int> &inIndices)
 {
-	numIndices = indices.size();
+	numIndices = inIndices.size();
 
 	//Create and Bind Index Buffer
 	glGenBuffers(1, &indexBuffer);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
 
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * numIndices, &indices[0], GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * numIndices, &inIndices[0], GL_STATIC_DRAW);
 
 	//glBindVertexArray(0);
 	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
@@ -409,19 +409,19 @@ AABB GameModel::getAABB()
 	return bounds;
 }
 
-void GameModel::calculateAABB(std::vector<glm::vec3> vertices)
+void GameModel::calculateAABB(std::vector<glm::vec3> inVertices)
 {
-	if (vertices.size() < 1)
+	if (inVertices.size() < 1)
 	{
 		bounds = AABB(glm::vec3(0), glm::vec3(0));
 		return;
 	}
 
 
-	glm::vec3 min(vertices[0]);
+	glm::vec3 min(inVertices[0]);
 	glm::vec3 max(min);
 
-	for (glm::vec3 vertex : vertices)
+	for (glm::vec3 vertex : inVertices)
 	{
 		//Rolled into loop for hopefully better performance
 		for (unsigned int axis = 0; axis < 3; axis++)

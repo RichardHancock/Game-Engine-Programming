@@ -164,9 +164,9 @@ private:
 	/**
 	 @brief	Adds an index buffer.
 	
-	 @param [in,out]	indices	The indices.
+	 @param [in,out]	inIndices	The indices.
 	 */
-	void addIndexBuffer(std::vector<unsigned int> &indices);
+	void addIndexBuffer(std::vector<unsigned int> &inIndices);
 
 	/**
 	 @brief	Process the assimp scene described by scene.
@@ -202,9 +202,9 @@ private:
 	/**
 	 @brief	Calculates Axis Aligned Bounding Box.
 	
-	 @param	vertices	The vertices.
+	 @param	inVertices	The vertices.
 	 */
-	void calculateAABB(std::vector<glm::vec3> vertices);
+	void calculateAABB(std::vector<glm::vec3> inVertices);
 
 	/**
 	@brief	Calculates Axis Aligned Bounding Box.

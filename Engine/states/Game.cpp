@@ -156,6 +156,7 @@ Game::Game()
 	);
 	sphere->addComponent<SphereCollider>("SphereCollider");
 
+	socket = new Socket(8080, "localhost");
 
 	gameO->onAwake();
 	ship->onAwake();
@@ -242,8 +243,16 @@ void Game::update()
 		GameVariables::data->gameObjs["sphere"]->getComponent<Transform>().lock()->setPostion(glm::vec3(-40.0f, 0.0f, -5.0f));
 	}
 
+	if (InputManager::wasKeyPressed(SDLK_n))
+	{
+		socket->sendMsg("Hello");
+	}
+
+
 	//GameVariables::data->gameObjs["fighter"]->getComponent<Transform>("Transform").lock()->rotate(glm::vec3(0.0f, 1.0f * DeltaTime::getDT(), 0.0f));
 	GameVariables::data->gameObjs["earth"]->getComponent<Transform>("Transform").lock()->rotate(glm::vec3(0.0f, 0.01f * DeltaTime::getDT(), 0.0f));
+
+	socket->recvMsg();
 
 	movementControls();
 

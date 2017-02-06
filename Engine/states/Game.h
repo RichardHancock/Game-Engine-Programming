@@ -9,6 +9,7 @@
 #include "../GameModel.h"
 #include "../Audio.h"
 #include "../misc/Vec3.h"
+#include "../Socket.h"
 
 /** @brief	The main game state. */
 class Game : public State
@@ -50,4 +51,5 @@ private:
 
 	std::shared_ptr<GameModel> heightmap;
 
+	Socket* socket;
 };
