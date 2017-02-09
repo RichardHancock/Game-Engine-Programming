@@ -3,6 +3,7 @@
 #include <GL/glew.h>
 
 #include "Log.h"
+#include "Utility.h"
 
 /*
 void BulletDebugDrawer::drawLine(const btVector3 & from, const btVector3 & to, const btVector3 & fromColour, const btVector3 & toColour)
@@ -42,8 +43,20 @@ void BulletDebugDrawer::drawLine(const btVector3 & from, const btVector3 & to, c
 	glEnd();
 }
 
-void BulletDebugDrawer::drawContactPoint(const btVector3 & pointOnB, const btVector3 & normalOnB, btScalar distance, int lifeTime, const btVector3 & color)
+void BulletDebugDrawer::drawContactPoint(const btVector3 & pointOnB, const btVector3 & normalOnB, btScalar distance, int lifeTime, const btVector3 & colour)
 {
+	btVector3 to;
+	to = pointOnB + normalOnB * distance;
+
+	glColor4f(colour.getX(), colour.getY(), colour.getZ(), 1.0f);
+	glBegin(GL_LINES);
+
+	glVertex3f(pointOnB.getX(), pointOnB.getY(), pointOnB.getZ());
+	glVertex3f(to.getX(), to.getY(), to.getZ());
+
+	glEnd();
+
+	Log::logD("Contact point lifetime: " + Utility::intToString(lifeTime));
 }
 
 void BulletDebugDrawer::reportErrorWarning(const char * warningString)
@@ -53,6 +66,11 @@ void BulletDebugDrawer::reportErrorWarning(const char * warningString)
 
 void BulletDebugDrawer::draw3dText(const btVector3 & location, const char * textString)
 {
+	Log::logD("Text that should be rendered at Vec3(" +
+		Utility::floatToString(location.getX()) +
+		Utility::floatToString(location.getY()) +
+		Utility::floatToString(location.getZ()) +
+		"): " + std::string(textString));
 }
 
 void BulletDebugDrawer::setDebugMode(int inDebugMode)
