@@ -1,17 +1,13 @@
 #pragma once
 
-#define WIN32_LEAN_AND_MEAN
-
-#include <windows.h>
-#include <winsock2.h>
-#include <ws2tcpip.h>
 #include <string>
-#include <queue>
+
+#include "internal/networking/SocketBase.h"
 
 class Socket
 {
 public:
-	Socket(int inPort, std::string inHostname);
+	Socket(std::string inHostname, int inPort);
 
 	bool isOpen();
 
@@ -20,20 +16,5 @@ public:
 	bool recvMsg();
 private:
 
-	WSADATA wsaData;
-	SOCKET connectSocket;
-
-	FD_SET readSet;
-	FD_SET writeSet;
-
-	TIMEVAL timeout;
-
-	std::queue<std::string> queue;
-	
-	const int recvbuflen = 256;
-
-	bool open;
-
-	std::string hostname;
-	int port;
+	SocketBase* socket;
 };

@@ -156,7 +156,7 @@ Game::Game()
 	);
 	sphere->addComponent<SphereCollider>("SphereCollider");
 
-	socket = new Socket(8080, "localhost");
+	socket = new Socket("10.0.2.2", 8080);
 
 	gameO->onAwake();
 	ship->onAwake();
@@ -206,6 +206,7 @@ bool Game::eventHandler()
 		}
 	}
 
+	//Statement can be simplified to one line
 	if (InputManager::wasKeyReleased(SDLK_ESCAPE))
 	{
 		return true;

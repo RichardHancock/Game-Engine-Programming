@@ -7,7 +7,6 @@
 #include <assimp/postprocess.h>
 #include <SDL.h>
 #include <SDL_ttf.h>
-#include <btBulletDynamicsCommon.h>
 
 #include "Resource.h"
 #include "misc/Vertex.h"

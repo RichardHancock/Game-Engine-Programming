@@ -1,6 +1,6 @@
 #pragma once
 
-#include "LinearMath\btIDebugDraw.h"
+#include <LinearMath/btIDebugDraw.h>
 
 class BulletDebugDrawer : public btIDebugDraw
 {
