@@ -1,5 +1,10 @@
 #include "Physics.h"
 
+#include <string>
+
+#include "misc/Log.h"
+#include "misc/Utility.h"
+
 btDiscreteDynamicsWorld* Physics::world;
 btSequentialImpulseConstraintSolver* Physics::solver;
 btCollisionDispatcher* Physics::dispatcher;
@@ -7,9 +12,14 @@ btBroadphaseInterface* Physics::broadphase;
 btDefaultCollisionConfiguration* Physics::collisionConfiguration;
 BulletDebugDrawer* Physics::debug;
 
-
 void Physics::init()
 {
+	std::string version = Utility::intToString(btGetVersion());
+	std::string versionMajor = version.substr(0, 1);
+	std::string versionMinor = version.substr(1, std::string::npos);
+
+	Log::logI("Physics SubSystem Initialized using Bullet Physics Library V" + versionMajor + "." + versionMinor);
+
 	broadphase = new btDbvtBroadphase();
 
 	collisionConfiguration = new btDefaultCollisionConfiguration();
