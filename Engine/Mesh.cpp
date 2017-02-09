@@ -7,18 +7,18 @@
 
 Mesh::Mesh()
 {
-	numIndicies = 0;
+	numIndices = 0;
 	baseVertex = 0;
 	baseIndex = 0;
 	materialIndex = 0;
 }
 
 Mesh::Mesh(
-	unsigned int numIndicies, 
+	unsigned int numIndices, 
 	unsigned int baseVertex, 
 	unsigned int baseIndex, 
 	unsigned int materialIndex
-) : numIndicies(numIndicies),
+) : numIndices(numIndices),
 	baseVertex(baseVertex),
 	baseIndex(baseIndex),
 	materialIndex(materialIndex)

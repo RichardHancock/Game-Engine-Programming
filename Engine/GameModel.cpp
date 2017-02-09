@@ -157,7 +157,7 @@ void GameModel::processAssimpScene(const aiScene* scene)
 		));
 		
 		numVertices += mesh->mNumVertices;
-		numIndices += meshes[currentMeshIndex].numIndicies;
+		numIndices += meshes[currentMeshIndex].numIndices;
 	}
 
 
@@ -212,8 +212,8 @@ void GameModel::processAssimpScene(const aiScene* scene)
 	vertices = positions;
 }
 
-void GameModel::initMeshFromAssimp(aiMesh* mesh, std::vector<glm::vec3>& positions, std::vector<glm::vec3>& normals, 
-	std::vector<glm::vec2>& uvs, std::vector<glm::vec3>& tangents, std::vector<glm::vec3>& biTangents, std::vector<unsigned int>& indicies)
+void GameModel::initMeshFromAssimp(aiMesh* mesh, std::vector<glm::vec3>& inPositions, std::vector<glm::vec3>& inNormals, 
+	std::vector<glm::vec2>& inUvs, std::vector<glm::vec3>& inTangents, std::vector<glm::vec3>& inBiTangents, std::vector<unsigned int>& inIndices)
 {
 	//Vertices
 	for (unsigned int i = 0; i < mesh->mNumVertices; i++)
@@ -224,11 +224,11 @@ void GameModel::initMeshFromAssimp(aiMesh* mesh, std::vector<glm::vec3>& positio
 		const aiVector3D tangent = mesh->mTangents[i];
 		const aiVector3D biTangent = mesh->mBitangents[i];
 
-		positions.push_back(glm::vec3(position.x, position.y, position.z));
-		normals.push_back(glm::vec3(normal.x, normal.y, normal.z));
-		uvs.push_back(glm::vec2(uv.x, uv.y));
-		tangents.push_back(glm::vec3(tangent.x, tangent.y, tangent.z));
-		biTangents.push_back(glm::vec3(biTangent.x, biTangent.y, biTangent.z));
+		inPositions.push_back(glm::vec3(position.x, position.y, position.z));
+		inNormals.push_back(glm::vec3(normal.x, normal.y, normal.z));
+		inUvs.push_back(glm::vec2(uv.x, uv.y));
+		inTangents.push_back(glm::vec3(tangent.x, tangent.y, tangent.z));
+		inBiTangents.push_back(glm::vec3(biTangent.x, biTangent.y, biTangent.z));
 	}
 
 	//Indices
@@ -236,9 +236,9 @@ void GameModel::initMeshFromAssimp(aiMesh* mesh, std::vector<glm::vec3>& positio
 	{
 		const aiFace face = mesh->mFaces[i];
 		assert(face.mNumIndices == 3);
-		indicies.push_back(face.mIndices[0]);
-		indicies.push_back(face.mIndices[1]);
-		indicies.push_back(face.mIndices[2]);
+		inIndices.push_back(face.mIndices[0]);
+		inIndices.push_back(face.mIndices[1]);
+		inIndices.push_back(face.mIndices[2]);
 	}
 }
 

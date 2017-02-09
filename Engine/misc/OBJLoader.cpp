@@ -35,9 +35,9 @@ OBJLoader::Type OBJLoader::getType(std::string typeToConvert)
 	}
 }
 
-void OBJLoader::readFace(std::stringstream &line, std::vector<MultiIndicies> &storage)
+void OBJLoader::readFace(std::stringstream &line, std::vector<MultiIndices> &storage)
 {
-	MultiIndicies ind[3];
+	MultiIndices ind[3];
 
 	for (unsigned int i = 0; i < 3; i++)
 	{
@@ -118,7 +118,7 @@ bool OBJLoader::load(std::vector<Vertex> &vertexData, std::string filename)
 	std::vector<Vec2> uvs;
 
 
-	std::vector<MultiIndicies> tempIndicies;
+	std::vector<MultiIndices> tempIndices;
 
 	std::string curLine;
 
@@ -145,7 +145,7 @@ bool OBJLoader::load(std::vector<Vertex> &vertexData, std::string filename)
 			break;
 		case F:
 			//NEED to handle (or at least throw a error) different types of faces (TRIs, QUADs ...)
-			readFace(line, tempIndicies);
+			readFace(line, tempIndices);
 			break;
 		case Ignored:
 			//None
@@ -165,7 +165,7 @@ bool OBJLoader::load(std::vector<Vertex> &vertexData, std::string filename)
 
 	//Organise separate vectors into vertex struct
 
-	for (auto ind : tempIndicies)
+	for (auto ind : tempIndices)
 	{
 		Vertex vert;
 

@@ -19,8 +19,6 @@ class GameObject : public std::enable_shared_from_this<GameObject>
 {
 public:
 
-	
-
 	/**
 	 @brief	Searches for the all objects of templated type.
 	
@@ -56,7 +54,7 @@ public:
 	~GameObject();
 
 	/**
-	 @brief	Creates a new gameobject 
+	 @brief	Creates a new game object 
 	
 	 @param	name	The name.
 	
@@ -83,15 +81,14 @@ public:
 		c->gameObject = shared_from_this();
 		c->onAwake();
 
-		Log::logD("Addding Component: " + title); 
+		Log::logD("Adding Component: " + title); 
 
 		return c;
 	}
 
 	/**
 	@brief	Gets first available component of type.
-
-	@param	title	The title.
+	@param title The title of the component
 
 	@return	The component.
 	*/
@@ -115,8 +112,6 @@ public:
 
 	/**
 	@brief	Gets first available component of type.
-
-	@param	title	The title.
 
 	@return	The component.
 	*/

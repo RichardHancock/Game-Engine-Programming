@@ -29,7 +29,7 @@ void Graphics::renderMesh(std::weak_ptr<GameModel> mesh, unsigned int index, std
 	{
 		glDrawElementsBaseVertex(
 			GL_TRIANGLES,
-			subMesh.numIndicies,
+			subMesh.numIndices,
 			GL_UNSIGNED_INT,
 			(void*)(sizeof(unsigned int) * subMesh.baseIndex),
 			subMesh.baseVertex

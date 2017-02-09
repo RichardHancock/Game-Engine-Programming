@@ -16,7 +16,7 @@
 namespace OBJLoader
 {
 	/** @brief A struct that contains all the indices for a point (equivalent to a (num/num/num) in a face). */
-	struct MultiIndicies
+	struct MultiIndices
 	{
 		unsigned int v; //< Vertex Position index
 		unsigned int vn; //< Vertex Normal index
@@ -50,7 +50,7 @@ namespace OBJLoader
 	 @param [in,out] line    The current line.
 	 @param [in,out] storage The vector the data will be stored in.
 	 */
-	void readFace(std::stringstream &line, std::vector<MultiIndicies> &storage);
+	void readFace(std::stringstream &line, std::vector<MultiIndices> &storage);
 
 	/**
 	 @brief Reads 3 floats from a line.

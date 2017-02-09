@@ -14,20 +14,20 @@ struct Mesh
 	/**
 	 @brief	Constructor.
 	
-	 @param	numIndicies  	Number of indicies.
+	 @param	numIndices  	Number of indices.
 	 @param	baseVertex   	The starting vertex.
 	 @param	baseIndex	 	The starting index.
 	 @param	materialIndex	Zero-based index of the material.
 	 */
 	Mesh(
-		unsigned int numIndicies,
+		unsigned int numIndices,
 		unsigned int baseVertex,
 		unsigned int baseIndex,
 		unsigned int materialIndex
 	);
 
-	/** @brief	Number of indicies. */
-	unsigned int numIndicies;
+	/** @brief	Number of indices. */
+	unsigned int numIndices;
 	/** @brief	The starting vertex. */
 	unsigned int baseVertex;
 	/** @brief	The starting index */

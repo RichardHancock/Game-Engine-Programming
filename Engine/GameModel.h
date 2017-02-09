@@ -121,22 +121,22 @@ private:
 	/**
 	 @brief	Init sub mesh from assimp.
 	
-	 @param [in,out]	mesh	  	If non-null, the mesh.
-	 @param [in,out]	positions 	The positions.
-	 @param [in,out]	normals   	The normals.
-	 @param [in,out]	uvs		  	The uvs.
-	 @param [in,out]	tangents  	The tangents.
-	 @param [in,out]	biTangents	The bi tangents.
-	 @param [in,out]	indicies  	The indicies.
+	 @param [in,out]	mesh	  	    If non-null, the mesh.
+	 @param [in,out]	inPositions 	The positions.
+	 @param [in,out]	inNormals   	The normals.
+	 @param [in,out]	inUvs		  	The uvs.
+	 @param [in,out]	inTangents  	The tangents.
+	 @param [in,out]	inBiTangents	The bi tangents.
+	 @param [in,out]	inIndices  	    The indices.
 	 */
 	void initMeshFromAssimp(
 		aiMesh* mesh,
-		std::vector<glm::vec3>& positions,
-		std::vector<glm::vec3>& normals,
-		std::vector<glm::vec2>& uvs,
-		std::vector<glm::vec3>& tangents,
-		std::vector<glm::vec3>& biTangents,
-		std::vector<unsigned int>& indicies
+		std::vector<glm::vec3>& inPositions,
+		std::vector<glm::vec3>& inNormals,
+		std::vector<glm::vec2>& inUvs,
+		std::vector<glm::vec3>& inTangents,
+		std::vector<glm::vec3>& inBiTangents,
+		std::vector<unsigned int>& inIndices
 	);
 
 	/**
