@@ -10,7 +10,7 @@ Socket::Socket(std::string inHostname, int inPort)
 	socket = nullptr;
 
 #ifdef _WIN32
-	Log::logI("Socket - Using WinSock");
+	Log::logI("Socket - Using WinSock V2.2");
 	socket = new WindowsSocket(inHostname, inPort);
 #else
 	Log::logI("Socket - Using Berkeley Sockets");

@@ -35,7 +35,7 @@ UNIXSocket::UNIXSocket(std::string &inHostname, int inPort)
 	iResult = getaddrinfo(hostname.c_str(), portString.c_str(), &hints, &result);
 	if (iResult != 0)
 	{
-		Log::logE("Socket - getaddrinfo failed with error: " + Utility::intToString(iResult));
+		Log::logE("Socket - getaddrinfo failed with error: " + getErrorMessage(iResult));
 		return;
 	}
 
@@ -48,7 +48,7 @@ UNIXSocket::UNIXSocket(std::string &inHostname, int inPort)
 		if (socketHandle == INVALID_SOCKET)
 		{
 			iResult = errno; //Save error number before some other call overwrites it.
-			Log::logE("Socket - socket() failed with error: " + Utility::intToString(iResult));
+			Log::logE("Socket - socket() failed with error: " + getErrorMessage(iResult));
 			freeaddrinfo(result);
 			return;
 		}
@@ -94,14 +94,14 @@ bool UNIXSocket::sendMsg(std::string message)
 		if (send(socketHandle, message.c_str(), message.length() + 1, 0) == SOCKET_ERROR)
 		{
 			iResult = errno; //Save error number before some other call overwrites it.
-			Log::logE("Socket - send failed with error: " + Utility::intToString(iResult));
+			Log::logE("Socket - send failed with error: " + getErrorMessage(iResult));
 			return false;
 		}
 	}
 	else if (iResult == SOCKET_ERROR)
 	{
 		iResult = errno; //Save error number before some other call overwrites it.
-		Log::logE("Socket - select failed with error: " + Utility::intToString(iResult));
+		Log::logE("Socket - select failed with error: " + getErrorMessage(iResult));
 		return false;
 	}
 
@@ -137,15 +137,30 @@ bool UNIXSocket::recvMsg()
 		else
 		{
 			iResult = errno; //Save error number before some other call overwrites it.
-			Log::logE("Socket - recv() failed with error: " + Utility::intToString(iResult));
+			Log::logE("Socket - recv() failed with error: " + getErrorMessage(iResult));
 		}
 	}
 	else if (iResult == SOCKET_ERROR)
 	{
 		iResult = errno; //Save error number before some other call overwrites it.
-		Log::logE("Socket - select failed with error: " + Utility::intToString(iResult));
+		Log::logE("Socket - select failed with error: " + getErrorMessage(iResult));
 	}
 #endif
 
 	return false;
+}
+
+std::string UNIXSocket::getErrorMessage(int errorCode)
+{
+#ifndef _WIN32
+	//This string may not be modified or deleted as the OS handles it.
+	char* errorRaw = std::strerror(errorCode);
+
+	std::string result(errorRaw);
+	
+	if (!result.empty())
+		return result;
+#endif 
+	
+	return std::string("Could not get error message for error code " + Utility::intToString(errorCode));
 }

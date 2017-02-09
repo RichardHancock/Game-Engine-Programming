@@ -20,6 +20,7 @@ public:
     virtual bool recvMsg();
 
 protected:
+	std::string getErrorMessage(int errorCode);
 
 #ifdef _WIN32
     WSADATA wsaData;

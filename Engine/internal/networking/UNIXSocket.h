@@ -19,6 +19,7 @@ public:
     virtual bool recvMsg();
 
 protected:
+	std::string getErrorMessage(int errorCode);
 
 #ifndef _WIN32
 	timeval timeout;
