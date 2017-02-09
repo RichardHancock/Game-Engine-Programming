@@ -99,6 +99,9 @@
     <ClCompile Include="HeightMap.cpp" />
     <ClCompile Include="input\Controller.cpp" />
     <ClCompile Include="input\InputManager.cpp" />
+    <ClCompile Include="internal\networking\SocketBase.cpp" />
+    <ClCompile Include="internal\networking\UNIXSocket.cpp" />
+    <ClCompile Include="internal\networking\WindowsSocket.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="Mesh.cpp" />
@@ -141,6 +144,9 @@
     <ClInclude Include="HeightMap.h" />
     <ClInclude Include="input\Controller.h" />
     <ClInclude Include="input\InputManager.h" />
+    <ClInclude Include="internal\networking\SocketBase.h" />
+    <ClInclude Include="internal\networking\UNIXSocket.h" />
+    <ClInclude Include="internal\networking\WindowsSocket.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="misc\AABB.h" />

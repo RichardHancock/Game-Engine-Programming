@@ -37,6 +37,18 @@
     <Filter Include="Source Files\Input">
       <UniqueIdentifier>{d4bc987b-a91e-4af9-b603-1e9663de23c2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Internal">
+      <UniqueIdentifier>{7b28ffc0-79f8-42ae-9696-c1c3f967d2ac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Internal\Networking">
+      <UniqueIdentifier>{40cd4431-d51b-4923-b093-5a6f04216fbd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Internal">
+      <UniqueIdentifier>{ccff4241-4b3f-4728-bdbc-83f00f0fc883}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Internal\Networking">
+      <UniqueIdentifier>{456d37cd-6f10-408a-9a8d-8509c227a85b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -158,6 +170,15 @@
     </ClCompile>
     <ClCompile Include="Socket.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="internal\networking\SocketBase.cpp">
+      <Filter>Source Files\Internal\Networking</Filter>
+    </ClCompile>
+    <ClCompile Include="internal\networking\UNIXSocket.cpp">
+      <Filter>Source Files\Internal\Networking</Filter>
+    </ClCompile>
+    <ClCompile Include="internal\networking\WindowsSocket.cpp">
+      <Filter>Source Files\Internal\Networking</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -286,6 +307,15 @@
     </ClInclude>
     <ClInclude Include="Socket.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="internal\networking\SocketBase.h">
+      <Filter>Header Files\Internal\Networking</Filter>
+    </ClInclude>
+    <ClInclude Include="internal\networking\UNIXSocket.h">
+      <Filter>Header Files\Internal\Networking</Filter>
+    </ClInclude>
+    <ClInclude Include="internal\networking\WindowsSocket.h">
+      <Filter>Header Files\Internal\Networking</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

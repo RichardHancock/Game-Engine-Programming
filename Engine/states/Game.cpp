@@ -156,7 +156,7 @@ Game::Game()
 	);
 	sphere->addComponent<SphereCollider>("SphereCollider");
 
-	socket = new Socket("10.0.2.2", 8080);
+	socket = new Socket("localhost", 8080);
 
 	gameO->onAwake();
 	ship->onAwake();

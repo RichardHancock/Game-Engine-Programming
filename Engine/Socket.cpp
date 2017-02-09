@@ -25,11 +25,10 @@ bool Socket::isOpen()
 
 bool Socket::sendMsg(std::string message)
 {
-	Log::logI("Upper send message attempt");
-	return (socket != nullptr ? socket->sendMsg(message) : false);
+	return (isOpen() ? socket->sendMsg(message) : false);
 }
 
 bool Socket::recvMsg()
 {
-	return (socket != nullptr ? socket->recvMsg() : false);
+	return (isOpen() ? socket->recvMsg() : false);
 }

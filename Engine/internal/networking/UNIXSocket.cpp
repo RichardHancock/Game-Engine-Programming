@@ -87,11 +87,10 @@ bool UNIXSocket::sendMsg(std::string message)
 	int iResult;
 
 	FD_SET(socketHandle, &writeSet);
-	Log::logI("Attempting Send Middle");
+
 	iResult = select(socketHandle + 1, NULL, &writeSet, NULL, &timeout);
 	if (iResult > 0)
 	{
-		Log::logI("Attempting Send");
 		if (send(socketHandle, message.c_str(), message.length() + 1, 0) == SOCKET_ERROR)
 		{
 			iResult = errno; //Save error number before some other call overwrites it.
