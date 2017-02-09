@@ -144,6 +144,7 @@
     <ClInclude Include="HeightMap.h" />
     <ClInclude Include="input\Controller.h" />
     <ClInclude Include="input\InputManager.h" />
+    <ClInclude Include="internal\dependencies\btBulletDynamicsCommon.h" />
     <ClInclude Include="internal\networking\SocketBase.h" />
     <ClInclude Include="internal\networking\UNIXSocket.h" />
     <ClInclude Include="internal\networking\WindowsSocket.h" />

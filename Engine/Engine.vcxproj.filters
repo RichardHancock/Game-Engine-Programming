@@ -49,6 +49,9 @@
     <Filter Include="Source Files\Internal\Networking">
       <UniqueIdentifier>{456d37cd-6f10-408a-9a8d-8509c227a85b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Internal\Dependencies">
+      <UniqueIdentifier>{9b6c39aa-8eb8-4c3b-9df7-1abffcf41d06}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -316,6 +319,9 @@
     </ClInclude>
     <ClInclude Include="internal\networking\WindowsSocket.h">
       <Filter>Header Files\Internal\Networking</Filter>
+    </ClInclude>
+    <ClInclude Include="internal\dependencies\btBulletDynamicsCommon.h">
+      <Filter>Header Files\Internal\Dependencies</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
