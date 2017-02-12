@@ -34,29 +34,40 @@ void BulletDebugDrawer::drawLine(const btVector3 & from, const btVector3 & to, c
 
 	glPopMatrix();*/
 
-	glColor4f(colour.getX(), colour.getY(), colour.getZ(), 1.0f);
+	
 	glBegin(GL_LINES);
-
+	glColor3f(0.0f, 1.0f, 1.0f);
+//	glColor3f(colour.getX(), colour.getY(), colour.getZ());
 	glVertex3f(from.getX(), from.getY(), from.getZ());
 	glVertex3f(to.getX(), to.getY(), to.getZ());
 
 	glEnd();
 }
 
-void BulletDebugDrawer::drawContactPoint(const btVector3 & pointOnB, const btVector3 & normalOnB, btScalar distance, int lifeTime, const btVector3 & colour)
+void BulletDebugDrawer::drawContactPoint(const btVector3 & pointOnB, const btVector3 & normalOnB, btScalar, int, const btVector3 & colour)
 {
 	btVector3 to;
-	to = pointOnB + normalOnB * distance;
+	to = pointOnB + normalOnB; //* distance);
 
-	glColor4f(colour.getX(), colour.getY(), colour.getZ(), 1.0f);
+	
+	glPointSize(15.0f);
+
+	glBegin(GL_POINTS);
+	
+	glColor3f(colour.getX(), colour.getY(), colour.getZ());
+	glVertex3f(pointOnB.getX(), pointOnB.getY(), pointOnB.getZ());
+
+	glEnd();
+
 	glBegin(GL_LINES);
 
+	glColor3f(colour.getX(), colour.getY(), colour.getZ());
 	glVertex3f(pointOnB.getX(), pointOnB.getY(), pointOnB.getZ());
 	glVertex3f(to.getX(), to.getY(), to.getZ());
 
 	glEnd();
 
-	Log::logD("Contact point lifetime: " + Utility::intToString(lifeTime));
+	//Log::logD("Contact point lifetime: " + Utility::intToString(lifeTime));
 }
 
 void BulletDebugDrawer::reportErrorWarning(const char * warningString)

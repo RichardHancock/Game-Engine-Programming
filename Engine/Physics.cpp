@@ -35,7 +35,7 @@ void Physics::init()
 	world->setGravity(btVector3(0, -1, 0));
 
 	debug = new BulletDebugDrawer();
-	debug->setDebugMode(BulletDebugDrawer::DBG_DrawWireframe);
+	debug->setDebugMode(BulletDebugDrawer::DBG_DrawWireframe + BulletDebugDrawer::DBG_DrawContactPoints + BulletDebugDrawer::DBG_DrawNormals);
 	world->setDebugDrawer((btIDebugDraw*)debug);
 }
 

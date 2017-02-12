@@ -16,7 +16,7 @@ public:
 	
 	virtual void onAwake();
 
-	void init();
+	void init(float weight, glm::vec3 inertia);
 
 private:
 	btRigidBody* rigidBody;

@@ -68,7 +68,7 @@ Game::Game()
 	gameO->addComponent<CollisionShape>("CollisionShape").lock()->generateStaticMeshShape();
 	auto rbGameO = gameO->addComponent<RigidBody>("RigidBody").lock();
 	//rbGameO->setPosition(glm::vec3(40, 0, 10));
-	rbGameO->init();
+	rbGameO->init(0.0f, glm::vec3(0.0f));
 
 
 	auto ship = GameObject::create("ship").lock();
@@ -86,7 +86,7 @@ Game::Game()
 	ship->addComponent<CollisionShape>("CollisionShape").lock()->generateStaticMeshShape();
 	auto rbShip = ship->addComponent<RigidBody>("RigidBody").lock();
 	//rbShip->setPosition(glm::vec3(40, 30, 15));
-	rbShip->init();
+	rbShip->init(2, glm::vec3(1.0f));
 
 	auto earth = GameObject::create("earth").lock();
 	auto transform3 = earth->addComponent<Transform>("Transform").lock();

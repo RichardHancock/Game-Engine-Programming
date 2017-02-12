@@ -28,7 +28,7 @@ void RigidBody::onAwake()
 	
 }
 
-void RigidBody::init()
+void RigidBody::init(float weight, glm::vec3 inertia)
 {
 	auto transformRef = getGameObject().lock()->getComponent<Transform>("Transform");
 	assert(!transformRef.expired());
@@ -56,7 +56,7 @@ void RigidBody::init()
 	auto collisionShape = collisionShapeRef;
 
 	btRigidBody::btRigidBodyConstructionInfo rigidBodyInfo(
-		0, motionState, collisionShape, btVector3(0, 0, 0)
+		weight, motionState, collisionShape, btVector3(inertia.x, inertia.y, inertia.z)
 	);
 
 	rigidBody = new btRigidBody(rigidBodyInfo);
