@@ -52,6 +52,12 @@
     <Filter Include="Header Files\Internal\Dependencies">
       <UniqueIdentifier>{9b6c39aa-8eb8-4c3b-9df7-1abffcf41d06}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Misc\Debug Drawer">
+      <UniqueIdentifier>{597bb339-8deb-47ca-842f-f51bba1e82e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Misc\Debug Drawer">
+      <UniqueIdentifier>{a2d0f36d-87b5-43b2-a2cd-503a9fca1865}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -182,6 +188,15 @@
     </ClCompile>
     <ClCompile Include="internal\networking\WindowsSocket.cpp">
       <Filter>Source Files\Internal\Networking</Filter>
+    </ClCompile>
+    <ClCompile Include="misc\debugDrawer\DebugDrawer.cpp">
+      <Filter>Source Files\Misc\Debug Drawer</Filter>
+    </ClCompile>
+    <ClCompile Include="misc\debugDrawer\ContactPoint.cpp">
+      <Filter>Source Files\Misc\Debug Drawer</Filter>
+    </ClCompile>
+    <ClCompile Include="misc\debugDrawer\Line.cpp">
+      <Filter>Source Files\Misc\Debug Drawer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -322,6 +337,15 @@
     </ClInclude>
     <ClInclude Include="internal\dependencies\btBulletDynamicsCommon.h">
       <Filter>Header Files\Internal\Dependencies</Filter>
+    </ClInclude>
+    <ClInclude Include="misc\debugDrawer\DebugDrawer.h">
+      <Filter>Header Files\Misc\Debug Drawer</Filter>
+    </ClInclude>
+    <ClInclude Include="misc\debugDrawer\ContactPoint.h">
+      <Filter>Header Files\Misc\Debug Drawer</Filter>
+    </ClInclude>
+    <ClInclude Include="misc\debugDrawer\Line.h">
+      <Filter>Header Files\Misc\Debug Drawer</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

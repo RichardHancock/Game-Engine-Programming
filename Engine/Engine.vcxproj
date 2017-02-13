@@ -109,6 +109,9 @@
     <ClCompile Include="misc\BulletDebugDrawer.cpp" />
     <ClCompile Include="misc\Colour.cpp" />
     <ClCompile Include="misc\CustomDestructors.cpp" />
+    <ClCompile Include="misc\debugDrawer\ContactPoint.cpp" />
+    <ClCompile Include="misc\debugDrawer\DebugDrawer.cpp" />
+    <ClCompile Include="misc\debugDrawer\Line.cpp" />
     <ClCompile Include="misc\DeltaTime.cpp" />
     <ClCompile Include="misc\GameVariables.cpp" />
     <ClCompile Include="misc\Log.cpp" />
@@ -154,6 +157,9 @@
     <ClInclude Include="misc\BulletDebugDrawer.h" />
     <ClInclude Include="misc\Colour.h" />
     <ClInclude Include="misc\CustomDestructors.h" />
+    <ClInclude Include="misc\debugDrawer\ContactPoint.h" />
+    <ClInclude Include="misc\debugDrawer\DebugDrawer.h" />
+    <ClInclude Include="misc\debugDrawer\Line.h" />
     <ClInclude Include="misc\DeltaTime.h" />
     <ClInclude Include="misc\GameVariables.h" />
     <ClInclude Include="misc\Log.h" />
