@@ -4,70 +4,35 @@
 
 #include "Log.h"
 #include "Utility.h"
+#include "debugDrawer/DebugDrawer.h"
 
-/*
+
 void BulletDebugDrawer::drawLine(const btVector3 & from, const btVector3 & to, const btVector3 & fromColour, const btVector3 & toColour)
 {
-	glPushMatrix();
-	glColor4f(fromColour.getX(), fromColour.getY(), fromColour.getZ(), 1.0f);
-
-
-}*/
+	DebugDrawer::addLine(
+		Utility::bulletVec3ToGLM(from),
+		Utility::bulletVec3ToGLM(to),
+		Utility::bulletVec3ToGLM(fromColour),
+		Utility::bulletVec3ToGLM(toColour)
+	);
+}
 
 void BulletDebugDrawer::drawLine(const btVector3 & from, const btVector3 & to, const btVector3 & colour)
 {
-	/*
-	glPushMatrix();
-	glColor4f(colour.getX(), colour.getY(), colour.getZ(), 1.0f);
-
-	const GLfloat line[] = {
-		from.getX(), from.getY(), from.getZ(),
-		to.getX(),   to.getY(),   to.getZ()
-	};
-
-	glVertexPointer(3, GL_FLOAT, 0, &line);
-
-	glPointSize(10.0f);
-
-	glDrawArrays(GL_POINTS, 0, 2);
-	glDrawArrays(GL_LINES, 0, 2);
-
-	glPopMatrix();*/
-
-	
-	glBegin(GL_LINES);
-	glColor3f(0.0f, 1.0f, 1.0f);
-//	glColor3f(colour.getX(), colour.getY(), colour.getZ());
-	glVertex3f(from.getX(), from.getY(), from.getZ());
-	glVertex3f(to.getX(), to.getY(), to.getZ());
-
-	glEnd();
+	DebugDrawer::addLine(
+		Utility::bulletVec3ToGLM(from),
+		Utility::bulletVec3ToGLM(to),
+		Utility::bulletVec3ToGLM(colour)
+	);
 }
 
 void BulletDebugDrawer::drawContactPoint(const btVector3 & pointOnB, const btVector3 & normalOnB, btScalar, int, const btVector3 & colour)
-{
-	btVector3 to;
-	to = pointOnB + normalOnB; //* distance);
-
-	
-	glPointSize(15.0f);
-
-	glBegin(GL_POINTS);
-	
-	glColor3f(colour.getX(), colour.getY(), colour.getZ());
-	glVertex3f(pointOnB.getX(), pointOnB.getY(), pointOnB.getZ());
-
-	glEnd();
-
-	glBegin(GL_LINES);
-
-	glColor3f(colour.getX(), colour.getY(), colour.getZ());
-	glVertex3f(pointOnB.getX(), pointOnB.getY(), pointOnB.getZ());
-	glVertex3f(to.getX(), to.getY(), to.getZ());
-
-	glEnd();
-
-	//Log::logD("Contact point lifetime: " + Utility::intToString(lifeTime));
+{  
+	DebugDrawer::addContactPoint(
+		Utility::bulletVec3ToGLM(pointOnB), 
+		Utility::bulletVec3ToGLM(normalOnB),
+		Utility::bulletVec3ToGLM(colour)
+	);
 }
 
 void BulletDebugDrawer::reportErrorWarning(const char * warningString)

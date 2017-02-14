@@ -5,7 +5,7 @@
 class BulletDebugDrawer : public btIDebugDraw
 {
 public:
-	//virtual void drawLine(const btVector3& from, const btVector3& to, const btVector3& fromColour, const btVector3& toColour);
+	virtual void drawLine(const btVector3& from, const btVector3& to, const btVector3& fromColour, const btVector3& toColour);
 
 	virtual void drawLine(const btVector3& from, const btVector3& to, const btVector3& colour);
 

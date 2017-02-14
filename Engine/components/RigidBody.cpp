@@ -14,7 +14,7 @@ RigidBody::RigidBody()
 
 void RigidBody::setPosition(glm::vec3 newPos)
 {
-	position = btVector3(newPos.x + 40.0f, newPos.y, newPos.z + 5.0f);
+	position = btVector3(newPos.x, newPos.y, newPos.z);
 	
 	if (rigidBody != nullptr)
 	{

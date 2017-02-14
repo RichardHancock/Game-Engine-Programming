@@ -13,6 +13,7 @@
 #include "misc/Random.h"
 #include "misc/DeltaTime.h"
 #include "Physics.h"
+#include "misc/debugDrawer/DebugDrawer.h"
 
 #ifdef _WIN32
 #include <windows.h>
@@ -63,6 +64,7 @@ int main(int argc, char *argv[])
 		+ "." + Utility::intToString(aiGetVersionRevision()));
 	
 	Random::init();
+	DebugDrawer::init("debugVertex.shader", "debugFragment.shader");
 	Physics::init();
 
 	StateManager::addState(std::make_shared<Game>());
@@ -70,7 +72,8 @@ int main(int argc, char *argv[])
 	DeltaTime::init();
 
 	bool done = false;
-
+	
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); Really funky looking toggle, Maybe add to a render manager.
 	while (!done)
 	{
 		done = StateManager::eventHandler();
@@ -87,6 +90,10 @@ int main(int argc, char *argv[])
 		Physics::getWorld()->stepSimulation(1 / 50.f, 10);
 		//ResourceManager::update(dt);
 
+		//Pre Render
+		Physics::getWorld()->debugDrawWorld(); //This sets up openGL buffers for rendering
+		DebugDrawer::preRender();
+
 		//Render
 		if (!Platform::isDummyRenderer())
 		{
@@ -97,11 +104,13 @@ int main(int argc, char *argv[])
 		}
 		
 		StateManager::render();
-		Physics::getWorld()->debugDrawWorld();
-		//Physics::getWorld()->
+
+		DebugDrawer::render();
 
 		Platform::sdlSwapWindow();
 
+		//Post Render
+		DebugDrawer::postRender();
 
 		InputManager::update();
 
@@ -112,6 +121,7 @@ int main(int argc, char *argv[])
 	}
 
 	StateManager::cleanup();
+	DebugDrawer::cleanup();
 	InputManager::cleanup();
 	ResourceManager::cleanUp();
 	Platform::cleanup();

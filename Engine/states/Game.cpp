@@ -15,6 +15,7 @@
 #include "../HeightMap.h"
 #include "../components/CollisionShape.h"
 #include "../components/RigidBody.h"
+#include "../misc/debugDrawer/DebugDrawer.h"
 
 Game::Game()
 {
@@ -156,7 +157,11 @@ Game::Game()
 	);
 	sphere->addComponent<SphereCollider>("SphereCollider");
 
-	socket = new Socket("localhost", 8080);
+	
+	//socket = new Socket("localhost", 8080);
+
+	DebugDrawer::setPointSize(15.0f);
+
 
 	gameO->onAwake();
 	ship->onAwake();
@@ -246,14 +251,14 @@ void Game::update()
 
 	if (InputManager::wasKeyPressed(SDLK_n))
 	{
-		socket->sendMsg("Hello");
+		//socket->sendMsg("Hello");
 	}
 
 
 	//GameVariables::data->gameObjs["fighter"]->getComponent<Transform>("Transform").lock()->rotate(glm::vec3(0.0f, 1.0f * DeltaTime::getDT(), 0.0f));
 	GameVariables::data->gameObjs["earth"]->getComponent<Transform>("Transform").lock()->rotate(glm::vec3(0.0f, 0.01f * DeltaTime::getDT(), 0.0f));
 
-	socket->recvMsg();
+	//socket->recvMsg();
 
 	movementControls();
 

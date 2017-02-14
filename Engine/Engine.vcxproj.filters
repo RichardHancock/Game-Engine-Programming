@@ -198,6 +198,9 @@
     <ClCompile Include="misc\debugDrawer\Line.cpp">
       <Filter>Source Files\Misc\Debug Drawer</Filter>
     </ClCompile>
+    <ClCompile Include="misc\debugDrawer\DebugPrimitives.cpp">
+      <Filter>Source Files\Misc\Debug Drawer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Platform.h">
@@ -345,6 +348,9 @@
       <Filter>Header Files\Misc\Debug Drawer</Filter>
     </ClInclude>
     <ClInclude Include="misc\debugDrawer\Line.h">
+      <Filter>Header Files\Misc\Debug Drawer</Filter>
+    </ClInclude>
+    <ClInclude Include="misc\debugDrawer\DebugPrimitives.h">
       <Filter>Header Files\Misc\Debug Drawer</Filter>
     </ClInclude>
   </ItemGroup>

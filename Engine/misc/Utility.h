@@ -9,6 +9,7 @@
 #include <unordered_map>
 #include <glm/glm.hpp>
 
+#include "../internal/dependencies/btBulletDynamicsCommon.h"
 #include "Vec2.h"
 #include "Vec3.h"
 
@@ -102,6 +103,9 @@ namespace Utility
 	 @return	A glm::vec3.
 	 */
 	glm::vec3 vec3ToGLM(Vec3 vector);
+
+	glm::vec3 bulletVec3ToGLM(const btVector3& vector);
+	glm::vec3 bulletVec3ToGLM(btVector3& vector);
 
 	/**
 	 @brief Scale a Vec2 relative to the passed in screen size (Bases everything on a base resolution of 640,480).

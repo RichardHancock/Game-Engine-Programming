@@ -111,6 +111,7 @@
     <ClCompile Include="misc\CustomDestructors.cpp" />
     <ClCompile Include="misc\debugDrawer\ContactPoint.cpp" />
     <ClCompile Include="misc\debugDrawer\DebugDrawer.cpp" />
+    <ClCompile Include="misc\debugDrawer\DebugPrimitives.cpp" />
     <ClCompile Include="misc\debugDrawer\Line.cpp" />
     <ClCompile Include="misc\DeltaTime.cpp" />
     <ClCompile Include="misc\GameVariables.cpp" />
@@ -159,6 +160,7 @@
     <ClInclude Include="misc\CustomDestructors.h" />
     <ClInclude Include="misc\debugDrawer\ContactPoint.h" />
     <ClInclude Include="misc\debugDrawer\DebugDrawer.h" />
+    <ClInclude Include="misc\debugDrawer\DebugPrimitives.h" />
     <ClInclude Include="misc\debugDrawer\Line.h" />
     <ClInclude Include="misc\DeltaTime.h" />
     <ClInclude Include="misc\GameVariables.h" />

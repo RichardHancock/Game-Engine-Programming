@@ -1,32 +1,52 @@
 #pragma once
 
 #include <glm/glm.hpp>
-#include <vector>
+#include <memory>
 
 #include "ContactPoint.h"
 #include "Line.h"
+#include "DebugPrimitives.h"
+#include "../../Shader.h"
 
 class DebugDrawer
 {
 public:
 
-	DebugDrawer();
+	static void init(std::string vShaderFilename, std::string fShaderFilename);
 
-	~DebugDrawer();
+	static void cleanup();
+
+	static void preRender();
 
 	/** @brief	Renders all elements in the Debug Drawer. */
-	void render();
+	static void render();
 
+	static void postRender();
 	
-	void addLine(glm::vec3 pA, glm::vec3 pB, glm::vec3 colour);
+	static void addLine(glm::vec3 pA, glm::vec3 pB, glm::vec3 colour);
 
-	void addLine(Line line);
+	static void addLine(glm::vec3 pA, glm::vec3 pB, glm::vec3 pAColour, glm::vec3 pBColour);
 
-	void addContactPoint(ContactPoint point);
+	static void addLine(Line line);
 
+	static void addContactPoint(glm::vec3 point, glm::vec3 normal, glm::vec3 colour);
+
+	static void addContactPoint(ContactPoint point);
+
+	static void setPointSize(float pointSize);
+
+	static void setLineSize(float lineSize);
+
+	/**
+	 @brief	Toggles whether the wire frame is visible through other models.
+	 */
+	static void toggleZeroDepthWireFrame();
 private:
 
-	std::vector<ContactPoint> points;
+	static std::shared_ptr<DebugPrimitives> lines;
+	static std::shared_ptr<DebugPrimitives> points;
 
-	std::vector<Line> lines;
+	static std::shared_ptr<Shader> shader;
+
+	static bool zeroDepthWireFrame;
 };

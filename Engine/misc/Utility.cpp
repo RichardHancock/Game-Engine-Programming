@@ -90,6 +90,16 @@ glm::vec3 Utility::vec3ToGLM(Vec3 vector)
 	return glm::vec3(vector.x, vector.y, vector.z);
 }
 
+glm::vec3 Utility::bulletVec3ToGLM(const btVector3& vector)
+{
+	return glm::vec3(vector.getX(), vector.getY(), vector.getZ());
+}
+
+glm::vec3 Utility::bulletVec3ToGLM(btVector3& vector)
+{	
+	return glm::vec3(vector.getX(), vector.getY(), vector.getZ());
+}
+
 Vec2 Utility::scaleTo(Vec2 vecToScale, Vec2 screenSize)
 {
 	vecToScale.x /= 640;
