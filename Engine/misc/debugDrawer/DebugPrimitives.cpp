@@ -5,8 +5,9 @@
 DebugPrimitives::DebugPrimitives(GLenum inPrimitiveType)
 {
 	primitiveType = inPrimitiveType;
+	VAO = 0;
 	VBO = 0;
-	
+
 	if (!Platform::isDummyRenderer())
 	{
 		glGenVertexArrays(1, &VAO);
