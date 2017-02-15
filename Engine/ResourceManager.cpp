@@ -83,7 +83,7 @@ void ResourceManager::loadMaterialsFromAssimp(std::string materialName, const ai
 	for (unsigned int curMaterial = 0; curMaterial < scene->mNumMaterials; curMaterial++)
 	{
 		std::shared_ptr<Material> newMaterial = std::make_shared<Material>(
-			shaderDir + "vertexNormal.shader", shaderDir + "fragmentNormal.shader");
+			shaderDir + "standardV.glsl", shaderDir + "standardF.glsl");
 
 		aiMaterial* materialData = scene->mMaterials[curMaterial];
 

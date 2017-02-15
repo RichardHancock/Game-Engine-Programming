@@ -64,7 +64,7 @@ int main(int argc, char *argv[])
 		+ "." + Utility::intToString(aiGetVersionRevision()));
 	
 	Random::init();
-	DebugDrawer::init("debugVertex.shader", "debugFragment.shader");
+	DebugDrawer::init("debugV.glsl", "debugF.glsl");
 	Physics::init();
 
 	StateManager::addState(std::make_shared<Game>());

@@ -36,7 +36,7 @@ Game::Game()
 	//hmap->addComponent<RigidBody>("RigidBody").lock();
 
 	ResourceManager::createMaterial("hmapTex", ResourceManager::getTexture("heightmap.png"),
-		"vertexMat.shader", "fragmentMat.shader");
+		"texturedV.glsl", "texturedF.glsl");
 
 	hmap->addComponent<MeshRenderer>("MeshRenderer").lock()->setMaterial(
 		ResourceManager::getMaterial("hmapTex", 0, false)
@@ -116,9 +116,9 @@ Game::Game()
 
 
 	ResourceManager::createMaterial("blue", ResourceManager::getTexture("blue.png"),
-		"vertexMat.shader", "fragmentMat.shader");
+		"texturedV.glsl", "texturedF.glsl");
 	ResourceManager::createMaterial("red", ResourceManager::getTexture("red.png"),
-		"vertexMat.shader", "fragmentMat.shader");
+		"texturedV.glsl", "texturedF.glsl");
 
 
 	//ALL BELOW ARE LOADED WITH MY OWN OBJ LOADER
