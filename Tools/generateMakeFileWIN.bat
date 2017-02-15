@@ -5,5 +5,7 @@ SET mkgen_debugFlags="-g -Wall -pedantic"
 SET mkgen_releaseFlags="-O2 -Wall -pedantic"
 SET mkgen_outputPath="../bin/"
 SET mkgen_outputFile="Engine"
+SET mkgen_resourceFolderName="resources"
+SET mkgen_resourceFolderPath="../Engine/"
 
-call python makeFileGenerator.py %mkgen_srcDir% %mkgen_compiler% %mkgen_flags% %mkgen_debugFlags% %mkgen_releaseFlags% %mkgen_outputPath% %mkgen_outputFile%
+call python makeFileGenerator.py %mkgen_srcDir% %mkgen_compiler% %mkgen_flags% %mkgen_debugFlags% %mkgen_releaseFlags% %mkgen_outputPath% %mkgen_outputFile% %mkgen_resourceFolderName% %mkgen_resourceFolderPath%

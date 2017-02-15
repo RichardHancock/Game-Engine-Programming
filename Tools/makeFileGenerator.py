@@ -2,7 +2,7 @@ import os
 import sys
 
 argLength = len(sys.argv)
-if argLength < 8:
+if argLength < 10:
     sys.exit()
 
 # Arguments
@@ -13,6 +13,8 @@ compilerDebugFlags = sys.argv[4]
 compilerReleaseFlags = sys.argv[5]
 outputPath = sys.argv[6]
 outputFileName = sys.argv[7]
+resourceFolderName = sys.argv[8]
+resourceFolderPath = sys.argv[9]
 
 cppFiles = []
 
@@ -42,13 +44,13 @@ makeFileLines = [
     "",
     "debug:",
     "\t$(CC) $(SOURCES) $(FLAGS) $(DFLAGS) -o $(OUTPUT)",
-	"\trm -r -f \"../bin/resources\"",
-	"\tcp -r \"../Engine/resources\" \"../bin/\"",
+	"\trm -r -f \"" + outputPath + resourceFolderName + "\"",
+	"\tcp -r \"" + resourceFolderPath + resourceFolderName + "\" \"" + outputPath + "\"",
     "",
     "release:",
     "\t$(CC) $(SOURCES) $(FLAGS) $(RFLAGS) -o $(OUTPUT)",
-	"\trm -r -f \"../bin/resources\"",
-	"\tcp -r \"../Engine/resources\" \"../bin/\"",
+	"\trm -r -f \"" + outputPath + resourceFolderName + "\"",
+	"\tcp -r \"" + resourceFolderPath + resourceFolderName + "\" \"" + outputPath + "\"",
 ]
 
 for srcFile in cppFiles:
