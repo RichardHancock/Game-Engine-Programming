@@ -24,7 +24,7 @@ SDL_Surface* QRCode::convertToSurface(int segmentSize)
 		return nullptr;
 	}
 	
-	int size = qr.size;
+	int size = qr.size + 2;
 	SDL_Rect* rects = new SDL_Rect[size*size];
 
 	int arrayIt = 0; //Get this working with just X and Y
@@ -36,7 +36,7 @@ SDL_Surface* QRCode::convertToSurface(int segmentSize)
 		for (int x = 0; x < size; x++)
 		{
 
-			if (qr.getModule(x, y) == 1)
+			if (x != 0 && y != 0 && x != size-1 && y != size-1 && qr.getModule(x - 1, y - 1) == 1)
 			{
 				SDL_Rect rect;
 				rect.h = segmentSize;

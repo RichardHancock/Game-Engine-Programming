@@ -38,6 +38,8 @@ public:
 
 	void send(std::string message);
 
+	void send(std::string eventName, std::string message);
+
 private:
 
 	void onConnected();

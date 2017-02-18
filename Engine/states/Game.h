@@ -56,9 +56,24 @@ private:
 
 	Socket* socket;
 
+
+	//MOBILE UI DEMO BELOW
 	MobileGameUI* mobileUI;
 
 	std::shared_ptr<Texture> qrTexture;
 
 	bool qrGenerated;
+
+	struct SentValues
+	{
+		glm::vec3 rotation;
+
+		float health;
+		float shield;
+	} sentValues;
+
+
+	float shipHealth;
+	float shipShield;
+
 };

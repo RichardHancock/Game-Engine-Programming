@@ -51,6 +51,18 @@ void MobileGameUI::send(std::string message)
 	}
 }
 
+void MobileGameUI::send(std::string eventName, std::string message)
+{
+	if (isConnected() && socket != nullptr)
+	{
+		sio::message::ptr data = sio::object_message::create();
+		data->get_map()["room"] = sio::string_message::create(sessionID);
+		data->get_map()["msg"] = sio::string_message::create(message);
+
+		socket->emit(eventName, data);
+	}
+}
+
 void MobileGameUI::onConnected()
 {
 	socket = client.socket();

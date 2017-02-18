@@ -18,6 +18,7 @@
 #include "../misc/debugDrawer/DebugDrawer.h"
 
 #include "../mobileUI/QRCode.h"
+#include "../misc/Random.h"
 
 Game::Game()
 {
@@ -27,6 +28,13 @@ Game::Game()
 	mobileUI = new MobileGameUI();
 	mobileUI->connect("http://gameinput.com");
 	qrGenerated = false;
+
+	sentValues.health = shipHealth = 100.0f;
+	sentValues.shield = shipShield = 100.0f;
+	sentValues.rotation = glm::vec3(0.0f);
+
+	shipHealth = 100.0f;
+	shipShield = 100.0f;
 	//MOBILE GAME UI END
 
 	controllingCamera = true;
@@ -243,7 +251,7 @@ void Game::update()
 		controllingCamera = !controllingCamera;
 	}
 
-	mobileUIUpdate();
+	
 	
 	//reset scene
 	if (InputManager::wasKeyReleased(SDLK_SPACE) || InputManager::wasControllerButtonPressed(0, Controller::Button::B))
@@ -275,6 +283,8 @@ void Game::update()
 	{
 		object.second->onUpdate();
 	}
+
+	mobileUIUpdate();
 }
 
 void Game::render()
@@ -302,7 +312,6 @@ void Game::movementControls()
 	glm::vec3 forward = object->getForwardVector();
 	glm::vec3 right = object->getRightVector();
 	glm::vec3 up = object->getUpVector();
-
 
 	//move along object along x
 	if (InputManager::isKeyHeld(SDLK_a))
@@ -409,7 +418,7 @@ void Game::mobileUIUpdate()
 
 		QRCode qr(qrText, qrcodegen::QrCode::Ecc::HIGH);
 
-		SDL_Surface* qrSurface = qr.convertToSurface(7);
+		SDL_Surface* qrSurface = qr.convertToSurface(10);
 		qrTexture = std::make_shared<Texture>(qrSurface); //NEED TO DELETE AT SOME POINT
 		//SDL_SaveBMP(qrSurface, "testing.bmp");
 		auto qrObject = GameObject::create("QRCode").lock();
@@ -430,5 +439,65 @@ void Game::mobileUIUpdate()
 		);
 
 		qrGenerated = true;
+	}
+	
+	//Health Recharge
+	if (InputManager::wasKeyReleased(SDLK_r))
+	{
+		shipShield = 100.00f;
+		shipHealth = 100.00f;
+	}
+
+	//Health Damage
+	if (InputManager::wasMouseButtonReleased(SDL_BUTTON_LEFT))
+	{
+		float tempShield = shipShield - Random::getFloat(5.0f, 25.0f);
+		
+		shipShield = (tempShield < 0.00f ? 0.00f : tempShield);
+	}
+	if (InputManager::wasMouseButtonReleased(SDL_BUTTON_RIGHT))
+	{
+		float tempHealth = shipHealth - Random::getFloat(5.0f, 25.0f);
+
+		shipHealth = (tempHealth < 0.00f ? 0.00f : tempHealth);
+	}
+
+
+	//Update Values and send
+	if (qrGenerated && mobileUI->isConnected())
+	{
+		auto ship = GameVariables::data->gameObjs["fighter"]->getComponent<Transform>().lock();
+
+		glm::vec3 rotation = ship->getRotation();
+
+		if (rotation != sentValues.rotation)
+		{
+			//Send updated rotation data to connected clients. (Reduced to 2 decimal places as we don't need that much precision and saves bandwidth)
+			mobileUI->send("shipYaw", Utility::floatToString(
+				Utility::convertRadiansToAngle(rotation.y), 2)
+			);
+			mobileUI->send("shipPitch", Utility::floatToString(
+				Utility::convertRadiansToAngle(rotation.x), 2)
+			);
+			mobileUI->send("shipRoll", Utility::floatToString(
+				Utility::convertRadiansToAngle(rotation.z), 2)
+			);
+
+			sentValues.rotation = rotation;
+		}
+
+		
+		//Check Other Vars
+		if (shipShield != sentValues.shield)
+		{
+			mobileUI->send("shipShield", Utility::floatToString(shipShield, 2));
+			sentValues.shield = shipShield;
+		}
+
+		if (shipHealth != sentValues.health)
+		{
+			mobileUI->send("shipHealth", Utility::floatToString(shipHealth, 2));
+			sentValues.health = shipHealth;
+		}
 	}
 }
