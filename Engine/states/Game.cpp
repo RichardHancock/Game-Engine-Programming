@@ -17,9 +17,15 @@
 #include "../components/RigidBody.h"
 #include "../misc/debugDrawer/DebugDrawer.h"
 
+#include "../mobileUI/MobileGameUI.h"
+
 Game::Game()
 {
 	stateName = "Game";
+
+	//MOBILE GAME UI START
+	MobileGameUI* mobileUI = new MobileGameUI();
+	//MOBILE GAME UI END
 
 	controllingCamera = true;
 
