@@ -17,14 +17,16 @@
 #include "../components/RigidBody.h"
 #include "../misc/debugDrawer/DebugDrawer.h"
 
-#include "../mobileUI/MobileGameUI.h"
+#include "../mobileUI/QRCode.h"
 
 Game::Game()
 {
 	stateName = "Game";
 
 	//MOBILE GAME UI START
-	MobileGameUI* mobileUI = new MobileGameUI();
+	mobileUI = new MobileGameUI();
+	mobileUI->connect("http://gameinput.com");
+	qrGenerated = false;
 	//MOBILE GAME UI END
 
 	controllingCamera = true;
@@ -241,6 +243,7 @@ void Game::update()
 		controllingCamera = !controllingCamera;
 	}
 
+	mobileUIUpdate();
 	
 	//reset scene
 	if (InputManager::wasKeyReleased(SDLK_SPACE) || InputManager::wasControllerButtonPressed(0, Controller::Button::B))
@@ -393,5 +396,39 @@ void Game::movementControls()
 		std::shared_ptr<Light> light = GameVariables::data->gameObjs["light"]->getComponent<Light>().lock();
 		light->setAmbient(glm::vec3(0.9f, 0.0f, 0.0f));
 		light->setDiffuse(glm::vec3(0.8f, 0.4f, 0.4f));
+	}
+}
+
+void Game::mobileUIUpdate()
+{
+	if (!qrGenerated &&
+		mobileUI->getSessionID() != "" &&
+		mobileUI->isConnected())
+	{
+		std::string qrText = "http://gameinput.com/?id=" + mobileUI->getSessionID();
+
+		QRCode qr(qrText, qrcodegen::QrCode::Ecc::HIGH);
+
+		SDL_Surface* qrSurface = qr.convertToSurface(7);
+		qrTexture = std::make_shared<Texture>(qrSurface); //NEED TO DELETE AT SOME POINT
+		//SDL_SaveBMP(qrSurface, "testing.bmp");
+		auto qrObject = GameObject::create("QRCode").lock();
+		
+		auto qrTransform = qrObject->addComponent<Transform>("Transform").lock();
+		qrTransform->setPostion(glm::vec3(-5.0f, 0.0f, 20.0f));
+		qrTransform->setRotation(glm::vec3(Utility::HALF_PI, 0.0f, 0.0f));
+		qrTransform->setScale(glm::vec3(2));
+
+		qrObject->addComponent<MeshComponent>("MeshComponent").lock()->setMesh(
+			ResourceManager::getModel("flatPlaneRaw.obj", false));
+
+		ResourceManager::createMaterial("QR", qrTexture,
+			"texturedV.glsl", "texturedF.glsl");
+
+		qrObject->addComponent<MeshRenderer>("MeshRenderer").lock()->setMaterial(
+			ResourceManager::getMaterial("QR", 0, false)
+		);
+
+		qrGenerated = true;
 	}
 }

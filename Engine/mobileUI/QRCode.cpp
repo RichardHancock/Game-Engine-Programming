@@ -90,6 +90,7 @@ SDL_Surface* QRCode::convertToSurface(int segmentSize)
 		exit(1);
 	}
 
+	SDL_FillRect(surface, NULL, SDL_MapRGB(surface->format, 255, 255, 255));
 	SDL_FillRects(surface, rects, size * size, SDL_MapRGB(surface->format, 0, 0, 0));
 
 
