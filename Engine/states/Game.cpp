@@ -35,6 +35,10 @@ Game::Game()
 
 	shipHealth = 100.0f;
 	shipShield = 100.0f;
+
+	//Preload audio
+	ResourceManager::getAudio("hit.wav", false);
+	ResourceManager::getAudio("shield.wav", false);
 	//MOBILE GAME UI END
 
 	controllingCamera = true;
@@ -103,7 +107,7 @@ Game::Game()
 	ship->addComponent<CollisionShape>("CollisionShape").lock()->generateStaticMeshShape();
 	auto rbShip = ship->addComponent<RigidBody>("RigidBody").lock();
 	//rbShip->setPosition(glm::vec3(40, 30, 15));
-	rbShip->init(2, glm::vec3(1.0f));
+	rbShip->init(0.0f, glm::vec3(0.0f));
 
 	auto earth = GameObject::create("earth").lock();
 	auto transform3 = earth->addComponent<Transform>("Transform").lock();
@@ -232,6 +236,8 @@ bool Game::eventHandler()
 	{
 		return true;
 	}
+
+	mobileUIEventQueue();
 
 	return false;
 }
@@ -448,19 +454,6 @@ void Game::mobileUIUpdate()
 		shipHealth = 100.00f;
 	}
 
-	//Health Damage
-	if (InputManager::wasMouseButtonReleased(SDL_BUTTON_LEFT))
-	{
-		float tempShield = shipShield - Random::getFloat(5.0f, 25.0f);
-		
-		shipShield = (tempShield < 0.00f ? 0.00f : tempShield);
-	}
-	if (InputManager::wasMouseButtonReleased(SDL_BUTTON_RIGHT))
-	{
-		float tempHealth = shipHealth - Random::getFloat(5.0f, 25.0f);
-
-		shipHealth = (tempHealth < 0.00f ? 0.00f : tempHealth);
-	}
 
 
 	//Update Values and send
@@ -499,5 +492,62 @@ void Game::mobileUIUpdate()
 			mobileUI->send("shipHealth", Utility::floatToString(shipHealth, 2));
 			sentValues.health = shipHealth;
 		}
+	}
+}
+
+void Game::mobileUIEventQueue()
+{
+	//While there are events to process	
+	while (!mobileUI->isQueueEmpty())
+	{
+		std::string eventMsg = mobileUI->pollQueue();
+		assert(eventMsg != "");
+
+		//NEED TO REWORK THIS TO A ENUM 
+		if (eventMsg == "qrToggle")
+		{
+			toggleQRVisiblity();
+			continue;
+		}
+
+		if (eventMsg == "damageShield")
+		{
+			float tempShield = shipShield - Random::getFloat(5.0f, 25.0f);
+			shipShield = (tempShield < 0.00f ? 0.00f : tempShield);
+
+			ResourceManager::getAudio("shield.wav", false).lock()->play(0, 0);
+			continue;
+		}
+
+		if (eventMsg == "damageHP")
+		{
+			float tempHealth = shipHealth - Random::getFloat(5.0f, 25.0f);
+			shipHealth = (tempHealth < 0.00f ? 0.00f : tempHealth);
+
+			ResourceManager::getAudio("hit.wav", false).lock()->play(0, 0);
+			continue;
+		}
+	}
+
+	return;
+}
+
+void Game::toggleQRVisiblity()
+{
+	try 
+	{
+		auto qrRef = GameVariables::data->gameObjs.at("QRCode");
+
+		if (qrRef.get() == nullptr)
+			return;
+
+		if (qrRef->getComponent<MeshRenderer>().expired())
+			return;
+
+		qrRef->getComponent<MeshRenderer>().lock()->toggleVisibility();
+	}
+	catch (std::out_of_range)
+	{
+		return;
 	}
 }

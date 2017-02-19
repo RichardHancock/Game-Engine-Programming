@@ -52,6 +52,10 @@ private:
 
 	void mobileUIUpdate();
 
+	void mobileUIEventQueue();
+
+	void toggleQRVisiblity();
+
 	std::shared_ptr<GameModel> heightmap;
 
 	Socket* socket;
