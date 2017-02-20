@@ -91,7 +91,7 @@ int main(int argc, char *argv[])
 		//ResourceManager::update(dt);
 
 		//Pre Render
-		Physics::getWorld()->debugDrawWorld(); //This sets up openGL buffers for rendering
+		//Physics::getWorld()->debugDrawWorld(); //This sets up openGL buffers for rendering
 		DebugDrawer::preRender();
 
 		//Render

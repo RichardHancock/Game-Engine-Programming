@@ -313,7 +313,7 @@ void Game::movementControls()
 		GameVariables::data->gameObjs["fighter"]->getComponent<Transform>().lock());
 
 	//Pre-compute the move distance
-	const float speed = 100.0f;
+	const float speed = 50.0f;
 	float speedDT = speed * DeltaTime::getDT();
 	glm::vec3 forward = object->getForwardVector();
 	glm::vec3 right = object->getRightVector();
