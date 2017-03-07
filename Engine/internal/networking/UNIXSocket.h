@@ -6,6 +6,7 @@
 
 #include <sys/socket.h>
 #include <sys/types.h>
+#include <sys/time.h>
 
 #endif
 
@@ -33,4 +34,3 @@ protected:
 	const int SOCKET_ERROR = -1;
 #endif
 };
-
