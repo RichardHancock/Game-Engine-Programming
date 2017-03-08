@@ -46,11 +46,13 @@ makeFileLines = [
     "debug:",
     "\t$(CC) $(SOURCES) $(FLAGS) $(DFLAGS) -o $(OUTPUT)",
 	"\trm -r -f \"" + resourceFolderOutputPath + resourceFolderName + "\"",
+	"\tmkdir -p \"" + resourceFolderOutputPath + "\"",
 	"\tcp -r \"" + resourceFolderPath + resourceFolderName + "\" \"" + resourceFolderOutputPath + "\"",
     "",
     "release:",
     "\t$(CC) $(SOURCES) $(FLAGS) $(RFLAGS) -o $(OUTPUT)",
 	"\trm -r -f \"" + resourceFolderOutputPath + resourceFolderName + "\"",
+	"\tmkdir -p \"" + resourceFolderOutputPath + "\"",
 	"\tcp -r \"" + resourceFolderPath + resourceFolderName + "\" \"" + resourceFolderOutputPath + "\"",
 ]
 
