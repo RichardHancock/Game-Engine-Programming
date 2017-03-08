@@ -44,7 +44,7 @@ Game::Game()
 	controllingCamera = true;
 
 	//Height Map Test
-	heightmap = HeightMap::load("resources/textures/heightmap.bmp", 0.60f, 4.0f);
+	heightmap = HeightMap::load(ResourceManager::getResourceDirPath() + "resources/textures/heightmap.bmp", 0.60f, 4.0f);
 	auto hmap = GameObject::create("heightmap").lock();
 	auto transform58 = hmap->addComponent<Transform>("Transform").lock();
 	transform58->setPostion(glm::vec3(30.0f, 0.0f, 0.0f));

@@ -15,8 +15,8 @@ bool DebugDrawer::zeroDepthWireFrame = false;
 void DebugDrawer::init(std::string vShaderFilename, std::string fShaderFilename)
 {
 	shader = std::make_shared<Shader>(
-		ResourceManager::shaderDir + vShaderFilename,
-		ResourceManager::shaderDir + fShaderFilename
+		ResourceManager::getResourceDirPath() + ResourceManager::shaderDir + vShaderFilename,
+		ResourceManager::getResourceDirPath() + ResourceManager::shaderDir + fShaderFilename
 		);
 
 	lines = std::make_shared<DebugPrimitives>(GL_LINES);

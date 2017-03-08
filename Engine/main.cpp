@@ -35,6 +35,13 @@ int main(int argc, char *argv[])
 	std::string organisation = "RH";
 	std::string application = "Engine";
 
+	std::string resourceDir;
+
+#ifdef __APPLE__ //Workaround for mac as it doesn't like relative directories (Probably Linux would also benefit from this change).
+	resourceDir = "/usr/local/share/";
+	ResourceManager::setResourceDirPath(resourceDir);
+#endif
+	
 	//Init Log Subsystem first as everything uses it.
 	Log::init(true, organisation, application);
 
@@ -43,7 +50,7 @@ int main(int argc, char *argv[])
 	std::string settingsFilename = "settings.xml";
 
 	Platform::init(settingsFilename);
-	Platform::loadSettingsFromFile(organisation, application);
+	Platform::loadSettingsFromFile(organisation, application, resourceDir);
 	Log::logI("Settings fully loaded.");
 
 	if (!Platform::initSDL(true, "Engine"))

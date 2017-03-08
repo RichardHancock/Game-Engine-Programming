@@ -78,8 +78,9 @@ public:
 	
 	 @param	org	The organisation name, will be the root directory of the setting file.
 	 @param	app	The application name, will be a subfolder in the above directory.
+	 @param	resourceDir	The resource directory that contains the default settings file (e.x "/usr/local/share/" do not include "/resources" as this is assumed).
 	 */
-	static void loadSettingsFromFile(std::string org, std::string app);
+	static void loadSettingsFromFile(std::string org, std::string app, std::string resourceDir);
 
 	static Renderer getCurrentRenderer();
 
@@ -173,8 +174,12 @@ private:
 
 	//Settings
 
-	/** @brief	Create a local settings file from the default settings file. */
-	static void initSettingsFile();
+	/**
+	 @brief	Create a local settings file from the default settings file.
+	
+	 @param	resourceDir	The resource directory that contains the default settings file (e.x "/usr/local/share/" do not include "/resources" as this is assumed).
+	 */
+	static void initSettingsFile(std::string resourceDir);
 
 	/**
 	 @brief	Checks if a local settings file already exists.
