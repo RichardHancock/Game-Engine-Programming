@@ -91,7 +91,7 @@ bool Platform::initSDL(bool openGL, std::string windowTitle)
 		" / Linked: " + getSDLTtfVersionString(true));
 
 	//SDL Mixer Initialization
-	int mixFlags = MIX_INIT_OGG | MIX_INIT_MP3 | MIX_INIT_FLAC;
+	int mixFlags = MIX_INIT_MP3 | MIX_INIT_FLAC;
 	int mixResult = Mix_Init(mixFlags);
 
 	//  If the inputed flags are not returned, an error has occurred
@@ -129,11 +129,11 @@ bool Platform::initSDL(bool openGL, std::string windowTitle)
 	///@todo Make these configurable
 	if (openGL)
 	{
-		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
+		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
 
-		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
+		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
 
-		SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_COMPATIBILITY);
+		SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 
 		SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 16);
 		SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
