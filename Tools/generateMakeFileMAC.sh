@@ -1,6 +1,6 @@
 MKGEN_SRC_DIR="../Engine"
 MKGEN_COMPILER="g++"
-MKGEN_FLAGS="-std=c++11 -std=gnu++11 -L/usr/local/lib -lGLEW -lGLU -lGL -lSDL2 -lSDL2_mixer -lSDL2_image -lSDL2_ttf -lpugixml -lLinearMath -lBulletCollision -lBulletDynamics -lassimp -lQRCode -lpthread -lsioclient -lboost_system -lboost_random \$(shell sdl2-config --cflags) -I/usr/local/include -I/usr/local/include/assimp -I/usr/local/include/pugixml-1.8 -I/usr/local/include/bullet"
+MKGEN_FLAGS="-std=c++11 -std=gnu++11 -framework OpenGL -L/usr/local/lib -L/usr/local/lib/pugixml-1.8  -lGLEW -lSDL2 -lSDL2_mixer -lSDL2_image -lSDL2_ttf -lpugixml -lLinearMath -lBulletCollision -lBulletDynamics -lassimp -lQRCode -lpthread -lsioclient -lboost_system -lboost_random \$(shell sdl2-config --cflags) -I/usr/local/include -I/usr/local/include/assimp -I/usr/local/include/pugixml-1.8 -I/usr/local/include/bullet"
 MKGEN_DEBUG_FLAGS="-g -Wall -pedantic"
 MKGEN_RELEASE_FLAGS="-O2 -Wall -pedantic"
 MKGEN_OUTPUT_PATH="../bin/"
