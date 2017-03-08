@@ -260,7 +260,7 @@ float InputManager::deadzone = 0.2f;
 
 InputManager::InputManager()
 {
-	
+
 }
 
 void InputManager::cleanup()
@@ -369,7 +369,7 @@ void InputManager::checkForActiveControllers()
 
 bool InputManager::wasControllerButtonPressed(int controller, Controller::Button button)
 {
-	if (!isGamepadValid(controller)) 
+	if (!isGamepadValid(controller))
 	{
 		//Log::logW("Invalid Gamepad requested");
 		return false;
@@ -493,7 +493,7 @@ void InputManager::processMouseEvent(SDL_Event& e)
 {
 	ButtonState buttonState = Unknown;
 
-	switch (e.type) 
+	switch (e.type)
 	{
 	case SDL_MOUSEBUTTONDOWN:
 		buttonState = Pressed;
@@ -513,7 +513,7 @@ void InputManager::processMouseEvent(SDL_Event& e)
 		mouseWheelDirection = { (float) e.wheel.x, (float) e.wheel.y };
 		return;
 		break;
-	
+
 	default:
 		Log::logE("Unhandled event passed through to processMouseEvent");
 		assert(false);
@@ -619,8 +619,8 @@ void InputManager::update()
 		}
 	}
 
-	mouseDirection = { 0 };
-	mouseWheelDirection = { 0 };
+	mouseDirection = Vec2(0.0f);
+	mouseWheelDirection = Vec2(0.0f);
 
 	//Gamepads
 	for (unsigned int curPad = 0; curPad < gamepads.size(); curPad++)
@@ -630,7 +630,7 @@ void InputManager::update()
 			gamepads[curPad]->update();
 		}
 	}
-	
+
 }
 
 
@@ -662,7 +662,7 @@ SDL_JoystickID InputManager::getJoystickInstanceIDFromEvent(SDL_Event& e)
 	case SDL_CONTROLLERDEVICEREMAPPED:
 		joyID = e.cdevice.which;
 		break;
-		
+
 	default:
 		joyID = -1;
 		break;
@@ -676,7 +676,7 @@ void InputManager::addController(SDL_Event& e)
 	//Check if not already added by joystickID (Not instance ID).
 	int joystickID = e.cdevice.which;
 	int firstFreeJoy = -1;
-	
+
 	for (unsigned int curJoy = 0; curJoy < gamepads.size(); curJoy++)
 	{
 		if (isGamepadValid(curJoy))
@@ -684,8 +684,8 @@ void InputManager::addController(SDL_Event& e)
 			if (gamepads[curJoy]->getJoystickID() == joystickID)
 			{
 				return;
-			} 
-		} 
+			}
+		}
 		else
 		{
 			//Only set this variable if it hasn't been set already
@@ -706,7 +706,7 @@ void InputManager::addNewController(int joystickID, int arrayPos)
 {
 	if (SDL_IsGameController(joystickID))
 	{
-		
+
 		if (arrayPos == -1)
 		{
 			gamepads.push_back(new Controller(joystickID));
@@ -721,7 +721,7 @@ void InputManager::addNewController(int joystickID, int arrayPos)
 
 			gamepads[arrayPos] = new Controller(joystickID);
 		}
-		
+
 
 		if (gamepads[arrayPos]->isValid())
 		{
@@ -740,8 +740,8 @@ void InputManager::removeController(SDL_Event& e)
 	{
 		if (isGamepadValid(curPad) &&
 			gamepads[curPad]->getJoystickInstanceID() == (SDL_JoystickID) e.cdevice.which)
-		{	
-			Log::logI(gamepads[curPad]->getName() + " Disconnected");  
+		{
+			Log::logI(gamepads[curPad]->getName() + " Disconnected");
 			delete gamepads[curPad];
 			gamepads[curPad] = nullptr;
 		}

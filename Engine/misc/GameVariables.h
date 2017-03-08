@@ -2,6 +2,9 @@
 
 #include <memory>
 #include <unordered_map>
+#include <string>
+
+//#include "../GameObject.h"
 
 class Camera;
 class GameObject;

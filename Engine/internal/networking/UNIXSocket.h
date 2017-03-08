@@ -34,4 +34,3 @@ protected:
 	const int SOCKET_ERROR = -1;
 #endif
 };
-
