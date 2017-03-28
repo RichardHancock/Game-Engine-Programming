@@ -17,14 +17,34 @@
 #include "../components/RigidBody.h"
 #include "../misc/debugDrawer/DebugDrawer.h"
 
+#include "../mobileUI/QRCode.h"
+#include "../misc/Random.h"
+
 Game::Game()
 {
 	stateName = "Game";
 
+	//MOBILE GAME UI START
+	mobileUI = new MobileGameUI();
+	mobileUI->connect("http://gameinput.com");
+	qrGenerated = false;
+
+	sentValues.health = shipHealth = 100.0f;
+	sentValues.shield = shipShield = 100.0f;
+	sentValues.rotation = glm::vec3(0.0f);
+
+	shipHealth = 100.0f;
+	shipShield = 100.0f;
+
+	//Preload audio
+	ResourceManager::getAudio("hit.wav", false);
+	ResourceManager::getAudio("shield.wav", false);
+	//MOBILE GAME UI END
+
 	controllingCamera = true;
 
 	//Height Map Test
-	heightmap = HeightMap::load("resources/textures/heightmap.bmp", 0.60f, 4.0f);
+	heightmap = HeightMap::load(ResourceManager::getResourceDirPath() + "resources/textures/heightmap.bmp", 0.60f, 4.0f);
 	auto hmap = GameObject::create("heightmap").lock();
 	auto transform58 = hmap->addComponent<Transform>("Transform").lock();
 	transform58->setPostion(glm::vec3(30.0f, 0.0f, 0.0f));
@@ -87,7 +107,7 @@ Game::Game()
 	ship->addComponent<CollisionShape>("CollisionShape").lock()->generateStaticMeshShape();
 	auto rbShip = ship->addComponent<RigidBody>("RigidBody").lock();
 	//rbShip->setPosition(glm::vec3(40, 30, 15));
-	rbShip->init(2, glm::vec3(1.0f));
+	rbShip->init(0.0f, glm::vec3(0.0f));
 
 	auto earth = GameObject::create("earth").lock();
 	auto transform3 = earth->addComponent<Transform>("Transform").lock();
@@ -217,6 +237,8 @@ bool Game::eventHandler()
 		return true;
 	}
 
+	mobileUIEventQueue();
+
 	return false;
 }
 
@@ -235,6 +257,7 @@ void Game::update()
 		controllingCamera = !controllingCamera;
 	}
 
+	
 	
 	//reset scene
 	if (InputManager::wasKeyReleased(SDLK_SPACE) || InputManager::wasControllerButtonPressed(0, Controller::Button::B))
@@ -266,6 +289,8 @@ void Game::update()
 	{
 		object.second->onUpdate();
 	}
+
+	mobileUIUpdate();
 }
 
 void Game::render()
@@ -288,12 +313,11 @@ void Game::movementControls()
 		GameVariables::data->gameObjs["fighter"]->getComponent<Transform>().lock());
 
 	//Pre-compute the move distance
-	const float speed = 100.0f;
+	const float speed = 50.0f;
 	float speedDT = speed * DeltaTime::getDT();
 	glm::vec3 forward = object->getForwardVector();
 	glm::vec3 right = object->getRightVector();
 	glm::vec3 up = object->getUpVector();
-
 
 	//move along object along x
 	if (InputManager::isKeyHeld(SDLK_a))
@@ -387,5 +411,143 @@ void Game::movementControls()
 		std::shared_ptr<Light> light = GameVariables::data->gameObjs["light"]->getComponent<Light>().lock();
 		light->setAmbient(glm::vec3(0.9f, 0.0f, 0.0f));
 		light->setDiffuse(glm::vec3(0.8f, 0.4f, 0.4f));
+	}
+}
+
+void Game::mobileUIUpdate()
+{
+	if (!qrGenerated &&
+		mobileUI->getSessionID() != "" &&
+		mobileUI->isConnected())
+	{
+		std::string qrText = "http://gameinput.com/?id=" + mobileUI->getSessionID();
+
+		QRCode qr(qrText, qrcodegen::QrCode::Ecc::HIGH);
+
+		SDL_Surface* qrSurface = qr.convertToSurface(10);
+		qrTexture = std::make_shared<Texture>(qrSurface); //NEED TO DELETE AT SOME POINT
+		//SDL_SaveBMP(qrSurface, "testing.bmp");
+		auto qrObject = GameObject::create("QRCode").lock();
+		
+		auto qrTransform = qrObject->addComponent<Transform>("Transform").lock();
+		qrTransform->setPostion(glm::vec3(-5.0f, 0.0f, 20.0f));
+		qrTransform->setRotation(glm::vec3(Utility::HALF_PI, 0.0f, 0.0f));
+		qrTransform->setScale(glm::vec3(2));
+
+		qrObject->addComponent<MeshComponent>("MeshComponent").lock()->setMesh(
+			ResourceManager::getModel("flatPlaneRaw.obj", false));
+
+		ResourceManager::createMaterial("QR", qrTexture,
+			"texturedV.glsl", "texturedF.glsl");
+
+		qrObject->addComponent<MeshRenderer>("MeshRenderer").lock()->setMaterial(
+			ResourceManager::getMaterial("QR", 0, false)
+		);
+
+		qrGenerated = true;
+	}
+	
+	//Health Recharge
+	if (InputManager::wasKeyReleased(SDLK_r))
+	{
+		shipShield = 100.00f;
+		shipHealth = 100.00f;
+	}
+
+
+
+	//Update Values and send
+	if (qrGenerated && mobileUI->isConnected())
+	{
+		auto ship = GameVariables::data->gameObjs["fighter"]->getComponent<Transform>().lock();
+
+		glm::vec3 rotation = ship->getRotation();
+
+		if (rotation != sentValues.rotation)
+		{
+			//Send updated rotation data to connected clients. (Reduced to 2 decimal places as we don't need that much precision and saves bandwidth)
+			mobileUI->send("shipYaw", Utility::floatToString(
+				Utility::convertRadiansToAngle(rotation.y), 2)
+			);
+			mobileUI->send("shipPitch", Utility::floatToString(
+				Utility::convertRadiansToAngle(rotation.x), 2)
+			);
+			mobileUI->send("shipRoll", Utility::floatToString(
+				Utility::convertRadiansToAngle(rotation.z), 2)
+			);
+
+			sentValues.rotation = rotation;
+		}
+
+		
+		//Check Other Vars
+		if (shipShield != sentValues.shield)
+		{
+			mobileUI->send("shipShield", Utility::floatToString(shipShield, 2));
+			sentValues.shield = shipShield;
+		}
+
+		if (shipHealth != sentValues.health)
+		{
+			mobileUI->send("shipHealth", Utility::floatToString(shipHealth, 2));
+			sentValues.health = shipHealth;
+		}
+	}
+}
+
+void Game::mobileUIEventQueue()
+{
+	//While there are events to process	
+	while (!mobileUI->isQueueEmpty())
+	{
+		std::string eventMsg = mobileUI->pollQueue();
+		assert(eventMsg != "");
+
+		//NEED TO REWORK THIS TO A ENUM 
+		if (eventMsg == "qrToggle")
+		{
+			toggleQRVisiblity();
+			continue;
+		}
+
+		if (eventMsg == "damageShield")
+		{
+			float tempShield = shipShield - Random::getFloat(5.0f, 25.0f);
+			shipShield = (tempShield < 0.00f ? 0.00f : tempShield);
+
+			ResourceManager::getAudio("shield.wav", false).lock()->play(0, 0);
+			continue;
+		}
+
+		if (eventMsg == "damageHP")
+		{
+			float tempHealth = shipHealth - Random::getFloat(5.0f, 25.0f);
+			shipHealth = (tempHealth < 0.00f ? 0.00f : tempHealth);
+
+			ResourceManager::getAudio("hit.wav", false).lock()->play(0, 0);
+			continue;
+		}
+	}
+
+	return;
+}
+
+void Game::toggleQRVisiblity()
+{
+	try 
+	{
+		auto qrRef = GameVariables::data->gameObjs.at("QRCode");
+
+		if (qrRef.get() == nullptr)
+			return;
+
+		if (qrRef->getComponent<MeshRenderer>().expired())
+			return;
+
+		qrRef->getComponent<MeshRenderer>().lock()->toggleVisibility();
+	}
+	catch (std::out_of_range)
+	{
+		return;
 	}
 }

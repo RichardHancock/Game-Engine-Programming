@@ -368,5 +368,11 @@ void Utility::SimpleTimer::update()
 float Utility::convertAngleToRadian(float angle)
 {
 	/*return the radian*/
-	return (angle * PI / 180.0f);
+	return (angle * PI) / 180.0f;
+}
+
+float Utility::convertRadiansToAngle(float radians)
+{
+	/*return the angle*/
+	return radians * (180.0f / PI);
 }

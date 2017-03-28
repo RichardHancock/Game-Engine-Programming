@@ -91,7 +91,7 @@ bool Platform::initSDL(bool openGL, std::string windowTitle)
 		" / Linked: " + getSDLTtfVersionString(true));
 
 	//SDL Mixer Initialization
-	int mixFlags = MIX_INIT_OGG | MIX_INIT_MP3 | MIX_INIT_FLAC;
+	int mixFlags = MIX_INIT_MP3 | MIX_INIT_FLAC;
 	int mixResult = Mix_Init(mixFlags);
 
 	//  If the inputed flags are not returned, an error has occurred
@@ -129,11 +129,11 @@ bool Platform::initSDL(bool openGL, std::string windowTitle)
 	///@todo Make these configurable
 	if (openGL)
 	{
-		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
+		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
 
-		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
+		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
 
-		SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_COMPATIBILITY);
+		SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 
 		SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 16);
 		SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
@@ -326,7 +326,7 @@ std::string Platform::getSDLTtfVersionString(bool linked)
 	return result;
 }
 
-void Platform::loadSettingsFromFile(std::string org, std::string app)
+void Platform::loadSettingsFromFile(std::string org, std::string app, std::string resourceDir)
 {
 	//Get the path and combine with filename for settings file location
 	char* basePath = SDL_GetPrefPath(org.c_str(), app.c_str());
@@ -338,7 +338,7 @@ void Platform::loadSettingsFromFile(std::string org, std::string app)
 	//Check if file exists, if not create the base settings file
 	if (!settingsFileExists())
 	{
-		initSettingsFile();
+		initSettingsFile(resourceDir);
 	}
 
 	pugi::xml_document settingsFile;
@@ -427,9 +427,9 @@ bool Platform::isDummyRenderer()
 	return currentRenderer == Renderer::Dummy;
 }
 
-void Platform::initSettingsFile()
+void Platform::initSettingsFile(std::string resourceDir)
 {
-	std::ifstream defaultSettings(defaultSettingsPath);
+	std::ifstream defaultSettings(resourceDir + defaultSettingsPath);
 
 	if (!defaultSettings.is_open())
 	{

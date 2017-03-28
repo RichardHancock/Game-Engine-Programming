@@ -2,7 +2,7 @@ import os
 import sys
 
 argLength = len(sys.argv)
-if argLength < 10:
+if argLength < 11:
     sys.exit()
 
 # Arguments
@@ -15,6 +15,7 @@ outputPath = sys.argv[6]
 outputFileName = sys.argv[7]
 resourceFolderName = sys.argv[8]
 resourceFolderPath = sys.argv[9]
+resourceFolderOutputPath = sys.argv[10]
 
 cppFiles = []
 
@@ -44,13 +45,15 @@ makeFileLines = [
     "",
     "debug:",
     "\t$(CC) $(SOURCES) $(FLAGS) $(DFLAGS) -o $(OUTPUT)",
-	"\trm -r -f \"" + outputPath + resourceFolderName + "\"",
-	"\tcp -r \"" + resourceFolderPath + resourceFolderName + "\" \"" + outputPath + "\"",
+	"\trm -r -f \"" + resourceFolderOutputPath + resourceFolderName + "\"",
+	"\tmkdir -p \"" + resourceFolderOutputPath + "\"",
+	"\tcp -r \"" + resourceFolderPath + resourceFolderName + "\" \"" + resourceFolderOutputPath + "\"",
     "",
     "release:",
     "\t$(CC) $(SOURCES) $(FLAGS) $(RFLAGS) -o $(OUTPUT)",
-	"\trm -r -f \"" + outputPath + resourceFolderName + "\"",
-	"\tcp -r \"" + resourceFolderPath + resourceFolderName + "\" \"" + outputPath + "\"",
+	"\trm -r -f \"" + resourceFolderOutputPath + resourceFolderName + "\"",
+	"\tmkdir -p \"" + resourceFolderOutputPath + "\"",
+	"\tcp -r \"" + resourceFolderPath + resourceFolderName + "\" \"" + resourceFolderOutputPath + "\"",
 ]
 
 for srcFile in cppFiles:

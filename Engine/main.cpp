@@ -35,6 +35,13 @@ int main(int argc, char *argv[])
 	std::string organisation = "RH";
 	std::string application = "Engine";
 
+	std::string resourceDir;
+
+#ifdef __APPLE__ //Workaround for mac as it doesn't like relative directories (Probably Linux would also benefit from this change).
+	resourceDir = "/usr/local/share/" + organisation + "/" + application + "/";
+	ResourceManager::setResourceDirPath(resourceDir);
+#endif
+
 	//Init Log Subsystem first as everything uses it.
 	Log::init(true, organisation, application);
 
@@ -43,7 +50,7 @@ int main(int argc, char *argv[])
 	std::string settingsFilename = "settings.xml";
 
 	Platform::init(settingsFilename);
-	Platform::loadSettingsFromFile(organisation, application);
+	Platform::loadSettingsFromFile(organisation, application, resourceDir);
 	Log::logI("Settings fully loaded.");
 
 	if (!Platform::initSDL(true, "Engine"))
@@ -54,15 +61,15 @@ int main(int argc, char *argv[])
 
 
 	glEnable(GL_DEPTH_TEST);
-	
-	
+
+
 	if (Platform::getSetting("MSAA") != 0)
 		glEnable(GL_MULTISAMPLE);
-	
-	Log::logI("Assimp Version: " + Utility::intToString(aiGetVersionMajor()) + 
+
+	Log::logI("Assimp Version: " + Utility::intToString(aiGetVersionMajor()) +
 		"." + Utility::intToString(aiGetVersionMinor())
 		+ "." + Utility::intToString(aiGetVersionRevision()));
-	
+
 	Random::init();
 	DebugDrawer::init("debugV.glsl", "debugF.glsl");
 	Physics::init();
@@ -72,7 +79,7 @@ int main(int argc, char *argv[])
 	DeltaTime::init();
 
 	bool done = false;
-	
+
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); Really funky looking toggle, Maybe add to a render manager.
 	while (!done)
 	{
@@ -91,7 +98,7 @@ int main(int argc, char *argv[])
 		//ResourceManager::update(dt);
 
 		//Pre Render
-		Physics::getWorld()->debugDrawWorld(); //This sets up openGL buffers for rendering
+		//Physics::getWorld()->debugDrawWorld(); //This sets up openGL buffers for rendering
 		DebugDrawer::preRender();
 
 		//Render
@@ -102,7 +109,7 @@ int main(int argc, char *argv[])
 			// This writes the above colour to the colour part of the frame buffer
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		}
-		
+
 		StateManager::render();
 
 		DebugDrawer::render();
@@ -127,7 +134,7 @@ int main(int argc, char *argv[])
 	Platform::cleanup();
 	Log::cleanup();
 	SDL_Quit();
-	
+
 	exit(0);
 }
 

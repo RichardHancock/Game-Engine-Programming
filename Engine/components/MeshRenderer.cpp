@@ -9,6 +9,11 @@
 #include "Light.h"
 #include "../Platform.h"
 
+MeshRenderer::MeshRenderer()
+	: Component(), visible(true)
+{
+}
+
 MeshRenderer::~MeshRenderer()
 {
 }
@@ -46,8 +51,16 @@ void MeshRenderer::setMaterials(std::vector<std::weak_ptr<Material>> newMaterial
 	materials = newMaterials;
 }
 
+void MeshRenderer::toggleVisibility()
+{
+	visible = !visible;
+}
+
 void MeshRenderer::onRender()
 {
+	if (!visible)
+		return;
+
 	std::shared_ptr<GameObject> gameObj = getGameObject().lock();
 
 	//Mesh

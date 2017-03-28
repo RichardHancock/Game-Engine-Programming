@@ -1,5 +1,5 @@
-#version 430 core
-						
+#version 320 core
+
 layout(location = 0) in vec4 vPosition;
 layout(location = 1) in vec3 vNormalIn;
 layout(location = 2) in vec2 vTexture;
@@ -13,6 +13,6 @@ out vec2 vTexCoord;
 void main()
 {
 	gl_Position = projMat * viewMat * modelMat * vPosition;
-	
+
 	vTexCoord = vTexture;
 }

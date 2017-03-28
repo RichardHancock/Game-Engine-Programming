@@ -58,6 +58,12 @@
     <Filter Include="Source Files\Misc\Debug Drawer">
       <UniqueIdentifier>{a2d0f36d-87b5-43b2-a2cd-503a9fca1865}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Mobile UI">
+      <UniqueIdentifier>{b09b227c-245c-4b76-a667-b0b0bf501506}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Mobile UI">
+      <UniqueIdentifier>{ce509747-1ecb-4be1-950b-87272ac22e79}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -200,6 +206,12 @@
     </ClCompile>
     <ClCompile Include="misc\debugDrawer\DebugPrimitives.cpp">
       <Filter>Source Files\Misc\Debug Drawer</Filter>
+    </ClCompile>
+    <ClCompile Include="mobileUI\MobileGameUI.cpp">
+      <Filter>Source Files\Mobile UI</Filter>
+    </ClCompile>
+    <ClCompile Include="mobileUI\QRCode.cpp">
+      <Filter>Source Files\Mobile UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -352,6 +364,12 @@
     </ClInclude>
     <ClInclude Include="misc\debugDrawer\DebugPrimitives.h">
       <Filter>Header Files\Misc\Debug Drawer</Filter>
+    </ClInclude>
+    <ClInclude Include="mobileUI\MobileGameUI.h">
+      <Filter>Header Files\Mobile UI</Filter>
+    </ClInclude>
+    <ClInclude Include="mobileUI\QRCode.h">
+      <Filter>Header Files\Mobile UI</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

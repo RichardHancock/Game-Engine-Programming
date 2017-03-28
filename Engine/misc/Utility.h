@@ -144,6 +144,13 @@ namespace Utility
 	float convertAngleToRadian(float angle);
 
 	/**
+	Converts radians to a angle.
+	@param radians The radians to convert.
+	@returns The converted angle.
+	*/
+	float convertRadiansToAngle(float radians);
+
+	/**
 	@brief Returns the center position of a rectangle.
 	
 	@param rect - Rectangle struct.

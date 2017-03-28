@@ -10,6 +10,7 @@
 #include "../Audio.h"
 #include "../misc/Vec3.h"
 #include "../Socket.h"
+#include "../mobileUI/MobileGameUI.h"
 
 /** @brief	The main game state. */
 class Game : public State
@@ -49,7 +50,34 @@ private:
 	/** @brief	true if currently controlling camera. */
 	bool controllingCamera;
 
+	void mobileUIUpdate();
+
+	void mobileUIEventQueue();
+
+	void toggleQRVisiblity();
+
 	std::shared_ptr<GameModel> heightmap;
 
 	Socket* socket;
+
+
+	//MOBILE UI DEMO BELOW
+	MobileGameUI* mobileUI;
+
+	std::shared_ptr<Texture> qrTexture;
+
+	bool qrGenerated;
+
+	struct SentValues
+	{
+		glm::vec3 rotation;
+
+		float health;
+		float shield;
+	} sentValues;
+
+
+	float shipHealth;
+	float shipShield;
+
 };

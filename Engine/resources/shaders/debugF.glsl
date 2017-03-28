@@ -1,4 +1,4 @@
-#version 330 core
+#version 320 core
 
 in vec3 fColour;
 

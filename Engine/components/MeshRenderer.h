@@ -12,6 +12,9 @@ class MeshRenderer : public Component
 {
 public:
 
+	/** @brief	Default constructor. */
+	MeshRenderer();
+
 	/** @brief	Destructor. */
 	virtual ~MeshRenderer();
 
@@ -44,11 +47,14 @@ public:
 	 */
 	void setMaterials(std::vector<std::weak_ptr<Material>> newMaterials);
 
+	void toggleVisibility();
 
 	/** @brief	Executes the render action. */
 	virtual void onRender();
 
 private:
+
+	bool visible;
 
 	/** @brief	The referenced materials. */
 	std::vector<std::weak_ptr<Material>> materials;

@@ -122,6 +122,20 @@ public:
 	/** @brief The directory for the relevant asset type */
 	static const std::string modelDir, shaderDir, audioDir, textureDir;
 
+	/**
+	 @brief	Gets resource directory path ending in '/'.
+	
+	 @return	The resource directory path.
+	 */
+	static std::string getResourceDirPath();
+
+	/**
+	 @brief	Sets resource directory path.
+	
+	 @param	path	Full pathname of the file ending in "/". Do not include "/resources" in it as this is assumed.
+	 */
+	static void setResourceDirPath(std::string path);
+
 private:
 	ResourceManager();
 	
@@ -167,7 +181,8 @@ private:
 	/** @brief The update delay timer to stop update running every frame. */
 	static Utility::SimpleTimer updateDelayTimer;
 	
-
+	/** @brief	The path to the resource directory ending in a /. */
+	static std::string resourceDirPath;
 	
 	/**
 	@brief Checks for expired resources and deletes any not being used.

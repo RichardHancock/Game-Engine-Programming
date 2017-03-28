@@ -11,6 +11,8 @@ const std::string ResourceManager::modelDir = "resources/models/";
 const std::string ResourceManager::audioDir = "resources/audio/";
 const std::string ResourceManager::shaderDir = "resources/shaders/";
 const std::string ResourceManager::textureDir = "resources/textures/";
+std::string ResourceManager::resourceDirPath = "";
+
 const float ResourceManager::UPDATE_DELAY = 10.0f;
 std::unordered_map<std::string, std::shared_ptr<GameModel>> ResourceManager::models;
 std::unordered_map<std::string, std::shared_ptr<Audio>> ResourceManager::audio;
@@ -49,7 +51,7 @@ std::weak_ptr<Audio> ResourceManager::getAudio(std::string audioFilename, bool i
 {
 	//Should we use the default path for this type of resource or just use the provided filename
 	if (defaultPath) {
-		audioFilename = audioDir + audioFilename;
+		audioFilename = resourceDirPath + audioDir + audioFilename;
 	}
 	
 	//Is it already loaded
@@ -83,7 +85,7 @@ void ResourceManager::loadMaterialsFromAssimp(std::string materialName, const ai
 	for (unsigned int curMaterial = 0; curMaterial < scene->mNumMaterials; curMaterial++)
 	{
 		std::shared_ptr<Material> newMaterial = std::make_shared<Material>(
-			shaderDir + "standardV.glsl", shaderDir + "standardF.glsl");
+			resourceDirPath + shaderDir + "standardV.glsl", resourceDirPath + shaderDir + "standardF.glsl");
 
 		aiMaterial* materialData = scene->mMaterials[curMaterial];
 
@@ -122,7 +124,7 @@ void ResourceManager::loadMaterialsFromAssimp(std::string materialName, const ai
 void ResourceManager::createMaterial(std::string materialName, std::weak_ptr<Texture> texture, std::string vertShaderFilename, std::string fragShaderFilename)
 {
 	std::shared_ptr<Material> newMaterial = std::make_shared<Material>(
-		shaderDir + vertShaderFilename, shaderDir + fragShaderFilename);
+		resourceDirPath + shaderDir + vertShaderFilename, resourceDirPath + shaderDir + fragShaderFilename);
 
 	newMaterial->addTexture("diffuseMap", texture);
 
@@ -132,7 +134,7 @@ void ResourceManager::createMaterial(std::string materialName, std::weak_ptr<Tex
 std::weak_ptr<Material> ResourceManager::getMaterial(std::string materialName, unsigned int index, bool defaultPath)
 {
 	if (defaultPath)
-		materialName = modelDir + materialName;
+		materialName = resourceDirPath + modelDir + materialName;
 
 	if (materials.count(materialName) > 0)
 	{
@@ -154,7 +156,7 @@ std::weak_ptr<Material> ResourceManager::getMaterial(std::string materialName, u
 std::vector<std::weak_ptr<Material>> ResourceManager::getMaterials(std::string materialName, bool defaultPath)
 {
 	if (defaultPath)
-		materialName = modelDir + materialName;
+		materialName = resourceDirPath + modelDir + materialName;
 
 	if (materials.count(materialName) > 0)
 	{
@@ -176,7 +178,7 @@ std::weak_ptr<GameModel> ResourceManager::getModel(std::string modelFilename, bo
 {
 	//Should we use the default path for this type of resource or just use the provided filename
 	if (defaultPath) {
-		modelFilename = modelDir + modelFilename;
+		modelFilename = resourceDirPath + modelDir + modelFilename;
 	}
 
 	//Is it already loaded
@@ -196,7 +198,7 @@ std::weak_ptr<Texture> ResourceManager::getTexture(std::string textureFilename, 
 {
 	//Should we use the default path for this type of resource or just use the provided filename
 	if (defaultPath) {
-		textureFilename = textureDir + textureFilename;
+		textureFilename = resourceDirPath + textureDir + textureFilename;
 	}
 
 	//Is it already loaded
@@ -277,6 +279,16 @@ std::weak_ptr<GameModel> ResourceManager::loadModelWithOBJLoader(std::string mod
 	
 	models[modelFilename] = gameModel;
 	return gameModel;
+}
+
+std::string ResourceManager::getResourceDirPath()
+{
+	return resourceDirPath;
+}
+
+void ResourceManager::setResourceDirPath(std::string path)
+{
+	resourceDirPath = path;
 }
 
 /*
