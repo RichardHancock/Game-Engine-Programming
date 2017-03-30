@@ -12,6 +12,8 @@ public:
 
 	bool generateStaticMeshShape();
 
+	bool generateConvexMeshShape();
+
 	btCollisionShape* getShape();
 private:
 

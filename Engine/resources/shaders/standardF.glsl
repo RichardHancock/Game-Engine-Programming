@@ -1,4 +1,4 @@
-#version 320 core
+#version 330 core
 out vec4 FragColor;
 
 //Parts taken from PGG2 and various OpenGL Tutorials

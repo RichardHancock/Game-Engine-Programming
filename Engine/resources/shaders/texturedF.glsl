@@ -1,4 +1,4 @@
-#version 320 core
+#version 330 core
 
 in vec2 vTexCoord;
 

@@ -213,6 +213,9 @@
     <ClCompile Include="mobileUI\QRCode.cpp">
       <Filter>Source Files\Mobile UI</Filter>
     </ClCompile>
+    <ClCompile Include="misc\MotionState.cpp">
+      <Filter>Source Files\Misc</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Platform.h">
@@ -370,6 +373,9 @@
     </ClInclude>
     <ClInclude Include="mobileUI\QRCode.h">
       <Filter>Header Files\Mobile UI</Filter>
+    </ClInclude>
+    <ClInclude Include="misc\MotionState.h">
+      <Filter>Header Files\Misc</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

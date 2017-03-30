@@ -100,6 +100,11 @@ glm::vec3 Utility::bulletVec3ToGLM(btVector3& vector)
 	return glm::vec3(vector.getX(), vector.getY(), vector.getZ());
 }
 
+btVector3 Utility::glmToBulletVec3(glm::vec3 & vec3)
+{
+	return btVector3(vec3.x, vec3.y, vec3.z);
+}
+
 Vec2 Utility::scaleTo(Vec2 vecToScale, Vec2 screenSize)
 {
 	vecToScale.x /= 640;

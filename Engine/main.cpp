@@ -98,7 +98,7 @@ int main(int argc, char *argv[])
 		//ResourceManager::update(dt);
 
 		//Pre Render
-		//Physics::getWorld()->debugDrawWorld(); //This sets up openGL buffers for rendering
+		Physics::getWorld()->debugDrawWorld(); //This sets up openGL buffers for rendering
 		DebugDrawer::preRender();
 
 		//Render
@@ -131,8 +131,9 @@ int main(int argc, char *argv[])
 	DebugDrawer::cleanup();
 	InputManager::cleanup();
 	ResourceManager::cleanUp();
-	Platform::cleanup();
 	Log::cleanup();
+	Platform::cleanup();
+
 	SDL_Quit();
 
 	exit(0);

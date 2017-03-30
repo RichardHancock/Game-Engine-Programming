@@ -26,7 +26,7 @@ Game::Game()
 
 	//MOBILE GAME UI START
 	mobileUI = new MobileGameUI();
-	mobileUI->connect("http://gameinput.com");
+	//mobileUI->connect("http://gameinput.com");
 	qrGenerated = false;
 
 	sentValues.health = shipHealth = 100.0f;
@@ -52,8 +52,8 @@ Game::Game()
 
 	hmap->addComponent<MeshComponent>("MeshComponent").lock()->setMesh(
 		heightmap);
-	//hmap->addComponent<CollisionShape>("CollisionShape").lock()->generateStaticMeshShape();
-	//hmap->addComponent<RigidBody>("RigidBody").lock();
+	hmap->addComponent<CollisionShape>("CollisionShape").lock()->generateStaticMeshShape();
+	hmap->addComponent<RigidBody>("RigidBody").lock()->init(0.0f, glm::vec3(0.0f));
 
 	ResourceManager::createMaterial("hmapTex", ResourceManager::getTexture("heightmap.png"),
 		"texturedV.glsl", "texturedF.glsl");
@@ -67,7 +67,7 @@ Game::Game()
 	auto cameraObj = GameObject::create("Camera").lock();
 	auto camTransform = cameraObj->addComponent<Transform>("Transform").lock();
 	camTransform->setPostion(glm::vec3(0, 0, 40));
-	camTransform->setRotation(glm::vec3(0, 0, 0));
+	camTransform->setRotation(glm::vec3(0.0f, 0, 0));
 	camTransform->setScale(glm::vec3(1));
 
 	auto cameraComponent = cameraObj->addComponent<Camera>("Camera");
@@ -86,7 +86,7 @@ Game::Game()
 		ResourceManager::getMaterials("dark_fighter_6.obj")
 	);
 
-	gameO->addComponent<CollisionShape>("CollisionShape").lock()->generateStaticMeshShape();
+	gameO->addComponent<CollisionShape>("CollisionShape").lock()->generateConvexMeshShape();
 	auto rbGameO = gameO->addComponent<RigidBody>("RigidBody").lock();
 	//rbGameO->setPosition(glm::vec3(40, 0, 10));
 	rbGameO->init(0.0f, glm::vec3(0.0f));
@@ -94,7 +94,7 @@ Game::Game()
 
 	auto ship = GameObject::create("ship").lock();
 	auto transform2 = ship->addComponent<Transform>("Transform").lock();
-	transform2->setPostion(glm::vec3(0.0f, 30.0f, 10.0f));
+	transform2->setPostion(glm::vec3(70.0f, 60.0f, 40.0f));
 	transform2->setScale(glm::vec3(1));
 
 	ship->addComponent<MeshComponent>("MeshComponent").lock()->setMesh(
@@ -104,10 +104,9 @@ Game::Game()
 		ResourceManager::getMaterials("space_frigate_6.obj")
 	);
 
-	ship->addComponent<CollisionShape>("CollisionShape").lock()->generateStaticMeshShape();
+	ship->addComponent<CollisionShape>("CollisionShape").lock()->generateConvexMeshShape();
 	auto rbShip = ship->addComponent<RigidBody>("RigidBody").lock();
-	//rbShip->setPosition(glm::vec3(40, 30, 15));
-	rbShip->init(0.0f, glm::vec3(0.0f));
+	rbShip->init(10.0f, glm::vec3(4.0f));
 
 	auto earth = GameObject::create("earth").lock();
 	auto transform3 = earth->addComponent<Transform>("Transform").lock();

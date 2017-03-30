@@ -61,5 +61,8 @@ void RigidBody::init(float weight, glm::vec3 inertia)
 
 	rigidBody = new btRigidBody(rigidBodyInfo);
 
+	//rigidBody->setRestitution(10.0f);
+	
+
 	Physics::addRigidBody(rigidBody);
 }

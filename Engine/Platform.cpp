@@ -33,6 +33,8 @@ void Platform::cleanup()
 	Mix_Quit();
 	TTF_Quit();
 	
+	
+
 	sdlContext.reset();
 }
 
