@@ -88,7 +88,6 @@ Game::Game()
 
 	gameO->addComponent<CollisionShape>("CollisionShape").lock()->generateConvexMeshShape();
 	auto rbGameO = gameO->addComponent<RigidBody>("RigidBody").lock();
-	//rbGameO->setPosition(glm::vec3(40, 0, 10));
 	rbGameO->init(0.0f, glm::vec3(0.0f));
 
 
@@ -119,6 +118,11 @@ Game::Game()
 	earth->addComponent<MeshRenderer>("MeshRenderer").lock()->setMaterials(
 		ResourceManager::getMaterials("Earth.obj")
 	);
+
+	earth->addComponent<CollisionShape>("CollisionShape").lock()->generateStaticMeshShape();
+	auto rbEarth = earth->addComponent<RigidBody>("RigidBody").lock();
+	rbEarth->init(0.0f, glm::vec3(0.0f));
+
 
 	auto flatPlane = GameObject::create("bg").lock();
 	auto transform4 = flatPlane->addComponent<Transform>("Transform").lock();

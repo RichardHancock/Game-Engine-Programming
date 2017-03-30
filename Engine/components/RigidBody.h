@@ -12,7 +12,7 @@ class RigidBody : public Component
 public:
 	RigidBody();
 
-	void setPosition(glm::vec3 newPos);
+	//void setPosition(glm::vec3 newPos);
 	
 	virtual void onAwake();
 
@@ -21,7 +21,7 @@ public:
 private:
 	btRigidBody* rigidBody;
 
-	btDefaultMotionState* motionState;
+	btMotionState* motionState;
 
-	btVector3 position;
+	//btVector3 position;
 };

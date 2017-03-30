@@ -108,7 +108,7 @@ namespace Utility
 	glm::vec3 bulletVec3ToGLM(btVector3& vector);
 
 	btVector3 glmToBulletVec3(glm::vec3& vec3);
-
+	
 	/**
 	 @brief Scale a Vec2 relative to the passed in screen size (Bases everything on a base resolution of 640,480).
 	

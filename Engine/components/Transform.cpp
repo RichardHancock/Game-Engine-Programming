@@ -47,12 +47,12 @@ void Transform::setPostion(glm::vec3 position)
 		localPosition = position;
 	}
 
-	auto rigidbodyRef = getGameObject().lock()->getComponent<RigidBody>("RigidBody");
+	//auto rigidbodyRef = getGameObject().lock()->getComponent<RigidBody>("RigidBody");
 
-	if (rigidbodyRef.expired())
-		return;
+	//if (rigidbodyRef.expired())
+		//return;
 
-	rigidbodyRef.lock()->setPosition(localPosition);
+	//rigidbodyRef.lock()->setPosition(localPosition);
 }
 
 void Transform::setRotation(glm::vec3 rotation)
@@ -104,12 +104,12 @@ void Transform::setLocalPosition(glm::vec3 position)
 {
 	localPosition = position;
 
-	auto rigidbodyRef = getGameObject().lock()->getComponent<RigidBody>("RigidBody");
+	//auto rigidbodyRef = getGameObject().lock()->getComponent<RigidBody>("RigidBody");
 
-	if (rigidbodyRef.expired())
-		return;
+	//if (rigidbodyRef.expired())
+		//return;
 
-	rigidbodyRef.lock()->setPosition(localPosition);
+	//rigidbodyRef.lock()->setPosition(localPosition);
 }
 
 void Transform::setLocalRotation(glm::vec3 rotation)
@@ -213,7 +213,7 @@ void Transform::translate(glm::vec3 translation)
 	if (rigidbodyRef.expired())
 		return;
 
-	rigidbodyRef.lock()->setPosition(localPosition);
+	//rigidbodyRef.lock()->setPosition(localPosition);
 }
 
 void Transform::rotate(glm::vec3 rotation)

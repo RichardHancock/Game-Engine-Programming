@@ -2,6 +2,8 @@
 
 #include "../Physics.h"
 #include "Transform.h"
+#include "../misc/Utility.h"
+#include "../misc/MotionState.h"
 
 RigidBody::RigidBody()
 	: Component()
@@ -9,9 +11,10 @@ RigidBody::RigidBody()
 	rigidBody = nullptr;
 	motionState = nullptr;
 
-	position = btVector3(0, 0, 0);
+	//position = btVector3(0, 0, 0);
 }
 
+/*
 void RigidBody::setPosition(glm::vec3 newPos)
 {
 	position = btVector3(newPos.x, newPos.y, newPos.z);
@@ -21,7 +24,7 @@ void RigidBody::setPosition(glm::vec3 newPos)
 		rigidBody->setWorldTransform(btTransform(btQuaternion(0, 0, 0, 1), btVector3(position)));
 	}
 	
-}
+}*/
 
 void RigidBody::onAwake()
 {
@@ -34,9 +37,9 @@ void RigidBody::init(float weight, glm::vec3 inertia)
 	assert(!transformRef.expired());
 
 	auto transform = transformRef.lock();
-	setPosition(transform->getPostion());
+	//setPosition(transform->getPostion());
 	
-	motionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), position));
+	motionState = new MotionState(transformRef);
 
 	auto shapeRef = getGameObject().lock()->getComponent<CollisionShape>("CollisionShape");
 
@@ -54,14 +57,16 @@ void RigidBody::init(float weight, glm::vec3 inertia)
 	}*/
 
 	auto collisionShape = collisionShapeRef;
+	collisionShape->setLocalScaling(Utility::glmToBulletVec3(transform->getScale()));
 
 	btRigidBody::btRigidBodyConstructionInfo rigidBodyInfo(
 		weight, motionState, collisionShape, btVector3(inertia.x, inertia.y, inertia.z)
 	);
 
 	rigidBody = new btRigidBody(rigidBodyInfo);
-
-	//rigidBody->setRestitution(10.0f);
+	
+	//rigidBody->
+	rigidBody->setRestitution(1.0f);
 	
 
 	Physics::addRigidBody(rigidBody);
