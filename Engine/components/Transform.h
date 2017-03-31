@@ -6,6 +6,7 @@
 
 #include "Component.h"
 #include "../misc/Vec3.h"
+#include "../internal/dependencies/btBulletDynamicsCommon.h"
 
 //Ref: Karsten (Mutiny) with changes to make it more suitable for my engine.
 
@@ -177,7 +178,7 @@ public:
 	 @param	rotateAxis 	The rotate axis. EX Vec3(1.0f,0.0f,0.0f) for X axis
 	 @param	amount	   	The amount to rotate by.
 	 */
-	void rotateAroundPos(glm::vec3 centerPoint, glm::vec3 rotateAxis, float amount);
+	//void rotateAroundPos(glm::vec3 centerPoint, glm::vec3 rotateAxis, float amount);
 
 	/**
 	 @brief	Gets forward vector.
@@ -235,8 +236,12 @@ private:
 
 	/** @brief	The local position. */
 	glm::vec3 localPosition;
+	
 	/** @brief	The local rotation. */
 	glm::vec3 localRotation;
+	
+	btQuaternion quat;
+
 	/** @brief	The local scale. */
 	glm::vec3 localScale;
 	/** @brief	The parent transform. */
@@ -244,4 +249,7 @@ private:
 	/** @brief	The transforms this transform is a parent to. */
 	std::vector<std::shared_ptr<Transform>> children;
 
+	//A Bad hack to get lookAts working, otherwise would require full redesign of Transform class
+	glm::mat4 lookAtMat;
+	bool useLookAt;
 };

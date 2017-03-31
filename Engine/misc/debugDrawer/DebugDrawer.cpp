@@ -50,7 +50,7 @@ void DebugDrawer::render()
 
 	std::shared_ptr<Camera> camera = GameVariables::data->currentCamera.lock();
 
-	glm::mat4 viewMat = glm::inverse(camera->getTransformMat());
+	glm::mat4 viewMat = camera->getTransformMat();
 	glm::mat4 projMat = camera->getProjMat();
 
 	if (!Platform::isDummyRenderer())

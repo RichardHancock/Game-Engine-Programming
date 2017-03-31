@@ -32,7 +32,7 @@ void Physics::init()
 		dispatcher, broadphase, solver, collisionConfiguration
 	);
 
-	world->setGravity(btVector3(0, -10, 0));
+	world->setGravity(btVector3(0, 0, 0));
 
 	debug = new BulletDebugDrawer();
 	debug->setDebugMode(BulletDebugDrawer::DBG_DrawWireframe + BulletDebugDrawer::DBG_DrawContactPoints); //+ BulletDebugDrawer::DBG_DrawNormals);

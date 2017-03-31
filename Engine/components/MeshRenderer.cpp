@@ -104,7 +104,7 @@ void MeshRenderer::onRender()
 
 	std::shared_ptr<Camera> camera = GameVariables::data->currentCamera.lock();
 
-	glm::mat4 viewMat = glm::inverse(camera->getTransformMat());
+	glm::mat4 viewMat = camera->getTransformMat();
 	glm::mat4 modelMat = transform->getTransformMat();
 
 	if (materials.size() == 0)

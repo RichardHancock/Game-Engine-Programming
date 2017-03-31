@@ -21,7 +21,11 @@ void MotionState::getWorldTransform(btTransform& worldTrans) const
 	worldTrans.setOrigin(Utility::glmToBulletVec3(position));
 
 	glm::vec3 rotation = transform->getRotation();
-	worldTrans.setRotation(btQuaternion(rotation.y, rotation.x, rotation.z));
+
+	btQuaternion quat;
+	quat.setEulerZYX(rotation.z, rotation.y, rotation.x);
+
+	worldTrans.setRotation(quat);
 }
 
 void MotionState::setWorldTransform(const btTransform& worldTrans)

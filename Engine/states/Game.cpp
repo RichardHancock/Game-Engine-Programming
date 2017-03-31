@@ -16,6 +16,7 @@
 #include "../components/CollisionShape.h"
 #include "../components/RigidBody.h"
 #include "../misc/debugDrawer/DebugDrawer.h"
+#include "../components/RigidBody.h"
 
 #include "../mobileUI/QRCode.h"
 #include "../misc/Random.h"
@@ -53,7 +54,7 @@ Game::Game()
 	hmap->addComponent<MeshComponent>("MeshComponent").lock()->setMesh(
 		heightmap);
 	hmap->addComponent<CollisionShape>("CollisionShape").lock()->generateStaticMeshShape();
-	hmap->addComponent<RigidBody>("RigidBody").lock()->init(0.0f, glm::vec3(0.0f));
+	hmap->addComponent<RigidBody>("RigidBody").lock()->init(0.0f);
 
 	ResourceManager::createMaterial("hmapTex", ResourceManager::getTexture("heightmap.png"),
 		"texturedV.glsl", "texturedF.glsl");
@@ -69,6 +70,7 @@ Game::Game()
 	camTransform->setPostion(glm::vec3(0, 0, 40));
 	camTransform->setRotation(glm::vec3(0.0f, 0, 0));
 	camTransform->setScale(glm::vec3(1));
+	
 
 	auto cameraComponent = cameraObj->addComponent<Camera>("Camera");
 	GameVariables::data->currentCamera = cameraComponent;
@@ -88,7 +90,7 @@ Game::Game()
 
 	gameO->addComponent<CollisionShape>("CollisionShape").lock()->generateConvexMeshShape();
 	auto rbGameO = gameO->addComponent<RigidBody>("RigidBody").lock();
-	rbGameO->init(0.0f, glm::vec3(0.0f));
+	rbGameO->init(20.0f);
 
 
 	auto ship = GameObject::create("ship").lock();
@@ -105,7 +107,7 @@ Game::Game()
 
 	ship->addComponent<CollisionShape>("CollisionShape").lock()->generateConvexMeshShape();
 	auto rbShip = ship->addComponent<RigidBody>("RigidBody").lock();
-	rbShip->init(10.0f, glm::vec3(4.0f));
+	rbShip->init(1.0f);
 
 	auto earth = GameObject::create("earth").lock();
 	auto transform3 = earth->addComponent<Transform>("Transform").lock();
@@ -121,7 +123,7 @@ Game::Game()
 
 	earth->addComponent<CollisionShape>("CollisionShape").lock()->generateStaticMeshShape();
 	auto rbEarth = earth->addComponent<RigidBody>("RigidBody").lock();
-	rbEarth->init(0.0f, glm::vec3(0.0f));
+	rbEarth->init(0.0f);
 
 
 	auto flatPlane = GameObject::create("bg").lock();
@@ -255,12 +257,6 @@ void Game::update()
 	{
 		ResourceManager::getAudio("Item Place.wav", false).lock()->play(0,0);
 	}
-	if (InputManager::wasKeyPressed(SDLK_c) || InputManager::wasControllerButtonPressed(0, Controller::Button::Y))
-	{
-		controllingCamera = !controllingCamera;
-	}
-
-	
 	
 	//reset scene
 	if (InputManager::wasKeyReleased(SDLK_SPACE) || InputManager::wasControllerButtonPressed(0, Controller::Button::B))
@@ -282,9 +278,28 @@ void Game::update()
 
 
 	//GameVariables::data->gameObjs["fighter"]->getComponent<Transform>("Transform").lock()->rotate(glm::vec3(0.0f, 1.0f * DeltaTime::getDT(), 0.0f));
-	GameVariables::data->gameObjs["earth"]->getComponent<Transform>("Transform").lock()->rotate(glm::vec3(0.0f, 0.01f * DeltaTime::getDT(), 0.0f));
+	GameVariables::data->gameObjs["earth"]->getComponent<Transform>("Transform").lock()->rotate(glm::vec3(0.0f, 0.5f * DeltaTime::getDT(), 0.0f));
 
 	//socket->recvMsg();
+
+	
+
+
+	//Calculate Camera Pos
+	std::shared_ptr<Transform> camera = GameVariables::data->currentCamera.lock()
+		->getGameObject().lock()->getComponent<Transform>("Transform").lock();
+
+	auto ship = GameVariables::data->gameObjs["fighter"]->getComponent<Transform>().lock();
+
+	glm::vec3 shipPos = ship->getPostion();
+	glm::vec3 shipOffset(0.0f);
+	shipOffset = (ship->getForwardVector() * 45.0f);
+	shipOffset = shipOffset + (ship->getUpVector() * 10.0f);
+
+	shipPos = shipPos + shipOffset;
+
+	camera->setPostion(shipPos);
+	camera->lookAt(ship->getPostion());
 
 	movementControls();
 
@@ -307,13 +322,8 @@ void Game::render()
 
 void Game::movementControls()
 {
-	//If camera control mode get pointer to camera transform, else get the light's transform instead
-	std::shared_ptr<Transform> object = (controllingCamera ? 
-		GameVariables::data->currentCamera.lock()
-		->getGameObject().lock()->getComponent<Transform>("Transform").lock()
-		:
-		//GameVariables::data->currentLight.lock()->getComponent<Transform>("Transform").lock()
-		GameVariables::data->gameObjs["fighter"]->getComponent<Transform>().lock());
+	std::shared_ptr<RigidBody> objectRB = GameVariables::data->gameObjs["fighter"]->getComponent<RigidBody>().lock();
+	std::shared_ptr<Transform> object = GameVariables::data->gameObjs["fighter"]->getComponent<Transform>().lock();
 
 	//Pre-compute the move distance
 	const float speed = 50.0f;
@@ -325,31 +335,31 @@ void Game::movementControls()
 	//move along object along x
 	if (InputManager::isKeyHeld(SDLK_a))
 	{
-		object->translate(-speedDT * right);
+		objectRB->applyForce(-speedDT * right);
 	}
 	else if (InputManager::isKeyHeld(SDLK_d))
 	{
-		object->translate(speedDT * right);
+		objectRB->applyForce(speedDT * right);
 	}
 
 	//move object along y
 	if (InputManager::isKeyHeld(SDLK_q))
 	{
-		object->translate(-speedDT * up);
+		objectRB->applyForce(-speedDT * up);
 	}
 	else if (InputManager::isKeyHeld(SDLK_e))
 	{
-		object->translate(speedDT * up);
+		objectRB->applyForce(speedDT * up);
 	}
 
 	//move object along z
 	if (InputManager::isKeyHeld(SDLK_w))
 	{
-		object->translate(-speedDT * forward);
+		objectRB->applyForce(-speedDT * forward);
 	}
 	if (InputManager::isKeyHeld(SDLK_s))
 	{
-		object->translate(speedDT * forward);
+		objectRB->applyForce(speedDT * forward);
 	}
 
 	float speedRadians = Utility::convertAngleToRadian(speedDT);

@@ -12,11 +12,15 @@ class RigidBody : public Component
 public:
 	RigidBody();
 
-	//void setPosition(glm::vec3 newPos);
+	void setPosition(glm::vec3 newPos);
+
+	void setRotation(glm::vec3 newRotation);
 	
 	virtual void onAwake();
 
-	void init(float weight, glm::vec3 inertia);
+	void applyForce(glm::vec3 newForce);
+
+	void init(float weight);
 
 private:
 	btRigidBody* rigidBody;

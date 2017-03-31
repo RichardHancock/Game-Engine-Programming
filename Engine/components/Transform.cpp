@@ -1,6 +1,7 @@
 #include "Transform.h"
 
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/matrix_decompose.hpp>
 
 #include "../misc/Utility.h"
 #include "RigidBody.h"
@@ -17,7 +18,7 @@ glm::vec3 Transform::getPostion()
 
 glm::vec3 Transform::getRotation()
 {
-	return localRotation;
+	quat.getAxis
 }
 
 glm::vec3 Transform::getScale()
@@ -47,12 +48,12 @@ void Transform::setPostion(glm::vec3 position)
 		localPosition = position;
 	}
 
-	//auto rigidbodyRef = getGameObject().lock()->getComponent<RigidBody>("RigidBody");
+	auto rigidbodyRef = getGameObject().lock()->getComponent<RigidBody>("RigidBody");
 
-	//if (rigidbodyRef.expired())
-		//return;
+	if (rigidbodyRef.expired())
+		return;
 
-	//rigidbodyRef.lock()->setPosition(localPosition);
+	rigidbodyRef.lock()->setPosition(localPosition);
 }
 
 void Transform::setRotation(glm::vec3 rotation)
@@ -65,6 +66,13 @@ void Transform::setRotation(glm::vec3 rotation)
 	{
 		localRotation = rotation;
 	}
+
+	auto rigidbodyRef = getGameObject().lock()->getComponent<RigidBody>("RigidBody");
+
+	if (rigidbodyRef.expired())
+		return;
+
+	rigidbodyRef.lock()->setRotation(localRotation);
 }
 
 void Transform::setScale(glm::vec3 scale)
@@ -104,17 +112,24 @@ void Transform::setLocalPosition(glm::vec3 position)
 {
 	localPosition = position;
 
-	//auto rigidbodyRef = getGameObject().lock()->getComponent<RigidBody>("RigidBody");
+	auto rigidbodyRef = getGameObject().lock()->getComponent<RigidBody>("RigidBody");
 
-	//if (rigidbodyRef.expired())
-		//return;
+	if (rigidbodyRef.expired())
+		return;
 
-	//rigidbodyRef.lock()->setPosition(localPosition);
+	rigidbodyRef.lock()->setPosition(localPosition);
 }
 
 void Transform::setLocalRotation(glm::vec3 rotation)
 {
 	localRotation = rotation;
+
+	auto rigidbodyRef = getGameObject().lock()->getComponent<RigidBody>("RigidBody");
+
+	if (rigidbodyRef.expired())
+		return;
+
+	rigidbodyRef.lock()->setRotation(localRotation);
 }
 
 void Transform::setLocalScale(glm::vec3 scale)
@@ -213,23 +228,28 @@ void Transform::translate(glm::vec3 translation)
 	if (rigidbodyRef.expired())
 		return;
 
-	//rigidbodyRef.lock()->setPosition(localPosition);
+	rigidbodyRef.lock()->setPosition(localPosition);
 }
 
 void Transform::rotate(glm::vec3 rotation)
 {
 	localRotation += rotation;
+
+	auto rigidbodyRef = getGameObject().lock()->getComponent<RigidBody>("RigidBody");
+
+	if (rigidbodyRef.expired())
+		return;
+
+	rigidbodyRef.lock()->setRotation(localRotation);
 }
 
 void Transform::lookAt(glm::vec3 worldPosition)
 {
-	//TODO: REWRITE
-	glm::vec2 diff = glm::vec2(localPosition.x, localPosition.z) - glm::vec2(worldPosition.x, worldPosition.z);
-
-	float angle = atan2(diff.x, diff.x) * 180 / Utility::PI;
-	localRotation.y = angle - 180.0f;
+	lookAtMat = glm::lookAt(localPosition, worldPosition, getUpVector());
+	useLookAt = true;
 }
 
+/*
 void Transform::rotateAroundPos(glm::vec3 centerPoint, glm::vec3 rotateAxis, float amount)
 {
 	glm::mat4 pos = buildTransformMat(centerPoint, glm::vec3(0), glm::vec3(1));
@@ -244,7 +264,7 @@ void Transform::rotateAroundPos(glm::vec3 centerPoint, glm::vec3 rotateAxis, flo
 	current = current * glm::inverse(pos);
 
 	localPosition = vec4ToVec3(current * glm::vec4(localPosition, 1));
-}
+}*/
 
 glm::vec3 Transform::getForwardVector()
 {
@@ -272,7 +292,14 @@ glm::vec3 Transform::getRightVector()
 
 glm::mat4 Transform::getTransformMat()
 {
-	return buildTransformMat(getPostion(), getRotation(), getScale());
+	if (useLookAt)
+	{
+		return lookAtMat;
+	}
+	else
+	{
+		return buildTransformMat(getPostion(), getRotation(), getScale());
+	}
 }
 
 glm::mat4 Transform::buildTransformMat(glm::vec3 position, glm::vec3 rotation, glm::vec3 scale)
@@ -299,8 +326,10 @@ glm::vec3 Transform::vec4ToVec3(const glm::vec4& vector)
 
 void Transform::onAwake()
 {
-	///TODO does this require parent to be intialised.
+	///TODO does this require parent to be initialised.
 	localScale = glm::vec3(1);
+
+	useLookAt = false;
 }
 
 void Transform::onDestroy()
