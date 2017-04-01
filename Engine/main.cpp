@@ -79,11 +79,17 @@ int main(int argc, char *argv[])
 	DeltaTime::init();
 
 	bool done = false;
+	bool renderDebugWorld = false;
 
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); Really funky looking toggle, Maybe add to a render manager.
 	while (!done)
 	{
 		done = StateManager::eventHandler();
+
+		if (InputManager::wasKeyReleased(SDLK_F1))
+		{
+			renderDebugWorld = !renderDebugWorld;
+		}
 
 		// Update
 		//Calculate deltaTime
@@ -94,12 +100,15 @@ int main(int argc, char *argv[])
 
 		StateManager::update();
 
-		Physics::getWorld()->stepSimulation(1 / 50.f, 10);
+		Physics::getWorld()->stepSimulation(DeltaTime::getDT(), 10);
 		//ResourceManager::update(dt);
 
 		//Pre Render
-		Physics::getWorld()->debugDrawWorld(); //This sets up openGL buffers for rendering
-		DebugDrawer::preRender();
+		if (renderDebugWorld)
+		{
+			Physics::getWorld()->debugDrawWorld(); //This sets up openGL buffers for rendering
+			DebugDrawer::preRender();
+		}
 
 		//Render
 		if (!Platform::isDummyRenderer())
@@ -109,10 +118,12 @@ int main(int argc, char *argv[])
 			// This writes the above colour to the colour part of the frame buffer
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		}
+		
 
 		StateManager::render();
 
-		DebugDrawer::render();
+		if (renderDebugWorld)
+			DebugDrawer::render();
 
 		Platform::sdlSwapWindow();
 
@@ -121,10 +132,11 @@ int main(int argc, char *argv[])
 
 		InputManager::update();
 
+		/* TODO: This makes physics out of sync, Really need to fix the time-step and main program flow in a future update
 		if (DeltaTime::getDT() < (1.0f / 50.0f))
 		{
 			SDL_Delay((unsigned int)(((1.0f / 50.0f) - DeltaTime::getDT())*1000.0f));
-		}
+		}*/
 	}
 
 	StateManager::cleanup();

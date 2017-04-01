@@ -27,22 +27,22 @@ void RigidBody::setPosition(glm::vec3 newPos)
 	}
 }
 
-void RigidBody::setRotation(glm::vec3 newRotation)
+void RigidBody::setRotation(btQuaternion& newRotation)
 {
-	//Log::logI(Utility::glmToString(newRotation));
-
 	if (rigidBody != nullptr)
 	{
 		btTransform current = rigidBody->getWorldTransform();
 
-		btQuaternion quat;
-		quat.setEulerZYX(newRotation.z, newRotation.y, newRotation.x);
-
-		current.setRotation(quat);
+		current.setRotation(newRotation);
 
 		rigidBody->setActivationState(ACTIVE_TAG);
 		rigidBody->setWorldTransform(current);
 	}
+}
+
+void RigidBody::setDamping(float linearDamping, float angularDamping)
+{
+	rigidBody->setDamping(linearDamping, angularDamping);
 }
 
 void RigidBody::onAwake()
@@ -52,10 +52,11 @@ void RigidBody::onAwake()
 
 void RigidBody::applyForce(glm::vec3 newForce)
 {
+	rigidBody->setActivationState(ACTIVE_TAG);
 	rigidBody->applyCentralImpulse(Utility::glmToBulletVec3(newForce));
 }
 
-void RigidBody::init(float weight)
+void RigidBody::init(float weight, glm::vec3 inertia)
 {
 	auto transformRef = getGameObject().lock()->getComponent<Transform>("Transform");
 	assert(!transformRef.expired());
@@ -83,11 +84,8 @@ void RigidBody::init(float weight)
 	auto collisionShape = collisionShapeRef;
 	collisionShape->setLocalScaling(Utility::glmToBulletVec3(transform->getScale()));
 
-	btVector3 inertia(0.0f, 0.0f, 0.0f);
-	collisionShape->calculateLocalInertia(weight, inertia);
-
 	btRigidBody::btRigidBodyConstructionInfo rigidBodyInfo(
-		weight, motionState, collisionShape, inertia
+		weight, motionState, collisionShape, Utility::glmToBulletVec3(inertia)
 	);
 
 	rigidBody = new btRigidBody(rigidBodyInfo);

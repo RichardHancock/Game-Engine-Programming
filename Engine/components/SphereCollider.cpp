@@ -48,7 +48,7 @@ bool SphereCollider::intersectSphere(std::weak_ptr<SphereCollider> other)
 
 	//Distance between spheres
 	float distance = glm::length(
-		getTransform()->getPostion() - otherPtr->getTransform()->getPostion()
+		getTransform()->getPosition() - otherPtr->getTransform()->getPosition()
 	);
 
 	//Test against self (Replace with better comparison)

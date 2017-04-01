@@ -14,13 +14,15 @@ public:
 
 	void setPosition(glm::vec3 newPos);
 
-	void setRotation(glm::vec3 newRotation);
+	void setRotation(btQuaternion& newRotation);
 	
+	void setDamping(float linearDamping, float angularDamping);
+
 	virtual void onAwake();
 
 	void applyForce(glm::vec3 newForce);
 
-	void init(float weight);
+	void init(float weight, glm::vec3 inertia);
 
 private:
 	btRigidBody* rigidBody;

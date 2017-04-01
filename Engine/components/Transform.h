@@ -17,22 +17,31 @@ public:
 
 	friend class GameObject;
 
+	Transform();
+
 	/** @brief	Destructor. */
 	virtual ~Transform();
 
 	/**
-	 @brief	Gets the current world space postion.
+	 @brief	Gets the current world space position.
 	
-	 @return	The postion.
+	 @return	The position.
 	 */
-	glm::vec3 getPostion();
+	glm::vec3 getPosition();
 
 	/**
 	 @brief	Gets the current world space rotation.
 	
 	 @return	The rotation.
 	 */
-	glm::vec3 getRotation();
+	btQuaternion getRotation();
+
+	/**
+	@brief	Gets the current world space rotation.
+
+	@return	The rotation.
+	*/
+	glm::vec3 getEulerRotation();
 
 	/**
 	 @brief	Gets the scale.
@@ -42,18 +51,26 @@ public:
 	glm::vec3 getScale();
 
 	/**
-	 @brief	Sets the postion relative to parents.
+	 @brief	Sets the position relative to parents.
 	
-	 @param	position	The position.
+	 @param	position	 	The position.
+	 @param	updatePhysics	(Optional) True to update physics.
 	 */
-	void setPostion(glm::vec3 position);
+	void setPosition(glm::vec3 position, bool updatePhysics = true);
 
 	/**
 	@brief	Sets the rotation relative to parents.
 
 	@param	rotation	The rotation.
 	*/
-	void setRotation(glm::vec3 rotation);
+	void setEulerRotation(glm::vec3 rotation);
+
+	/**
+	@brief	Sets the rotation relative to parents.
+
+	@param	rotation	The rotation.
+	*/
+	void setRotation(btQuaternion& rotation);
 
 	/**
 	 @brief	Sets the scale.
@@ -62,93 +79,6 @@ public:
 	 */
 	void setScale(glm::vec3 scale);
 
-
-	//Local Transform Components
-
-	/**
-	 @brief	Gets local space position.
-
-	 @return	The local position.
-	 */
-	glm::vec3 getLocalPosition();
-
-	/**
-	 @brief	Gets local space rotation.
-	
-	 @return	The local rotation.
-	 */
-	glm::vec3 getLocalRotation();
-
-	/**
-	 @brief	Sets local position.
-	
-	 @param	position	The position.
-	 */
-	void setLocalPosition(glm::vec3 position);
-
-	/**
-	 @brief	Sets local rotation.
-	
-	 @param	rotation	The rotation.
-	 */
-	void setLocalRotation(glm::vec3 rotation);
-
-	/**
-	 @brief	Sets local scale.
-	
-	 @param	scale	The scale.
-	 */
-	void setLocalScale(glm::vec3 scale);
-
-
-	/** @brief	Detatch all attached children. */
-	void detatchChildren();
-
-	/**
-	 @brief	Gets the parent of this transform.
-	
-	 @return	The parent.
-	 */
-	std::weak_ptr<Transform> getParent();
-
-	/**
-	 @brief	Sets this transform's parent.
-	
-	 @param	transform	The parent transform.
-	 */
-	void setParent(std::weak_ptr<Transform> transform);
-
-	/**
-	 @brief	Gets the amount of transforms attached to this transform.
-	
-	 @return	The child count.
-	 */
-	int getChildCount();
-
-	/**
-	 @brief	Gets the child transform at specified index.
-	
-	 @param	index	Zero-based index of the transform.
-	
-	 @return	The child transform.
-	 */
-	std::weak_ptr<Transform> getChildTransform(int index);
-
-	/**
-	 @brief	Gets the root of this transform hierachy.
-	
-	 @return	The root transform.
-	 */
-	std::shared_ptr<Transform> getRootTransform();
-
-	/**
-	 @brief	Searches for the specified transform node.
-	
-	 @param	query	The query.
-	
-	 @return	The found transform node.
-	 */
-	std::weak_ptr<Transform> findTransformNode(std::string query);
 
 	/**
 	 @brief	Translates the position by the given translation.
@@ -212,12 +142,24 @@ public:
 	 @brief	Builds a transform matrix from passed in elements.
 	
 	 @param	position	The position.
-	 @param	rotation	The rotation.
+	 @param	rotation	The rotation as Euler angles.
 	 @param	scale   	The scale.
 	
 	 @return	A glm::mat4.
 	 */
 	static glm::mat4 buildTransformMat(glm::vec3 position, glm::vec3 rotation, glm::vec3 scale);
+
+	/**
+	@brief	Builds a transform matrix from passed in elements.
+
+	@param	position	The position.
+	@param	rotation	The rotation as a Quaternion.
+	@param	scale   	The scale.
+
+	@return	A glm::mat4.
+	*/
+	static glm::mat4 buildTransformMat(glm::vec3 position, btQuaternion& rotation, glm::vec3 scale);
+
 
 	/**
 	 @brief	Helper function to convert a GLM Vector 4 to vector 3.
@@ -238,16 +180,12 @@ private:
 	glm::vec3 localPosition;
 	
 	/** @brief	The local rotation. */
-	glm::vec3 localRotation;
+	//glm::vec3 localRotation;
 	
 	btQuaternion quat;
 
 	/** @brief	The local scale. */
 	glm::vec3 localScale;
-	/** @brief	The parent transform. */
-	std::weak_ptr<Transform> parent;
-	/** @brief	The transforms this transform is a parent to. */
-	std::vector<std::shared_ptr<Transform>> children;
 
 	//A Bad hack to get lookAts working, otherwise would require full redesign of Transform class
 	glm::mat4 lookAtMat;

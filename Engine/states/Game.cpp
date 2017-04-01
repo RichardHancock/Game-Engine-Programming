@@ -48,13 +48,13 @@ Game::Game()
 	heightmap = HeightMap::load(ResourceManager::getResourceDirPath() + "resources/textures/heightmap.bmp", 0.60f, 4.0f);
 	auto hmap = GameObject::create("heightmap").lock();
 	auto transform58 = hmap->addComponent<Transform>("Transform").lock();
-	transform58->setPostion(glm::vec3(30.0f, 0.0f, 0.0f));
+	transform58->setPosition(glm::vec3(30.0f, 0.0f, 0.0f));
 	transform58->setScale(glm::vec3(1));
 
 	hmap->addComponent<MeshComponent>("MeshComponent").lock()->setMesh(
 		heightmap);
 	hmap->addComponent<CollisionShape>("CollisionShape").lock()->generateStaticMeshShape();
-	hmap->addComponent<RigidBody>("RigidBody").lock()->init(0.0f);
+	hmap->addComponent<RigidBody>("RigidBody").lock()->init(0.0f, glm::vec3(0.0f));
 
 	ResourceManager::createMaterial("hmapTex", ResourceManager::getTexture("heightmap.png"),
 		"texturedV.glsl", "texturedF.glsl");
@@ -67,8 +67,8 @@ Game::Game()
 	//Camera
 	auto cameraObj = GameObject::create("Camera").lock();
 	auto camTransform = cameraObj->addComponent<Transform>("Transform").lock();
-	camTransform->setPostion(glm::vec3(0, 0, 40));
-	camTransform->setRotation(glm::vec3(0.0f, 0, 0));
+	camTransform->setPosition(glm::vec3(0, 0, 40));
+	camTransform->setEulerRotation(glm::vec3(0.0f, 0, 0));
 	camTransform->setScale(glm::vec3(1));
 	
 
@@ -78,7 +78,7 @@ Game::Game()
 	//Game Object
 	auto gameO = GameObject::create("fighter").lock();
 	auto transform = gameO->addComponent<Transform>("Transform").lock();
-	transform->setPostion(glm::vec3(0.0f, 0.0f, 5.0f));
+	transform->setPosition(glm::vec3(0.0f, 0.0f, 5.0f));
 	transform->setScale(glm::vec3(1));
 
 	gameO->addComponent<MeshComponent>("MeshComponent").lock()->setMesh(
@@ -90,12 +90,13 @@ Game::Game()
 
 	gameO->addComponent<CollisionShape>("CollisionShape").lock()->generateConvexMeshShape();
 	auto rbGameO = gameO->addComponent<RigidBody>("RigidBody").lock();
-	rbGameO->init(20.0f);
+	rbGameO->init(20.0f, glm::vec3(10.0f));
+	rbGameO->setDamping(0.5f, 0.8f);
 
 
 	auto ship = GameObject::create("ship").lock();
 	auto transform2 = ship->addComponent<Transform>("Transform").lock();
-	transform2->setPostion(glm::vec3(70.0f, 60.0f, 40.0f));
+	transform2->setPosition(glm::vec3(70.0f, 60.0f, 40.0f));
 	transform2->setScale(glm::vec3(1));
 
 	ship->addComponent<MeshComponent>("MeshComponent").lock()->setMesh(
@@ -107,11 +108,12 @@ Game::Game()
 
 	ship->addComponent<CollisionShape>("CollisionShape").lock()->generateConvexMeshShape();
 	auto rbShip = ship->addComponent<RigidBody>("RigidBody").lock();
-	rbShip->init(1.0f);
+	rbShip->init(1.0f, glm::vec3(1.0f));
+	rbShip->setDamping(0.1f, 0.1f);
 
 	auto earth = GameObject::create("earth").lock();
 	auto transform3 = earth->addComponent<Transform>("Transform").lock();
-	transform3->setPostion(glm::vec3(-20.0f, 50.0f, -150.0f));
+	transform3->setPosition(glm::vec3(-20.0f, 50.0f, -150.0f));
 	transform3->setScale(glm::vec3(50));
 
 	earth->addComponent<MeshComponent>("MeshComponent").lock()->setMesh(
@@ -123,13 +125,13 @@ Game::Game()
 
 	earth->addComponent<CollisionShape>("CollisionShape").lock()->generateStaticMeshShape();
 	auto rbEarth = earth->addComponent<RigidBody>("RigidBody").lock();
-	rbEarth->init(0.0f);
+	rbEarth->init(0.0f, glm::vec3(0.0f));
 
 
 	auto flatPlane = GameObject::create("bg").lock();
 	auto transform4 = flatPlane->addComponent<Transform>("Transform").lock();
-	transform4->setPostion(glm::vec3(-20.0f, 50.0f, -350.0f));
-	transform4->setRotation(glm::vec3(Utility::HALF_PI, 0.0f, 0.0f));
+	transform4->setPosition(glm::vec3(-20.0f, 50.0f, -350.0f));
+	transform4->setEulerRotation(glm::vec3(Utility::HALF_PI, 0.0f, 0.0f));
 	transform4->setScale(glm::vec3(100));
 
 	flatPlane->addComponent<MeshComponent>("MeshComponent").lock()->setMesh(
@@ -150,7 +152,7 @@ Game::Game()
 	//spheres (Loaded using my own OBJ loader)
 	auto light = GameObject::create("light").lock();
 	auto lightT = light->addComponent<Transform>("Transform").lock();
-	lightT->setPostion(glm::vec3(-50.0f, 10.0f, -5.0f));
+	lightT->setPosition(glm::vec3(-50.0f, 10.0f, -5.0f));
 
 	light->addComponent<MeshComponent>("MeshComponent").lock()->setMesh(
 		ResourceManager::getModel("bowl.obj", false));
@@ -172,7 +174,7 @@ Game::Game()
 
 	auto sphere = GameObject::create("sphere").lock();
 	auto sphereT = sphere->addComponent<Transform>("Transform").lock();
-	sphereT->setPostion(glm::vec3(-40.0f, 0.0f, -5.0f));
+	sphereT->setPosition(glm::vec3(-40.0f, 0.0f, -5.0f));
 
 	sphere->addComponent<MeshComponent>("MeshComponent").lock()->setMesh(
 		ResourceManager::getModel("bowl.obj", false));
@@ -261,14 +263,14 @@ void Game::update()
 	//reset scene
 	if (InputManager::wasKeyReleased(SDLK_SPACE) || InputManager::wasControllerButtonPressed(0, Controller::Button::B))
 	{
-		std::shared_ptr<Transform> camera = GameVariables::data->currentCamera.lock()->getGameObject().lock()
-			->getComponent<Transform>("Transform").lock();
+		//std::shared_ptr<Transform> camera = GameVariables::data->currentCamera.lock()->getGameObject().lock()
+			//->getComponent<Transform>("Transform").lock();
 
-		camera->setRotation(glm::vec3(0.0f));
-		camera->setPostion(glm::vec3(0, 0, 40));
+		//camera->setEulerRotation(glm::vec3(0.0f));
+		//camera->setPosition(glm::vec3(0, 0, 40));
 
-		GameVariables::data->gameObjs["light"]->getComponent<Transform>().lock()->setPostion(glm::vec3(-50.0f, 10.0f, -5.0f));
-		GameVariables::data->gameObjs["sphere"]->getComponent<Transform>().lock()->setPostion(glm::vec3(-40.0f, 0.0f, -5.0f));
+		//GameVariables::data->gameObjs["light"]->getComponent<Transform>().lock()->setPosition(glm::vec3(-50.0f, 10.0f, -5.0f));
+		//GameVariables::data->gameObjs["sphere"]->getComponent<Transform>().lock()->setPosition(glm::vec3(-40.0f, 0.0f, -5.0f));
 	}
 
 	if (InputManager::wasKeyPressed(SDLK_n))
@@ -291,15 +293,15 @@ void Game::update()
 
 	auto ship = GameVariables::data->gameObjs["fighter"]->getComponent<Transform>().lock();
 
-	glm::vec3 shipPos = ship->getPostion();
+	glm::vec3 shipPos = ship->getPosition();
 	glm::vec3 shipOffset(0.0f);
 	shipOffset = (ship->getForwardVector() * 45.0f);
 	shipOffset = shipOffset + (ship->getUpVector() * 10.0f);
 
 	shipPos = shipPos + shipOffset;
 
-	camera->setPostion(shipPos);
-	camera->lookAt(ship->getPostion());
+	camera->setPosition(shipPos);
+	camera->lookAt(ship->getPosition());
 
 	movementControls();
 
@@ -326,7 +328,7 @@ void Game::movementControls()
 	std::shared_ptr<Transform> object = GameVariables::data->gameObjs["fighter"]->getComponent<Transform>().lock();
 
 	//Pre-compute the move distance
-	const float speed = 50.0f;
+	const float speed = 500.0f;
 	float speedDT = speed * DeltaTime::getDT();
 	glm::vec3 forward = object->getForwardVector();
 	glm::vec3 right = object->getRightVector();
@@ -362,7 +364,7 @@ void Game::movementControls()
 		objectRB->applyForce(speedDT * forward);
 	}
 
-	float speedRadians = Utility::convertAngleToRadian(speedDT);
+	float speedRadians = Utility::convertAngleToRadian(speedDT / 10.0f);
 
 	//rotate along object along x
 	if (InputManager::isKeyHeld(SDLK_UP))
@@ -443,8 +445,8 @@ void Game::mobileUIUpdate()
 		auto qrObject = GameObject::create("QRCode").lock();
 		
 		auto qrTransform = qrObject->addComponent<Transform>("Transform").lock();
-		qrTransform->setPostion(glm::vec3(-5.0f, 0.0f, 20.0f));
-		qrTransform->setRotation(glm::vec3(Utility::HALF_PI, 0.0f, 0.0f));
+		qrTransform->setPosition(glm::vec3(-5.0f, 0.0f, 20.0f));
+		qrTransform->setEulerRotation(glm::vec3(Utility::HALF_PI, 0.0f, 0.0f));
 		qrTransform->setScale(glm::vec3(2));
 
 		qrObject->addComponent<MeshComponent>("MeshComponent").lock()->setMesh(
@@ -474,7 +476,7 @@ void Game::mobileUIUpdate()
 	{
 		auto ship = GameVariables::data->gameObjs["fighter"]->getComponent<Transform>().lock();
 
-		glm::vec3 rotation = ship->getRotation();
+		glm::vec3 rotation = ship->getEulerRotation();
 
 		if (rotation != sentValues.rotation)
 		{

@@ -102,7 +102,7 @@ bool CollisionShape::generateStaticMeshShape()
 	}*/
 
 	//btConvexTriangleMeshShape* rawShape = new btConvexTriangleMeshShape(triangles);
-	btBvhTriangleMeshShape* rawShape = new btBvhTriangleMeshShape(triangles, true);
+	btBvhTriangleMeshShape* rawShape = new btBvhTriangleMeshShape(triangles, false);
 	shape = rawShape;
 
 	return true;

@@ -2,23 +2,38 @@
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/matrix_decompose.hpp>
+#include <glm/gtx/quaternion.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 #include "../misc/Utility.h"
 #include "RigidBody.h"
+
+Transform::Transform()
+{
+	localScale = glm::vec3(1);
+	quat = quat.getIdentity();
+
+	useLookAt = false;
+}
 
 Transform::~Transform()
 {
 }
 
-glm::vec3 Transform::getPostion()
+glm::vec3 Transform::getPosition()
 {
 	///@todo Implement fully
 	return localPosition;
 }
 
-glm::vec3 Transform::getRotation()
+btQuaternion Transform::getRotation()
 {
-	quat.getAxis
+	return quat;
+}
+
+glm::vec3 Transform::getEulerRotation()
+{
+	return Utility::bulletVec3ToGLM(quat.getAxis() * quat.getAngle());
 }
 
 glm::vec3 Transform::getScale()
@@ -26,197 +41,42 @@ glm::vec3 Transform::getScale()
 	return localScale;
 }
 
-void Transform::setPostion(glm::vec3 position)
+void Transform::setPosition(glm::vec3 position, bool updatePhysics)
 {
-	if (getParent().lock().get() != nullptr)
+	localPosition = position;
+	
+	if (updatePhysics)
 	{
-		glm::mat4 mat = glm::mat4(1);
-		std::weak_ptr<Transform> curParent = getParent();
+		auto rigidbodyRef = getGameObject().lock()->getComponent<RigidBody>("RigidBody");
 
-		while (curParent.lock().get() != nullptr)
-		{
-			std::shared_ptr<Transform> node = curParent.lock();
-			mat = (buildTransformMat(node->localPosition, node->localRotation, glm::vec3(1)) * mat);
+		if (rigidbodyRef.expired())
+			return;
 
-			curParent = node->getParent();
-		}
-
-		localPosition = vec4ToVec3((glm::inverse(mat) * glm::vec4(position, 1)));
+		rigidbodyRef.lock()->setPosition(localPosition);
 	}
-	else
-	{
-		localPosition = position;
-	}
-
-	auto rigidbodyRef = getGameObject().lock()->getComponent<RigidBody>("RigidBody");
-
-	if (rigidbodyRef.expired())
-		return;
-
-	rigidbodyRef.lock()->setPosition(localPosition);
 }
 
-void Transform::setRotation(glm::vec3 rotation)
+void Transform::setEulerRotation(glm::vec3 rotation)
 {
-	if (getParent().lock().get() != nullptr)
-	{
-		localRotation = rotation - getParent().lock()->getRotation();
-	}
-	else
-	{
-		localRotation = rotation;
-	}
+	quat = quat.getIdentity();
+	quat.setEulerZYX(rotation.z, rotation.y, rotation.x);
 
 	auto rigidbodyRef = getGameObject().lock()->getComponent<RigidBody>("RigidBody");
 
 	if (rigidbodyRef.expired())
 		return;
 
-	rigidbodyRef.lock()->setRotation(localRotation);
+	rigidbodyRef.lock()->setRotation(quat);
+}
+
+void Transform::setRotation(btQuaternion & rotation)
+{
+	quat = rotation;
 }
 
 void Transform::setScale(glm::vec3 scale)
 {
-	if (getParent().lock().get() != nullptr)
-	{
-		glm::mat4 mat = glm::mat4(1);
-		std::weak_ptr<Transform> curParent = getParent();
-
-		while (curParent.lock().get() != nullptr)
-		{
-			std::shared_ptr<Transform> node = curParent.lock();
-			mat = (buildTransformMat(node->localPosition, node->localRotation, node->localScale) * mat);
-
-			curParent = node->getParent();
-		}
-
-		localScale = vec4ToVec3(glm::inverse(mat) * glm::vec4(scale, 1));
-	}
-	else
-	{
-		localScale = scale;
-	}
-}
-
-glm::vec3 Transform::getLocalPosition()
-{
-	return localPosition;
-}
-
-glm::vec3 Transform::getLocalRotation()
-{
-	return localRotation;
-}
-
-void Transform::setLocalPosition(glm::vec3 position)
-{
-	localPosition = position;
-
-	auto rigidbodyRef = getGameObject().lock()->getComponent<RigidBody>("RigidBody");
-
-	if (rigidbodyRef.expired())
-		return;
-
-	rigidbodyRef.lock()->setPosition(localPosition);
-}
-
-void Transform::setLocalRotation(glm::vec3 rotation)
-{
-	localRotation = rotation;
-
-	auto rigidbodyRef = getGameObject().lock()->getComponent<RigidBody>("RigidBody");
-
-	if (rigidbodyRef.expired())
-		return;
-
-	rigidbodyRef.lock()->setRotation(localRotation);
-}
-
-void Transform::setLocalScale(glm::vec3 scale)
-{
 	localScale = scale;
-}
-
-void Transform::detatchChildren()
-{
-	for (auto child : children)
-	{
-		child->setParent(std::weak_ptr<Transform>());
-		///TODO: Check why he calls delete on entire object here.
-	}
-
-	children.clear();
-}
-
-std::weak_ptr<Transform> Transform::getParent()
-{
-	return parent;
-}
-
-void Transform::setParent(std::weak_ptr<Transform> transform)
-{
-	std::shared_ptr<Transform> parPtr = getParent().lock();
-
-	if (parPtr.get() != nullptr)
-	{
-		for (unsigned int i = 0; i < parPtr->children.size(); i++)
-		{
-			if (parPtr->children[i].get() == this)
-			{
-				parPtr->children.erase(parPtr->children.begin() + i);
-				break;
-			}
-		}
-	}
-
-	std::shared_ptr<Transform> trPtr = transform.lock();
-	if (trPtr.get() != nullptr)
-	{
-		trPtr->children.push_back(std::shared_ptr<Transform>(this));
-	}
-
-	setLocalPosition(getPostion());
-	setLocalRotation(getRotation());
-	parent = transform;
-	setPostion(getLocalPosition());
-	setRotation(getLocalRotation());
-}
-
-int Transform::getChildCount()
-{
-	return children.size();
-}
-
-std::weak_ptr<Transform> Transform::getChildTransform(int index)
-{
-	return children.at(index);
-}
-
-std::shared_ptr<Transform> Transform::getRootTransform()
-{
-	std::shared_ptr<Transform> root(this);
-	std::weak_ptr<Transform> trPtr = parent;
-
-	while (trPtr.lock().get() != nullptr)
-	{
-		root = trPtr.lock();
-		trPtr = root->getParent();
-	}
-
-	return root;
-}
-
-std::weak_ptr<Transform> Transform::findTransformNode(std::string query)
-{
-	for (auto child : children)
-	{
-		if (child->getGameObject().lock()->getName() == query)
-		{
-			return child;
-		}
-	}
-
-	return std::weak_ptr<Transform>();
 }
 
 void Transform::translate(glm::vec3 translation)
@@ -233,14 +93,17 @@ void Transform::translate(glm::vec3 translation)
 
 void Transform::rotate(glm::vec3 rotation)
 {
-	localRotation += rotation;
+	btQuaternion rotationQuat;
+	rotationQuat.setEulerZYX(rotation.z, rotation.y, rotation.x);
+
+	quat = quat * rotationQuat;
 
 	auto rigidbodyRef = getGameObject().lock()->getComponent<RigidBody>("RigidBody");
 
 	if (rigidbodyRef.expired())
 		return;
 
-	rigidbodyRef.lock()->setRotation(localRotation);
+	rigidbodyRef.lock()->setRotation(quat);
 }
 
 void Transform::lookAt(glm::vec3 worldPosition)
@@ -268,7 +131,7 @@ void Transform::rotateAroundPos(glm::vec3 centerPoint, glm::vec3 rotateAxis, flo
 
 glm::vec3 Transform::getForwardVector()
 {
-	glm::mat4 mat = buildTransformMat(localPosition, localRotation, localScale);
+	glm::mat4 mat = buildTransformMat(localPosition, quat, localScale);
 	glm::vec4 vec(0, 0, 1, 0);
 
 	return vec4ToVec3(mat * vec);
@@ -276,7 +139,7 @@ glm::vec3 Transform::getForwardVector()
 
 glm::vec3 Transform::getUpVector()
 {
-	glm::mat4 mat = buildTransformMat(localPosition, localRotation, localScale);
+	glm::mat4 mat = buildTransformMat(localPosition, quat, localScale);
 	glm::vec4 vec(0, 1, 0, 0);
 
 	return vec4ToVec3(mat * vec);
@@ -284,7 +147,7 @@ glm::vec3 Transform::getUpVector()
 
 glm::vec3 Transform::getRightVector()
 {
-	glm::mat4 mat = buildTransformMat(localPosition, localRotation, localScale);
+	glm::mat4 mat = buildTransformMat(localPosition, quat, localScale);
 	glm::vec4 vec(1, 0, 0, 0);
 
 	return vec4ToVec3(mat * vec);
@@ -298,7 +161,7 @@ glm::mat4 Transform::getTransformMat()
 	}
 	else
 	{
-		return buildTransformMat(getPostion(), getRotation(), getScale());
+		return buildTransformMat(getPosition(), getRotation(), getScale());
 	}
 }
 
@@ -308,10 +171,45 @@ glm::mat4 Transform::buildTransformMat(glm::vec3 position, glm::vec3 rotation, g
 
 	mat = glm::translate(mat, position);
 	
-	//XYZ Rotation Order
 	mat = glm::rotate(mat, rotation.z, glm::vec3(0, 0, 1));
 	mat = glm::rotate(mat, rotation.y, glm::vec3(0, 1, 0));
 	mat = glm::rotate(mat, rotation.x, glm::vec3(1, 0, 0));
+
+	//This may need to done first
+	mat = glm::scale(mat, scale);
+
+	return mat;
+}
+
+glm::mat4 Transform::buildTransformMat(glm::vec3 position, btQuaternion& rotation, glm::vec3 scale)
+{
+	glm::mat4 mat;
+
+	//mat = glm::translate(mat, position);
+
+	//glm::vec3 eulerRotation = Utility::bulletVec3ToGLM(rotation.getAxis() * rotation.getAngle());
+	
+	//glm::quat tempQuat(rotation.x(), rotation.y(), rotation.z(), rotation.w());
+
+	//mat = glm::rotate(mat, eulerRotation.z, glm::vec3(0, 0, 1));
+	//mat = glm::rotate(mat, eulerRotation.y, glm::vec3(0, 1, 0));
+	//mat = glm::rotate(mat, eulerRotation.x, glm::vec3(1, 0, 0));
+
+	//mat = mat * glm::mat4_cast(tempQuat);
+
+	//I HATE QUATERNIONS, LOOK WHAT THEY MADE ME DO ;(
+	btTransform temp;
+	temp = temp.getIdentity();
+
+	temp.setOrigin(Utility::glmToBulletVec3(position));
+	temp.setRotation(rotation);
+
+	float matrixRaw[16];
+
+	temp.getOpenGLMatrix(matrixRaw);
+
+	mat = glm::make_mat4(matrixRaw);
+	//mat = glm::translate(mat, position);
 
 	//This may need to done first
 	mat = glm::scale(mat, scale);
@@ -326,14 +224,9 @@ glm::vec3 Transform::vec4ToVec3(const glm::vec4& vector)
 
 void Transform::onAwake()
 {
-	///TODO does this require parent to be initialised.
-	localScale = glm::vec3(1);
-
-	useLookAt = false;
+	
 }
 
 void Transform::onDestroy()
 {
-	detatchChildren();
-	setParent(std::weak_ptr<Transform>());
 }
