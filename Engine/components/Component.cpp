@@ -37,6 +37,10 @@ void Component::onFixedUpdate()
 {
 }
 
+void Component::onPreRender()
+{
+}
+
 void Component::onRender()
 {
 }

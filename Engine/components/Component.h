@@ -45,6 +45,8 @@ private:
 	/** @brief	Executes the fixed update action. */
 	virtual void onFixedUpdate();
 
+	virtual void onPreRender();
+
 	/** @brief	Executes the render action. */
 	virtual void onRender();
 

@@ -5,6 +5,7 @@
 
 #include "Shader.h"
 #include "Texture.h"
+#include "CubeMap.h"
 
 #include "misc/Log.h"
 
@@ -17,8 +18,18 @@ private:
 	{
 		/** @brief	The texture data. */
 		std::weak_ptr<Texture> data;
+
+		/// @todo Make Texture and CubeMap share a base class to allow these to be merged
+
+		/** @brief	The cube map. */
+		std::weak_ptr<CubeMap> cubeMap;
+
 		/** @brief	Zero-based index of the texture in OpenGL. */
 		GLuint index;
+
+
+		/** @brief	Type of the texture (ex. Cube map, Texture 2D). */
+		GLenum textureType;
 
 		/** @brief	Default constructor. */
 		GLTextureInfo()
@@ -29,13 +40,29 @@ private:
 		/**
 		 @brief	Constructor.
 		
-		 @param	data 	The texture data.
-		 @param	index	Zero-based index of the texture in OpenGL.
+		 @param	data	   	The texture data.
+		 @param	index	   	Zero-based index of the texture in OpenGL.
+		 @param	textureType	Type of the texture.
 		 */
-		GLTextureInfo(std::weak_ptr<Texture> data, GLuint index)
+		GLTextureInfo(std::weak_ptr<Texture> data, GLuint index, GLenum textureType)
 		{
 			this->data = data;
 			this->index = index;
+			this->textureType = textureType;
+		}
+
+		/**
+		 @brief	Constructor.
+		
+		 @param	data	   	The cubeMap data.
+		 @param	index	   	Zero-based index of the texture in OpenGL.
+		 @param	textureType	Type of the texture.
+		 */
+		GLTextureInfo(std::weak_ptr<CubeMap> data, GLuint index, GLenum textureType)
+		{
+			this->cubeMap = data;
+			this->index = index;
+			this->textureType = textureType;
 		}
 	};
 
@@ -63,6 +90,14 @@ public:
 	 @param	texture	The texture.
 	 */
 	void addTexture(std::string name, std::weak_ptr<Texture> texture);
+
+	/**
+	@brief	Adds a cube map to the named shader uniform.
+
+	@param	name   	The name.
+	@param	cubeMap	The cube map (Tends to be a skybox).
+	*/
+	void addCubeMap(std::string name, std::weak_ptr<CubeMap> cubeMap);
 
 	/** @brief	Uses shader program. */
 	void useProgram();

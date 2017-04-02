@@ -11,6 +11,7 @@
 #include "../misc/Vec3.h"
 #include "../Socket.h"
 #include "../mobileUI/MobileGameUI.h"
+#include "../CubeMap.h"
 
 /** @brief	The main game state. */
 class Game : public State
@@ -56,6 +57,7 @@ private:
 
 	void toggleQRVisiblity();
 
+	std::shared_ptr<CubeMap> skyBoxCubeMap;
 	std::shared_ptr<GameModel> heightmap;
 
 	Socket* socket;

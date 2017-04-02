@@ -64,6 +64,14 @@ void GameObject::onFixedUpdate()
 	}
 }
 
+void GameObject::onPreRender()
+{
+	for (auto component : components)
+	{
+		component.second->onPreRender();
+	}
+}
+
 void GameObject::onRender()
 {
 	for (auto component : components)

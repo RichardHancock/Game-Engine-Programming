@@ -100,7 +100,7 @@ GLuint Texture::getGLTexID()
 	return texID;
 }
 
-void Texture::loadForOpenGL()
+GLenum Texture::getOpenGLTextureFormat(SDL_Surface * surface)
 {
 	GLenum textureFormat = 0;
 
@@ -130,6 +130,13 @@ void Texture::loadForOpenGL()
 	__pragma(warning(pop));
 #endif // _MSC_VER
 	//End Section
+
+	return textureFormat;
+}
+
+void Texture::loadForOpenGL()
+{
+	GLenum textureFormat = getOpenGLTextureFormat(surface);
 
 	assert(textureFormat != 0);
 

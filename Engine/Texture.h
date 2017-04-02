@@ -75,7 +75,9 @@ public:
 	 */
 	GLuint getGLTexID();
 
-private:
+	static GLenum getOpenGLTextureFormat(SDL_Surface* surface);
+
+protected:
 
 	/** @brief The surface. */
 	SDL_Surface* surface;

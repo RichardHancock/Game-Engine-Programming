@@ -40,7 +40,36 @@ void Material::addTexture(std::string name, std::weak_ptr<Texture> texture)
 		}
 	}
 
-	textures[name] = GLTextureInfo(texture, texID);
+	textures[name] = GLTextureInfo(texture, texID, GL_TEXTURE_2D);
+}
+
+void Material::addCubeMap(std::string name, std::weak_ptr<CubeMap> cubeMap)
+{
+	if (cubeMap.expired())
+	{
+		Log::logE("CubeMap passed to Material::addCubeMap is expired");
+		return;
+	}
+
+	if (textures.count(name) == 1)
+	{
+		Log::logW(name + " already exists in texture array, this may cause undefined behaviours to occur");
+	}
+
+	GLint texID = -1;
+
+	//if dummy renderer just provide a invalid texID as it won't be used
+	if (shader->getProgram() != 0)
+	{
+		texID = shader->getUniformLocation(name);
+		if (texID == -1)
+		{
+			Log::logE(name + " could not be found in the shader uniforms");
+			return;
+		}
+	}
+
+	textures[name] = GLTextureInfo(cubeMap, texID, GL_TEXTURE_CUBE_MAP);
 }
 
 void Material::useProgram()
@@ -56,7 +85,7 @@ void Material::useProgram()
 			glUniform1i(texture.second.index, currentTexUnit);
 
 			///TODO Wrap in debug wrapper
-			//Check for the maximum available texture units
+			//Check for the maximum available texture units  (TODO: Should probably only check once and save result)
 			GLint maxAvailableTexUnits = 0;
 			glGetIntegerv(GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS, &maxAvailableTexUnits);
 
@@ -65,9 +94,19 @@ void Material::useProgram()
 
 			//Activate the next available texture unit
 			glActiveTexture(GL_TEXTURE0 + currentTexUnit);
-			//Provide the texture data's ID
-			glBindTexture(GL_TEXTURE_2D, texture.second.data.lock()->getGLTexID());
+			
 
+			//Slight temporary hack until I rewrite the Texture Classes to allow non standard textures
+			if (!texture.second.cubeMap.expired())
+			{
+				//Provide the cubeMap data's ID
+				glBindTexture(texture.second.textureType, texture.second.cubeMap.lock()->getGLTexID());
+			}
+			else
+			{
+				//Provide the texture data's ID
+				glBindTexture(texture.second.textureType, texture.second.data.lock()->getGLTexID());
+			}
 
 			currentTexUnit++;
 		}

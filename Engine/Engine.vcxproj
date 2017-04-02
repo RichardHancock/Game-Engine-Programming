@@ -91,8 +91,10 @@
     <ClCompile Include="components\MeshComponent.cpp" />
     <ClCompile Include="components\MeshRenderer.cpp" />
     <ClCompile Include="components\RigidBody.cpp" />
+    <ClCompile Include="components\SkyBoxRenderer.cpp" />
     <ClCompile Include="components\SphereCollider.cpp" />
     <ClCompile Include="components\Transform.cpp" />
+    <ClCompile Include="CubeMap.cpp" />
     <ClCompile Include="GameModel.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="Graphics.cpp" />
@@ -143,8 +145,10 @@
     <ClInclude Include="components\MeshComponent.h" />
     <ClInclude Include="components\MeshRenderer.h" />
     <ClInclude Include="components\RigidBody.h" />
+    <ClInclude Include="components\SkyBoxRenderer.h" />
     <ClInclude Include="components\SphereCollider.h" />
     <ClInclude Include="components\Transform.h" />
+    <ClInclude Include="CubeMap.h" />
     <ClInclude Include="GameModel.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="Graphics.h" />

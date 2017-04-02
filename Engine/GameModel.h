@@ -7,6 +7,7 @@
 #include <assimp/postprocess.h>
 #include <SDL.h>
 #include <SDL_ttf.h>
+#include <memory>
 
 #include "Resource.h"
 #include "misc/Vertex.h"
@@ -49,6 +50,8 @@ public:
 	 @param	advVertices	The advance vertices from OBJ Loader.
 	 */
 	GameModel(std::vector<Vertex> advVertices);
+
+	static std::shared_ptr<GameModel> getCubeModel();
 
 	/** @brief	Destructor. */
 	~GameModel();

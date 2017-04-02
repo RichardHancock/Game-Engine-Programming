@@ -40,7 +40,7 @@ GameModel::GameModel(std::vector<glm::vec3>* inVertices, std::vector<glm::vec3>*
 	}
 
 	numVertices = inVertices->size();
-	
+	numIndices = 0;
 	
 	if (!Platform::isDummyRenderer())
 	{
@@ -50,6 +50,7 @@ GameModel::GameModel(std::vector<glm::vec3>* inVertices, std::vector<glm::vec3>*
 		glBindVertexArray(VAO);
 
 		addVBO(*inVertices);
+		vertices = *inVertices;
 
 		if (inNormals != nullptr)
 			addVBO(*inNormals);
@@ -58,19 +59,20 @@ GameModel::GameModel(std::vector<glm::vec3>* inVertices, std::vector<glm::vec3>*
 			addVBO(*inUvs);
 
 		if (inIndices != nullptr)
+		{
 			addIndexBuffer(*inIndices);
+			numIndices = inIndices->size();
+			indices = *inIndices;
+		}
 
 		meshes.push_back(Mesh(
-			inIndices->size(),
+			numIndices,
 			0,
 			0,
 			0
 		));
 
 		calculateAABB(*inVertices);
-
-		vertices = *inVertices;
-		indices = *inIndices;
 
 		glBindVertexArray(0);
 	}
@@ -84,6 +86,58 @@ GameModel::GameModel(std::vector<Vertex> advVertices)
 	VAO = 0;
 	
 	initModelFromAdvVertices(advVertices);
+}
+
+std::shared_ptr<GameModel> GameModel::getCubeModel()
+{
+	std::vector<glm::vec3> vertices =
+	{
+		glm::vec3(-1.0f,  1.0f, -1.0f),
+		glm::vec3(-1.0f, -1.0f, -1.0f),
+		glm::vec3(1.0f, -1.0f, -1.0f),
+		glm::vec3(1.0f, -1.0f, -1.0f),
+		glm::vec3(1.0f,  1.0f, -1.0f),
+		glm::vec3(-1.0f,  1.0f, -1.0f),
+		
+		glm::vec3(-1.0f, -1.0f,  1.0f),
+		glm::vec3(-1.0f, -1.0f, -1.0f),
+		glm::vec3(-1.0f,  1.0f, -1.0f),
+		glm::vec3(-1.0f,  1.0f, -1.0f),
+		glm::vec3(-1.0f,  1.0f,  1.0f),
+		glm::vec3(-1.0f, -1.0f,  1.0f),
+		
+		glm::vec3(1.0f, -1.0f, -1.0f),
+		glm::vec3(1.0f, -1.0f,  1.0f),
+		glm::vec3(1.0f,  1.0f,  1.0f),
+		glm::vec3(1.0f,  1.0f,  1.0f),
+		glm::vec3(1.0f,  1.0f, -1.0f),
+		glm::vec3(1.0f, -1.0f, -1.0f),
+		
+		glm::vec3(-1.0f, -1.0f,  1.0),
+		glm::vec3(-1.0f,  1.0f,  1.0),
+		glm::vec3(1.0f,  1.0f,  1.0f),
+		glm::vec3(1.0f,  1.0f,  1.0f),
+		glm::vec3(1.0f, -1.0f,  1.0f),
+		glm::vec3(-1.0f, -1.0f,  1.0f),
+		
+		glm::vec3(-1.0f,  1.0f, -1.0f),
+		glm::vec3(1.0f,  1.0f, -1.0f),
+		glm::vec3(1.0f,  1.0f,  1.0f),
+		glm::vec3(1.0f,  1.0f,  1.0f),
+		glm::vec3(-1.0f,  1.0f,  1.0f),
+		glm::vec3(-1.0f,  1.0f, -1.0f),
+		
+		glm::vec3(-1.0f, -1.0f, -1.0f),
+		glm::vec3(-1.0f, -1.0f,  1.0f),
+		glm::vec3(1.0f, -1.0f, -1.0f),
+		glm::vec3(1.0f, -1.0f, -1.0f),
+		glm::vec3(-1.0f, -1.0f,  1.0f),
+		glm::vec3(1.0f, -1.0f,  1.0f)
+	};
+
+	std::shared_ptr<GameModel> cube = std::make_shared<GameModel>(&vertices, nullptr, nullptr, nullptr);
+
+	return cube;
 }
 
 GameModel::~GameModel()

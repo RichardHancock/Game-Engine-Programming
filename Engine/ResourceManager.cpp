@@ -131,6 +131,16 @@ void ResourceManager::createMaterial(std::string materialName, std::weak_ptr<Tex
 	materials[materialName].push_back(newMaterial);
 }
 
+void ResourceManager::createMaterial(std::string materialName, std::weak_ptr<CubeMap> cubeMap, std::string vertShaderFilename, std::string fragShaderFilename)
+{
+	std::shared_ptr<Material> newMaterial = std::make_shared<Material>(
+		resourceDirPath + shaderDir + vertShaderFilename, resourceDirPath + shaderDir + fragShaderFilename);
+
+	newMaterial->addCubeMap("diffuseMap", cubeMap);
+
+	materials[materialName].push_back(newMaterial);
+}
+
 std::weak_ptr<Material> ResourceManager::getMaterial(std::string materialName, unsigned int index, bool defaultPath)
 {
 	if (defaultPath)
@@ -192,6 +202,29 @@ std::weak_ptr<GameModel> ResourceManager::getModel(std::string modelFilename, bo
 	Log::logI("Loading model: " + modelFilename);
 
 	return (useAssimp ? loadModelFromAssimp(modelFilename) : loadModelWithOBJLoader(modelFilename));
+}
+
+std::weak_ptr<GameModel> ResourceManager::getModel(ModelPrimitives primitive)
+{
+	std::string primitiveName = "primitive";
+	
+	//TODO Improve this (It's fine for now until multiple shapes are implemented)
+	switch (primitive)
+	{
+	case Cube:
+		primitiveName += "Cube";
+		
+		if (models.count(primitiveName) > 0)
+			return models[primitiveName];
+
+		std::shared_ptr<GameModel> modelData = GameModel::getCubeModel();
+		models[primitiveName] = modelData;
+
+		return modelData;
+		break;
+	}
+
+	return std::weak_ptr<GameModel>();
 }
 
 std::weak_ptr<Texture> ResourceManager::getTexture(std::string textureFilename, bool defaultPath)

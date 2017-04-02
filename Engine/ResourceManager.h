@@ -59,6 +59,18 @@ public:
 		std::string vertShaderFilename, std::string fragShaderFilename);
 
 	/**
+	@brief	Creates a material manually.
+
+	@param	materialName	  	Name of the material.
+	@param	cubeMap		  		The cubeMap (SkyBox).
+	@param	vertShaderFilename	Filename of the vertical shader file.
+	@param	fragShaderFilename	Filename of the fragment shader file.
+	*/
+	static void createMaterial(std::string materialName, std::weak_ptr<CubeMap> cubeMap,
+		std::string vertShaderFilename, std::string fragShaderFilename);
+
+
+	/**
 	 @brief	Gets the material associated with the passed in name at the index location or the first if not specified.
 	
 	 @param	materialName	Name of the material set.
@@ -79,6 +91,13 @@ public:
 	 */
 	static std::vector<std::weak_ptr<Material>> getMaterials(std::string materialName, bool defaultPath = true);
 
+
+
+	enum ModelPrimitives
+	{
+		Cube
+	};
+
 	/**
 	 @brief	Gets a model, loads the model if not already loaded.
 	
@@ -89,6 +108,16 @@ public:
 	 @return	null if it fails, else the model.
 	 */
 	static std::weak_ptr<GameModel> getModel(std::string modelFilename, bool useAssimp = true, bool defaultPath = true);
+
+	/**
+	 @brief	Gets a model of the requested shape, loads the model if not already loaded.
+	
+	 @param	primitive	The shape/primitive.
+	
+	 @return	null if it fails, else the model.
+	 */
+	static std::weak_ptr<GameModel> getModel(ModelPrimitives primitive);
+
 
 	/**
 	@brief Gets a texture, loads the texture if not already loaded.

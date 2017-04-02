@@ -17,6 +17,7 @@
 #include "../components/RigidBody.h"
 #include "../misc/debugDrawer/DebugDrawer.h"
 #include "../components/RigidBody.h"
+#include "../components/SkyBoxRenderer.h"
 
 #include "../mobileUI/QRCode.h"
 #include "../misc/Random.h"
@@ -147,7 +148,6 @@ Game::Game()
 	ResourceManager::createMaterial("red", ResourceManager::getTexture("red.png"),
 		"texturedV.glsl", "texturedF.glsl");
 
-
 	//ALL BELOW ARE LOADED WITH MY OWN OBJ LOADER
 	//spheres (Loaded using my own OBJ loader)
 	auto light = GameObject::create("light").lock();
@@ -183,7 +183,41 @@ Game::Game()
 		ResourceManager::getMaterial("red" , 0, false)
 	);
 	sphere->addComponent<SphereCollider>("SphereCollider");
+	//END OF LOADING USING MY OBJ LOADER
+	
 
+	//MODELS LOADED USING PRIMITIVES
+	//SkyBox
+	/*skyBoxCubeMap = std::make_shared<CubeMap>(
+		"resources/textures/cloudtop_rt.png",
+		"resources/textures/cloudtop_lf.png",
+		"resources/textures/cloudtop_up.png",
+		"resources/textures/cloudtop_dn.png",
+		"resources/textures/cloudtop_bk.png",
+		"resources/textures/cloudtop_ft.png"
+		);*/
+	skyBoxCubeMap = std::make_shared<CubeMap>(
+		"resources/textures/space/right.png",
+		"resources/textures/space/left.png",
+		"resources/textures/space/top.png",
+		"resources/textures/space/bottom.png",
+		"resources/textures/space/back.png",
+		"resources/textures/space/front.png"
+		);
+
+	ResourceManager::createMaterial("BlueSkyBox", skyBoxCubeMap, "skyBoxV.glsl", "skyBoxF.glsl");
+
+	auto skyBox = GameObject::create("SkyBox").lock();
+
+	skyBox->addComponent<Transform>("Transform");
+	//Add primitive cube
+	skyBox->addComponent<MeshComponent>("MeshComponent").lock()->setMesh(
+		ResourceManager::getModel(ResourceManager::ModelPrimitives::Cube)
+	);
+
+	skyBox->addComponent<SkyBoxRenderer>("Sky").lock()->setMaterial(
+		ResourceManager::getMaterial("BlueSkyBox", 0, false)
+	);
 	
 	//socket = new Socket("localhost", 8080);
 
@@ -315,6 +349,14 @@ void Game::update()
 
 void Game::render()
 {
+	//preRender (Currently only used for the skybox)
+	for (auto object : GameVariables::data->gameObjs)
+	{
+		object.second->onPreRender();
+	}
+
+
+	//onRender
 	for (auto object : GameVariables::data->gameObjs)
 	{
 		object.second->onRender();
@@ -328,7 +370,7 @@ void Game::movementControls()
 	std::shared_ptr<Transform> object = GameVariables::data->gameObjs["fighter"]->getComponent<Transform>().lock();
 
 	//Pre-compute the move distance
-	const float speed = 500.0f;
+	const float speed = 5000.0f;
 	float speedDT = speed * DeltaTime::getDT();
 	glm::vec3 forward = object->getForwardVector();
 	glm::vec3 right = object->getRightVector();
@@ -364,7 +406,7 @@ void Game::movementControls()
 		objectRB->applyForce(speedDT * forward);
 	}
 
-	float speedRadians = Utility::convertAngleToRadian(speedDT / 10.0f);
+	float speedRadians = Utility::convertAngleToRadian(speedDT / 100.0f);
 
 	//rotate along object along x
 	if (InputManager::isKeyHeld(SDLK_UP))
