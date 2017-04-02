@@ -10,9 +10,13 @@ class CollisionShape : public Component
 {
 public:
 
+	~CollisionShape();
+
 	bool generateStaticMeshShape();
 
 	bool generateConvexMeshShape();
+
+	bool generateBoxShape();
 
 	btCollisionShape* getShape();
 private:

@@ -12,6 +12,8 @@ class RigidBody : public Component
 public:
 	RigidBody();
 
+	~RigidBody();
+
 	void setPosition(glm::vec3 newPos);
 
 	void setRotation(btQuaternion& newRotation);

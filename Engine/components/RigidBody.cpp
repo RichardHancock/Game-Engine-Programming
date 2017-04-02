@@ -14,6 +14,14 @@ RigidBody::RigidBody()
 	//position = btVector3(0, 0, 0);
 }
 
+RigidBody::~RigidBody()
+{
+	Physics::removeRigidBody(rigidBody);
+
+	delete rigidBody;
+	delete motionState;
+}
+
 
 void RigidBody::setPosition(glm::vec3 newPos)
 {

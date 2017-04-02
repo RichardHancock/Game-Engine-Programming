@@ -18,6 +18,7 @@
 #include "../misc/debugDrawer/DebugDrawer.h"
 #include "../components/RigidBody.h"
 #include "../components/SkyBoxRenderer.h"
+#include "../components/ShipController.h"
 
 #include "../mobileUI/QRCode.h"
 #include "../misc/Random.h"
@@ -94,6 +95,8 @@ Game::Game()
 	rbGameO->init(20.0f, glm::vec3(10.0f));
 	rbGameO->setDamping(0.5f, 0.8f);
 
+	gameO->addComponent<ShipController>("ShipController");
+
 
 	auto ship = GameObject::create("ship").lock();
 	auto transform2 = ship->addComponent<Transform>("Transform").lock();
@@ -127,20 +130,6 @@ Game::Game()
 	earth->addComponent<CollisionShape>("CollisionShape").lock()->generateStaticMeshShape();
 	auto rbEarth = earth->addComponent<RigidBody>("RigidBody").lock();
 	rbEarth->init(0.0f, glm::vec3(0.0f));
-
-
-	auto flatPlane = GameObject::create("bg").lock();
-	auto transform4 = flatPlane->addComponent<Transform>("Transform").lock();
-	transform4->setPosition(glm::vec3(-20.0f, 50.0f, -350.0f));
-	transform4->setEulerRotation(glm::vec3(Utility::HALF_PI, 0.0f, 0.0f));
-	transform4->setScale(glm::vec3(100));
-
-	flatPlane->addComponent<MeshComponent>("MeshComponent").lock()->setMesh(
-		ResourceManager::getModel("flatPlane.obj"));
-
-	flatPlane->addComponent<MeshRenderer>("MeshRenderer").lock()->setMaterials(
-		ResourceManager::getMaterials("flatPlane.obj")
-	);
 
 
 	ResourceManager::createMaterial("blue", ResourceManager::getTexture("blue.png"),
@@ -224,13 +213,11 @@ Game::Game()
 	DebugDrawer::setPointSize(15.0f);
 
 
-	gameO->onAwake();
-	ship->onAwake();
-	earth->onAwake();
-	flatPlane->onAwake();
-	light->onAwake();
-	sphere->onAwake();
-	cameraObj->onAwake();
+	//Loading finished trigger onAwake
+	for (auto gameObj : GameVariables::data->gameObjs)
+	{
+		gameObj.second->onAwake();
+	}
 }
 
 Game::~Game()
@@ -314,7 +301,7 @@ void Game::update()
 
 
 	//GameVariables::data->gameObjs["fighter"]->getComponent<Transform>("Transform").lock()->rotate(glm::vec3(0.0f, 1.0f * DeltaTime::getDT(), 0.0f));
-	GameVariables::data->gameObjs["earth"]->getComponent<Transform>("Transform").lock()->rotate(glm::vec3(0.0f, 0.5f * DeltaTime::getDT(), 0.0f));
+	GameVariables::data->gameObjs["earth"]->getComponent<Transform>("Transform").lock()->rotate(glm::vec3(0.0f, 0.01f * DeltaTime::getDT(), 0.0f));
 
 	//socket->recvMsg();
 
@@ -339,12 +326,25 @@ void Game::update()
 
 	movementControls();
 
+
+	//Game Object Update (should later be moved to a central area)
+	std::vector<std::string> gameObjsToDelete;
+	
 	for (auto object : GameVariables::data->gameObjs)
 	{
 		object.second->onUpdate();
+		
+		//Check if objects delete flag has been set
+		if (object.second->checkDeleteFlag())
+			gameObjsToDelete.push_back(object.first);
 	}
 
-	mobileUIUpdate();
+	for (std::string objectName : gameObjsToDelete)
+	{
+		GameVariables::data->gameObjs.erase(objectName);
+	}
+
+	//mobileUIUpdate();
 }
 
 void Game::render()
@@ -366,87 +366,6 @@ void Game::render()
 
 void Game::movementControls()
 {
-	std::shared_ptr<RigidBody> objectRB = GameVariables::data->gameObjs["fighter"]->getComponent<RigidBody>().lock();
-	std::shared_ptr<Transform> object = GameVariables::data->gameObjs["fighter"]->getComponent<Transform>().lock();
-
-	//Pre-compute the move distance
-	const float speed = 5000.0f;
-	float speedDT = speed * DeltaTime::getDT();
-	glm::vec3 forward = object->getForwardVector();
-	glm::vec3 right = object->getRightVector();
-	glm::vec3 up = object->getUpVector();
-
-	//move along object along x
-	if (InputManager::isKeyHeld(SDLK_a))
-	{
-		objectRB->applyForce(-speedDT * right);
-	}
-	else if (InputManager::isKeyHeld(SDLK_d))
-	{
-		objectRB->applyForce(speedDT * right);
-	}
-
-	//move object along y
-	if (InputManager::isKeyHeld(SDLK_q))
-	{
-		objectRB->applyForce(-speedDT * up);
-	}
-	else if (InputManager::isKeyHeld(SDLK_e))
-	{
-		objectRB->applyForce(speedDT * up);
-	}
-
-	//move object along z
-	if (InputManager::isKeyHeld(SDLK_w))
-	{
-		objectRB->applyForce(-speedDT * forward);
-	}
-	if (InputManager::isKeyHeld(SDLK_s))
-	{
-		objectRB->applyForce(speedDT * forward);
-	}
-
-	float speedRadians = Utility::convertAngleToRadian(speedDT / 100.0f);
-
-	//rotate along object along x
-	if (InputManager::isKeyHeld(SDLK_UP))
-	{
-		object->rotate(glm::vec3(speedRadians, 0, 0));
-	}
-	else if (InputManager::isKeyHeld(SDLK_DOWN))
-	{
-		object->rotate(glm::vec3(-speedRadians, 0, 0));
-	}
-	//rotate object along y
-	if (InputManager::isKeyHeld(SDLK_LEFT))
-	{
-		object->rotate(glm::vec3(0, speedRadians, 0));
-	}
-	if (InputManager::isKeyHeld(SDLK_RIGHT))
-	{
-		object->rotate(glm::vec3(0, -speedRadians, 0));
-	}
-	//rotate object along z
-	if (InputManager::isKeyHeld(SDLK_k))
-	{
-		object->rotate(glm::vec3(0, 0, speedRadians));
-	}
-	if (InputManager::isKeyHeld(SDLK_l))
-	{
-		object->rotate(glm::vec3(0, 0, -speedRadians));
-	}
-
-	//Controller Movement
-	if (InputManager::isControllerAxisInUse(0, Controller::Axis2D::LeftStick))
-	{
-		object->translate(glm::vec3(
-			InputManager::getControllerAxis2D(0, Controller::Axis2D::LeftStick).x * speed * DeltaTime::getDT(),
-			0.0f, 
-			InputManager::getControllerAxis2D(0, Controller::Axis2D::LeftStick).y * speed * DeltaTime::getDT()));
-	}
-
-
-
 	//Check if any collisions are active with the light
 	if (GameVariables::data->gameObjs["light"]->getComponent<SphereCollider>().lock()->isColliding())
 	{

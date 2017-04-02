@@ -5,6 +5,11 @@
 #include "MeshComponent.h"
 #include "../misc/Utility.h"
 
+CollisionShape::~CollisionShape()
+{
+	delete shape;
+}
+
 bool CollisionShape::generateStaticMeshShape()
 {
 	std::weak_ptr<MeshComponent> meshWrapRef = getGameObject().lock()->getComponent<MeshComponent>("MeshComponent");
@@ -68,7 +73,7 @@ bool CollisionShape::generateStaticMeshShape()
 	shape = std::make_shared<btBvhTriangleMeshShape>(shapeRaw, true);
 	*/
 	
-	btTriangleMesh* triangles = new btTriangleMesh();
+	btTriangleMesh* triangles = new btTriangleMesh(); //TODO Possible mem leak
 	
 	if (indicesAvailable)
 	{
@@ -146,7 +151,7 @@ bool CollisionShape::generateConvexMeshShape()
 		indicesAvailable = false;
 
 
-	btTriangleMesh* triangles = new btTriangleMesh();
+	btTriangleMesh* triangles = new btTriangleMesh(); //TODO Possible mem leak
 
 	if (indicesAvailable)
 	{
@@ -173,6 +178,37 @@ bool CollisionShape::generateConvexMeshShape()
 
 	btConvexTriangleMeshShape* rawShape = new btConvexTriangleMeshShape(triangles);
 	shape = rawShape;
+
+	return true;
+}
+
+bool CollisionShape::generateBoxShape()
+{
+	std::weak_ptr<MeshComponent> meshWrapRef = getGameObject().lock()->getComponent<MeshComponent>("MeshComponent");
+
+	if (meshWrapRef.expired())
+	{
+		Log::logW("Cannot generate a Mesh Collision shape with no MeshComponent attached to game object.");
+		return false;
+	}
+
+	std::shared_ptr<MeshComponent> meshWrap = meshWrapRef.lock();
+
+	//Model Check
+	std::weak_ptr<GameModel> modelRef = meshWrap->getMesh();
+
+	if (modelRef.expired())
+	{
+		Log::logW("Cannot generate a Mesh Collision shape with no Mesh attached to game object's Mesh Component.");
+		return false;
+	}
+
+
+	std::shared_ptr<GameModel> model = modelRef.lock();
+
+	btBoxShape* boxShape = new btBoxShape(Utility::glmToBulletVec3(model->getAABB().halfSize));
+
+	shape = boxShape;
 
 	return true;
 }

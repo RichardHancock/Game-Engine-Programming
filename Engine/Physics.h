@@ -11,9 +11,13 @@ public:
 
 	static void init();
 
+	static void cleanup();
+
 	static btDiscreteDynamicsWorld* getWorld();
 
 	static void addRigidBody(btRigidBody* rigidBody);
+
+	static void removeRigidBody(btRigidBody* rigidBody);
 
 private:
 

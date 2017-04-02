@@ -39,6 +39,18 @@ void Physics::init()
 	world->setDebugDrawer((btIDebugDraw*)debug);
 }
 
+void Physics::cleanup()
+{
+	delete world;
+	world = nullptr;
+	delete debug;
+	debug = nullptr;
+	delete solver;
+	delete dispatcher;
+	delete collisionConfiguration;
+	delete broadphase;
+}
+
 btDiscreteDynamicsWorld* Physics::getWorld()
 {
 	return world;
@@ -46,5 +58,12 @@ btDiscreteDynamicsWorld* Physics::getWorld()
 
 void Physics::addRigidBody(btRigidBody* rigidBody)
 {
-	world->addRigidBody(rigidBody);
+	if (world != nullptr)
+		world->addRigidBody(rigidBody);
+}
+
+void Physics::removeRigidBody(btRigidBody * rigidBody)
+{
+	if (world != nullptr)
+		world->removeRigidBody(rigidBody);
 }

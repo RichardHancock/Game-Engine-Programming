@@ -143,6 +143,7 @@ int main(int argc, char *argv[])
 	DebugDrawer::cleanup();
 	InputManager::cleanup();
 	ResourceManager::cleanUp();
+	Physics::cleanup();
 	Log::cleanup();
 	Platform::cleanup();
 

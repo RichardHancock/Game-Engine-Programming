@@ -57,10 +57,12 @@ public:
 	 @brief	Creates a new game object 
 	
 	 @param	name	The name.
+	 @param makeUnique  If true it will append a random number string to the end of the name, 
+		this will make it impossible to find in arrays.
 	
 	 @return	reference to new game object
 	 */
-	static std::weak_ptr<GameObject> create(std::string name);
+	static std::weak_ptr<GameObject> create(std::string name, bool makeUnique = false);
 
 	/**
 	@brief	Adds a component.
@@ -146,6 +148,9 @@ public:
 	 */
 	void setName(std::string newName);
 
+	bool checkDeleteFlag();
+
+	void setDeleteFlag();
 
 	/** @brief	Executes the awake action. */
 	virtual void onAwake();
@@ -173,5 +178,7 @@ private:
 
 	/** @brief	Name of the Game Object. */
 	std::string name;
+
+	bool deleteFlag;
 
 };

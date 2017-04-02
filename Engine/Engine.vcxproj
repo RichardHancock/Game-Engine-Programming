@@ -87,10 +87,12 @@
     <ClCompile Include="components\Collider.cpp" />
     <ClCompile Include="components\CollisionShape.cpp" />
     <ClCompile Include="components\Component.cpp" />
+    <ClCompile Include="components\ExpiryTimer.cpp" />
     <ClCompile Include="components\Light.cpp" />
     <ClCompile Include="components\MeshComponent.cpp" />
     <ClCompile Include="components\MeshRenderer.cpp" />
     <ClCompile Include="components\RigidBody.cpp" />
+    <ClCompile Include="components\ShipController.cpp" />
     <ClCompile Include="components\SkyBoxRenderer.cpp" />
     <ClCompile Include="components\SphereCollider.cpp" />
     <ClCompile Include="components\Transform.cpp" />
@@ -141,10 +143,12 @@
     <ClInclude Include="components\Collider.h" />
     <ClInclude Include="components\CollisionShape.h" />
     <ClInclude Include="components\Component.h" />
+    <ClInclude Include="components\ExpiryTimer.h" />
     <ClInclude Include="components\Light.h" />
     <ClInclude Include="components\MeshComponent.h" />
     <ClInclude Include="components\MeshRenderer.h" />
     <ClInclude Include="components\RigidBody.h" />
+    <ClInclude Include="components\ShipController.h" />
     <ClInclude Include="components\SkyBoxRenderer.h" />
     <ClInclude Include="components\SphereCollider.h" />
     <ClInclude Include="components\Transform.h" />
