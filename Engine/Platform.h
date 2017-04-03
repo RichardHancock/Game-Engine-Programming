@@ -82,8 +82,18 @@ public:
 	 */
 	static void loadSettingsFromFile(std::string org, std::string app, std::string resourceDir);
 
+	/**
+	 @brief	Gets current renderer.
+	
+	 @return	The current renderer.
+	 */
 	static Renderer getCurrentRenderer();
 
+	/**
+	 @brief	Query if the current renderer is dummy renderer.
+	
+	 @return	True if dummy renderer, false if not.
+	 */
 	static bool isDummyRenderer();
 
 	/**
@@ -130,10 +140,17 @@ private:
 	/** @brief Size of the window. */
 	static Vec2 windowSize;
 
+	/** @brief	The current renderer. */
 	static Renderer currentRenderer;
 	
 	//Version Number
+	/**
+	 @brief	SDL Version number to string converter.
 	
+	 @param [in,out]	version	If non-null, the version.
+	
+	 @return	A std::string.
+	 */
 	static std::string versionStringConverter(SDL_version* version);
 
 	/** 

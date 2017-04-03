@@ -47,6 +47,7 @@ public:
 	 */
 	void setMaterials(std::vector<std::weak_ptr<Material>> newMaterials);
 
+	/** @brief	Toggle visibility of the model. */
 	void toggleVisibility();
 
 	/** @brief	Executes the render action. */
@@ -54,6 +55,7 @@ public:
 
 private:
 
+	/** @brief	True to show, false to hide. */
 	bool visible;
 
 	/** @brief	The referenced materials. */

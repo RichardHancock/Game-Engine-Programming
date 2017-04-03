@@ -148,8 +148,14 @@ public:
 	 */
 	void setName(std::string newName);
 
+	/**
+	 @brief	Determines if delete flag has been set.
+	
+	 @return	True if set, false if not.
+	 */
 	bool checkDeleteFlag();
 
+	/** @brief	Sets delete flag. */
 	void setDeleteFlag();
 
 	/** @brief	Executes the awake action. */
@@ -189,6 +195,7 @@ private:
 	/** @brief	Name of the Game Object. */
 	std::string name;
 
+	/** @brief	True if game object should be deleted. */
 	bool deleteFlag;
 
 };

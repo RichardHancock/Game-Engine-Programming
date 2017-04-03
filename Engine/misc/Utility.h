@@ -104,9 +104,31 @@ namespace Utility
 	 */
 	glm::vec3 vec3ToGLM(Vec3 vector);
 
+	/**
+	 @brief	Bullet vector 3 to glm.
+	
+	 @param	vector	The vector.
+	
+	 @return	A glm::vec3.
+	 */
 	glm::vec3 bulletVec3ToGLM(const btVector3& vector);
+
+	/**
+	 @brief	Bullet vector 3 to glm.
+	
+	 @param [in,out]	vector	The vector.
+	
+	 @return	A glm::vec3.
+	 */
 	glm::vec3 bulletVec3ToGLM(btVector3& vector);
 
+	/**
+	 @brief	Glm to bullet vector 3.
+	
+	 @param [in,out]	vec3	The vector.
+	
+	 @return	A btVector3.
+	 */
 	btVector3 glmToBulletVec3(glm::vec3& vec3);
 	
 	/**
@@ -210,8 +232,16 @@ namespace Utility
 	 @return A SDL_Colour.
 	 */
 	SDL_Colour newSDLColour(uint8_t r, uint8_t g, uint8_t b, uint8_t a);
-	
 
+	/**
+	 @brief	Calculates the face normal.
+	
+	 @param [in,out]	a	Vertex 1.
+	 @param [in,out]	b	Vertex 2.
+	 @param [in,out]	c	Vertex 3.
+	
+	 @return	The calculated face normal.
+	 */
 	glm::vec3 calculateFaceNormal(glm::vec3& a, glm::vec3& b, glm::vec3& c);
 
 	//Timer Management

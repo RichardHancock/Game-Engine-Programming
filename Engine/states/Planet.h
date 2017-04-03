@@ -2,6 +2,7 @@
 
 #include "State.h"
 
+/** @brief	A planet. */
 class PlanetState : public State
 {
 public:
@@ -29,6 +30,9 @@ public:
 	virtual void render();
 protected:
 
+	/** @brief	The sky box's cube map. */
 	std::shared_ptr<CubeMap> skyBoxCubeMap;
+
+	/** @brief	The heightmap. */
 	std::shared_ptr<GameModel> heightmap;
 };

@@ -33,6 +33,7 @@ public:
 	*/
 	Texture(SDL_Surface* surface, bool loadOpenGL = true);
 
+	/** @brief	Destructor. */
 	~Texture();
 
 	/**
@@ -75,6 +76,13 @@ public:
 	 */
 	GLuint getGLTexID();
 
+	/**
+	 @brief	Gets OpenGL texture format.
+	
+	 @param [in]	surface	If non-null, the surface.
+	
+	 @return	The OpenGL texture format.
+	 */
 	static GLenum getOpenGLTextureFormat(SDL_Surface* surface);
 
 protected:

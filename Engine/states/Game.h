@@ -55,8 +55,10 @@ private:
 
 	//void toggleQRVisiblity();
 
+	/** @brief	The sky box's cube map. */
 	std::shared_ptr<CubeMap> skyBoxCubeMap;
 
+	/** @brief	The socket (not Used currently). */
 	Socket* socket;
 
 

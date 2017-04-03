@@ -17,6 +17,7 @@ public:
 
 	friend class GameObject;
 
+	/** @brief	Default constructor. */
 	Transform();
 
 	/** @brief	Destructor. */
@@ -37,7 +38,7 @@ public:
 	btQuaternion getRotation();
 
 	/**
-	@brief	Gets the current world space rotation.
+	@brief	Gets the current world space rotation in Euler Angles.
 
 	@return	The rotation.
 	*/
@@ -54,19 +55,19 @@ public:
 	 @brief	Sets the position relative to parents.
 	
 	 @param	position	 	The position.
-	 @param	updatePhysics	(Optional) True to update physics.
+	 @param	updatePhysics	(Optional) True to update physics (Usually Leave this on).
 	 */
 	void setPosition(glm::vec3 position, bool updatePhysics = true);
 
 	/**
-	@brief	Sets the rotation relative to parents.
+	@brief	Sets the rotation using Euler Angles.
 
 	@param	rotation	The rotation.
 	*/
 	void setEulerRotation(glm::vec3 rotation);
 
 	/**
-	@brief	Sets the rotation relative to parents.
+	@brief	Sets the rotation.
 
 	@param	rotation	The rotation.
 	*/
@@ -100,15 +101,6 @@ public:
 	 @param	worldPosition	The world position.
 	 */
 	void lookAt(glm::vec3 worldPosition);
-
-	/**
-	 @brief	Rotate around position.
-	
-	 @param	centerPoint	The center point.
-	 @param	rotateAxis 	The rotate axis. EX Vec3(1.0f,0.0f,0.0f) for X axis
-	 @param	amount	   	The amount to rotate by.
-	 */
-	//void rotateAroundPos(glm::vec3 centerPoint, glm::vec3 rotateAxis, float amount);
 
 	/**
 	 @brief	Gets forward vector.
@@ -182,12 +174,15 @@ private:
 	/** @brief	The local rotation. */
 	//glm::vec3 localRotation;
 	
+	/** @brief	The quaternion rotation. */
 	btQuaternion quat;
 
 	/** @brief	The local scale. */
 	glm::vec3 localScale;
 
 	//A Bad hack to get lookAts working, otherwise would require full redesign of Transform class
+	/** @brief	The look at matrix. */
 	glm::mat4 lookAtMat;
+	/** @brief	True to use look at else generate matrix from transform components. */
 	bool useLookAt;
 };

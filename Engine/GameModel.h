@@ -51,6 +51,11 @@ public:
 	 */
 	GameModel(std::vector<Vertex> advVertices);
 
+	/**
+	 @brief	Gets cube primitive model.
+	
+	 @return	The cube model.
+	 */
 	static std::shared_ptr<GameModel> getCubeModel();
 
 	/** @brief	Destructor. */
@@ -107,8 +112,18 @@ public:
 	 */
 	AABB getAABB();
 
+	/**
+	 @brief	Gets the vertices.
+	
+	 @return	The vertices.
+	 */
 	std::vector<glm::vec3>& getVertices() { return vertices; }
 
+	/**
+	 @brief	Gets the indices.
+	
+	 @return	The indices.
+	 */
 	std::vector<unsigned int>& getIndices() { return indices; }
 private:
 
@@ -192,7 +207,9 @@ private:
 	/** @brief	The sub-meshes. */
 	std::vector<Mesh> meshes;
 
+	/** @brief	The vertices. */
 	std::vector<glm::vec3> vertices;
+	/** @brief	The indices. */
 	std::vector<unsigned int> indices;
 
 	/** @brief	Number of indices. */

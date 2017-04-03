@@ -1,5 +1,6 @@
 #pragma once
 
+/** @brief	A random number generation class. */
 class Random
 {
 public:
@@ -36,5 +37,6 @@ public:
 
 private:
 
+	/** @brief	True if initialized. */
 	static bool initialized;
 };

@@ -93,6 +93,7 @@ public:
 
 
 
+	/** @brief	Values that represent model primitives. */
 	enum ModelPrimitives
 	{
 		Cube

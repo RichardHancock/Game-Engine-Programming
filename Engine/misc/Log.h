@@ -23,8 +23,18 @@ public:
 		D  ///< Debug
 	};
 
+	/**
+	 @brief	Initialises the Log System.
+	
+	 @param	fileOutput	True for file output.
+	 @param	org		  	The organisation.
+	 @param	app		  	The application.
+	
+	 @return	True if it succeeds, false if it fails.
+	 */
 	static bool init(bool fileOutput, std::string org, std::string app);
 
+	/** @brief	Clean-ups this Log System. */
 	static void cleanup();
 
 	/**
@@ -71,9 +81,11 @@ public:
 
 private:
 	
+	/** @brief	True if initialized. */
 	static bool initialized;
 
 	static std::string convertSDL_LogPriority(SDL_LogPriority priority);
 
+	/** @brief	The log file. */
 	static std::ofstream logFile;
 };
