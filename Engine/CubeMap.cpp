@@ -6,18 +6,19 @@
 
 #include "misc/Log.h"
 #include "Texture.h"
+#include "ResourceManager.h"
 
 CubeMap::CubeMap(std::string rightFacePath, std::string leftFacePath, std::string topFacePath, std::string bottomFacePath, std::string backFacePath, std::string frontFacePath)
 {
 	std::vector<SDL_Surface*> surfaces;
 	surfaces.reserve(SIDES_OF_CUBE);
 
-	surfaces.push_back(loadSurface(rightFacePath));
-	surfaces.push_back(loadSurface(leftFacePath));
-	surfaces.push_back(loadSurface(topFacePath));
-	surfaces.push_back(loadSurface(bottomFacePath));
-	surfaces.push_back(loadSurface(backFacePath));
-	surfaces.push_back(loadSurface(frontFacePath));
+	surfaces.push_back(loadSurface(ResourceManager::getResourceDirPath() + rightFacePath));
+	surfaces.push_back(loadSurface(ResourceManager::getResourceDirPath() + leftFacePath));
+	surfaces.push_back(loadSurface(ResourceManager::getResourceDirPath() + topFacePath));
+	surfaces.push_back(loadSurface(ResourceManager::getResourceDirPath() + bottomFacePath));
+	surfaces.push_back(loadSurface(ResourceManager::getResourceDirPath() + backFacePath));
+	surfaces.push_back(loadSurface(ResourceManager::getResourceDirPath() + frontFacePath));
 
 	glGenTextures(1, &texID);
 	glActiveTexture(GL_TEXTURE0);
