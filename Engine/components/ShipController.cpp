@@ -128,7 +128,9 @@ void ShipController::fireRocket()
 	auto rocketT = rocket->addComponent<Transform>("Transform").lock();
 
 	rocketT->setPosition(shipTransform->getPosition() + (shipTransform->getUpVector() * -15.0f));
-	rocketT->setRotation(shipTransform->getRotation());
+	
+	btQuaternion quat = shipTransform->getRotation();
+	rocketT->setRotation(quat);
 
 	rocket->addComponent<MeshComponent>("MeshComponent").lock()
 		->setMesh(ResourceManager::getModel("rocket.obj"));

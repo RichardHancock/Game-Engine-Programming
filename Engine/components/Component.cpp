@@ -41,7 +41,7 @@ void Component::onPreRender()
 {
 }
 
-void Component::onCollision(std::string objAName, std::string objBName, glm::vec3 contactPoint)
+void Component::onCollision(std::string, std::string, glm::vec3)
 {
 }
 

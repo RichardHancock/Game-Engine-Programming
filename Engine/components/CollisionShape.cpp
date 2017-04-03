@@ -208,7 +208,8 @@ bool CollisionShape::generateBoxShape()
 
 	std::shared_ptr<GameModel> model = modelRef.lock();
 
-	btBoxShape* boxShape = new btBoxShape(Utility::glmToBulletVec3(model->getAABB().halfSize));
+	glm::vec3 halfAABBSize = model->getAABB().halfSize;
+	btBoxShape* boxShape = new btBoxShape(Utility::glmToBulletVec3(halfAABBSize));
 
 	shape = boxShape;
 

@@ -18,7 +18,7 @@ RigidBody::~RigidBody()
 {
 	Physics::removeRigidBody(rigidBody);
 
-	delete rigidBody->getUserPointer();
+	delete (std::string*)rigidBody->getUserPointer();
 	delete rigidBody;
 	delete motionState;
 }
@@ -97,7 +97,9 @@ void RigidBody::init(float weight, glm::vec3 inertia)
 	}*/
 
 	auto collisionShape = collisionShapeRef;
-	collisionShape->setLocalScaling(Utility::glmToBulletVec3(transform->getScale()));
+
+	glm::vec3 localScale = transform->getScale();
+	collisionShape->setLocalScaling(Utility::glmToBulletVec3(localScale));
 
 	btRigidBody::btRigidBodyConstructionInfo rigidBodyInfo(
 		weight, motionState, collisionShape, Utility::glmToBulletVec3(inertia)

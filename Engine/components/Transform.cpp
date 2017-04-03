@@ -161,7 +161,8 @@ glm::mat4 Transform::getTransformMat()
 	}
 	else
 	{
-		return buildTransformMat(getPosition(), getRotation(), getScale());
+		btQuaternion quatRotation = getRotation();
+		return buildTransformMat(getPosition(), quatRotation, getScale());
 	}
 }
 

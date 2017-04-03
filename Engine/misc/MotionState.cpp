@@ -40,5 +40,7 @@ void MotionState::setWorldTransform(const btTransform& worldTrans)
 	//rotation.y = -rotation.y;
 
 	//transform->setRotation(Utility::bulletVec3ToGLM(quat.getAxis() * quat.getAngleShortestPath()));
-	transform->setRotation(worldTrans.getRotation());
+	
+	btQuaternion quat = worldTrans.getRotation();
+	transform->setRotation(quat);
 }
