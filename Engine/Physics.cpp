@@ -113,7 +113,7 @@ void Physics::update()
 
 			GameVariables::data->gameObjs[*obAName]->onCollision(*obAName, *obBName, Utility::bulletVec3ToGLM(point.getPositionWorldOnA()));
 			GameVariables::data->gameObjs[*obBName]->onCollision(*obBName, *obAName, Utility::bulletVec3ToGLM(point.getPositionWorldOnB()));
-			Log::logI("Collision: A: " + *obAName + ", B: " + *obBName);
+			//Log::logI("Collision: A: " + *obAName + ", B: " + *obBName);
 		}
 	}
 }
