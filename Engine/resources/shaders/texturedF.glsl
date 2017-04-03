@@ -10,7 +10,7 @@ void main()
 {
 	vec2 flipTexCoord = vec2(vTexCoord.x, 1.0 - vTexCoord.y);
 
-	vec3 diffuseColour = texture2D(diffuseMap, flipTexCoord).xyz;
+	vec3 diffuseColour = texture(diffuseMap, flipTexCoord).xyz;
 
 	fragColour = vec4( diffuseColour, 1.0f);
 }
