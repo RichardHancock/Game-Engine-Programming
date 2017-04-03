@@ -8,6 +8,7 @@
 #include "MeshRenderer.h"
 #include "../ResourceManager.h"
 #include "ExpiryTimer.h"
+#include "ExplosiveCollision.h"
 
 ShipController::ShipController()
 	: reloadTimer(0.0f)
@@ -126,7 +127,7 @@ void ShipController::fireRocket()
 	auto rocket = GameObject::create("Rocket", true).lock();
 	auto rocketT = rocket->addComponent<Transform>("Transform").lock();
 
-	rocketT->setPosition(shipTransform->getPosition() + (shipTransform->getUpVector() * -10.0f));
+	rocketT->setPosition(shipTransform->getPosition() + (shipTransform->getUpVector() * -15.0f));
 	rocketT->setRotation(shipTransform->getRotation());
 
 	rocket->addComponent<MeshComponent>("MeshComponent").lock()
@@ -140,7 +141,9 @@ void ShipController::fireRocket()
 
 	auto rocketRB = rocket->addComponent<RigidBody>("RigidBody").lock();
 	rocketRB->init(0.1f, glm::vec3(0.1f));
-	rocketRB->applyForce(rocketT->getForwardVector() * -30.0f);
+	rocketRB->applyForce(rocketT->getForwardVector() * -10.0f);
 
 	rocket->addComponent<ExpiryTimer>("ExpiryTimer").lock()->startExpiryTimer(7.0f);
+
+	rocket->addComponent<ExplosiveCollision>("ExplosiveCollision");
 }

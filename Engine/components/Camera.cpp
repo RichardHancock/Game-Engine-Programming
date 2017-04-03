@@ -31,6 +31,6 @@ glm::mat4 Camera::getTransformMat()
 void Camera::onAwake()
 {
 	//Set to a basic Perspective matrix
-	projMatrix = glm::perspective(45.0f, Platform::getWindowSize().x / Platform::getWindowSize().y, 0.1f, 1000.0f);
+	projMatrix = glm::perspective(45.0f, Platform::getWindowSize().x / Platform::getWindowSize().y, 0.1f, 10000.0f);
 }
 

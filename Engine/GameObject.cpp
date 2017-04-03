@@ -104,6 +104,14 @@ void GameObject::onPreRender()
 	}
 }
 
+void GameObject::onCollision(std::string objAName, std::string objBName, glm::vec3 contactPoint)
+{
+	for (auto component : components)
+	{
+		component.second->onCollision(objAName, objBName, contactPoint);
+	}
+}
+
 void GameObject::onRender()
 {
 	for (auto component : components)

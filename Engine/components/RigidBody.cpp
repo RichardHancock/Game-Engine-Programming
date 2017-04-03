@@ -18,6 +18,7 @@ RigidBody::~RigidBody()
 {
 	Physics::removeRigidBody(rigidBody);
 
+	delete rigidBody->getUserPointer();
 	delete rigidBody;
 	delete motionState;
 }
@@ -97,10 +98,8 @@ void RigidBody::init(float weight, glm::vec3 inertia)
 	);
 
 	rigidBody = new btRigidBody(rigidBodyInfo);
-	
-	//rigidBody->rot
-	//rigidBody->setRestitution(1.0f);
-	
+	rigidBody->setUserPointer(new std::string(getGameObject().lock()->getName()));
+	rigidBody->setRestitution(0.5f);
 
 	Physics::addRigidBody(rigidBody);
 }

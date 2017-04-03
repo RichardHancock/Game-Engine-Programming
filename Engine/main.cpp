@@ -95,6 +95,7 @@ int main(int argc, char *argv[])
 		//Calculate deltaTime
 		DeltaTime::update();
 
+		Physics::update();
 
 		Utility::Timer::update();
 

@@ -164,7 +164,17 @@ public:
 	/** @brief	Executes the fixed update action. */
 	virtual void onFixedUpdate();
 
+	/** @brief	Executes the pre render action. */
 	virtual void onPreRender();
+
+	/**
+	 @brief	Executes the collision action.
+	
+	 @param	objAName		Name of the object a.
+	 @param	objBName		Name of the object b.
+	 @param	contactPoint	The contact point.
+	 */
+	virtual void onCollision(std::string objAName, std::string objBName, glm::vec3 contactPoint);
 
 	/** @brief	Executes the render action. */
 	virtual void onRender();

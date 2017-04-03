@@ -88,6 +88,7 @@
     <ClCompile Include="components\CollisionShape.cpp" />
     <ClCompile Include="components\Component.cpp" />
     <ClCompile Include="components\ExpiryTimer.cpp" />
+    <ClCompile Include="components\ExplosiveCollision.cpp" />
     <ClCompile Include="components\Light.cpp" />
     <ClCompile Include="components\MeshComponent.cpp" />
     <ClCompile Include="components\MeshRenderer.cpp" />
@@ -133,6 +134,7 @@
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Socket.cpp" />
     <ClCompile Include="states\Game.cpp" />
+    <ClCompile Include="states\Planet.cpp" />
     <ClCompile Include="states\State.cpp" />
     <ClCompile Include="states\StateManager.cpp" />
     <ClCompile Include="Texture.cpp" />
@@ -144,6 +146,7 @@
     <ClInclude Include="components\CollisionShape.h" />
     <ClInclude Include="components\Component.h" />
     <ClInclude Include="components\ExpiryTimer.h" />
+    <ClInclude Include="components\ExplosiveCollision.h" />
     <ClInclude Include="components\Light.h" />
     <ClInclude Include="components\MeshComponent.h" />
     <ClInclude Include="components\MeshRenderer.h" />
@@ -192,6 +195,7 @@
     <ClInclude Include="Shader.h" />
     <ClInclude Include="Socket.h" />
     <ClInclude Include="states\Game.h" />
+    <ClInclude Include="states\Planet.h" />
     <ClInclude Include="states\State.h" />
     <ClInclude Include="states\StateManager.h" />
     <ClInclude Include="Texture.h" />

@@ -48,21 +48,19 @@ private:
 	 */
 	void movementControls();
 
-	/** @brief	true if currently controlling camera. */
-	bool controllingCamera;
 
-	void mobileUIUpdate();
+	//void mobileUIUpdate();
 
-	void mobileUIEventQueue();
+	//void mobileUIEventQueue();
 
-	void toggleQRVisiblity();
+	//void toggleQRVisiblity();
 
 	std::shared_ptr<CubeMap> skyBoxCubeMap;
-	std::shared_ptr<GameModel> heightmap;
 
 	Socket* socket;
 
 
+	/*
 	//MOBILE UI DEMO BELOW
 	MobileGameUI* mobileUI;
 
@@ -81,5 +79,5 @@ private:
 
 	float shipHealth;
 	float shipShield;
-
+	*/
 };

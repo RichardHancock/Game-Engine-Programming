@@ -19,6 +19,8 @@
 #include "../components/RigidBody.h"
 #include "../components/SkyBoxRenderer.h"
 #include "../components/ShipController.h"
+#include "StateManager.h"
+#include "Planet.h"
 
 #include "../mobileUI/QRCode.h"
 #include "../misc/Random.h"
@@ -27,7 +29,7 @@ Game::Game()
 {
 	stateName = "Game";
 
-	//MOBILE GAME UI START
+	/*MOBILE GAME UI START
 	mobileUI = new MobileGameUI();
 	//mobileUI->connect("http://gameinput.com");
 	qrGenerated = false;
@@ -42,30 +44,11 @@ Game::Game()
 	//Preload audio
 	ResourceManager::getAudio("hit.wav", false);
 	ResourceManager::getAudio("shield.wav", false);
-	//MOBILE GAME UI END
+	//MOBILE GAME UI END*/
 
-	controllingCamera = true;
+	//controllingCamera = true;
 
-	//Height Map Test
-	heightmap = HeightMap::load(ResourceManager::getResourceDirPath() + "resources/textures/heightmap.bmp", 0.60f, 4.0f);
-	auto hmap = GameObject::create("heightmap").lock();
-	auto transform58 = hmap->addComponent<Transform>("Transform").lock();
-	transform58->setPosition(glm::vec3(30.0f, 0.0f, 0.0f));
-	transform58->setScale(glm::vec3(1));
 
-	hmap->addComponent<MeshComponent>("MeshComponent").lock()->setMesh(
-		heightmap);
-	hmap->addComponent<CollisionShape>("CollisionShape").lock()->generateStaticMeshShape();
-	hmap->addComponent<RigidBody>("RigidBody").lock()->init(0.0f, glm::vec3(0.0f));
-
-	ResourceManager::createMaterial("hmapTex", ResourceManager::getTexture("heightmap.png"),
-		"texturedV.glsl", "texturedF.glsl");
-
-	hmap->addComponent<MeshRenderer>("MeshRenderer").lock()->setMaterial(
-		ResourceManager::getMaterial("hmapTex", 0, false)
-	);
-
-	
 	//Camera
 	auto cameraObj = GameObject::create("Camera").lock();
 	auto camTransform = cameraObj->addComponent<Transform>("Transform").lock();
@@ -73,9 +56,9 @@ Game::Game()
 	camTransform->setEulerRotation(glm::vec3(0.0f, 0, 0));
 	camTransform->setScale(glm::vec3(1));
 	
-
 	auto cameraComponent = cameraObj->addComponent<Camera>("Camera");
 	GameVariables::data->currentCamera = cameraComponent;
+
 
 	//Game Object
 	auto gameO = GameObject::create("fighter").lock();
@@ -92,7 +75,7 @@ Game::Game()
 
 	gameO->addComponent<CollisionShape>("CollisionShape").lock()->generateConvexMeshShape();
 	auto rbGameO = gameO->addComponent<RigidBody>("RigidBody").lock();
-	rbGameO->init(20.0f, glm::vec3(10.0f));
+	rbGameO->init(20.0f, glm::vec3(1.0f));
 	rbGameO->setDamping(0.5f, 0.8f);
 
 	gameO->addComponent<ShipController>("ShipController");
@@ -112,7 +95,7 @@ Game::Game()
 
 	ship->addComponent<CollisionShape>("CollisionShape").lock()->generateConvexMeshShape();
 	auto rbShip = ship->addComponent<RigidBody>("RigidBody").lock();
-	rbShip->init(1.0f, glm::vec3(1.0f));
+	rbShip->init(10.0f, glm::vec3(1.0f));
 	rbShip->setDamping(0.1f, 0.1f);
 
 	auto earth = GameObject::create("earth").lock();
@@ -177,14 +160,6 @@ Game::Game()
 
 	//MODELS LOADED USING PRIMITIVES
 	//SkyBox
-	/*skyBoxCubeMap = std::make_shared<CubeMap>(
-		"resources/textures/cloudtop_rt.png",
-		"resources/textures/cloudtop_lf.png",
-		"resources/textures/cloudtop_up.png",
-		"resources/textures/cloudtop_dn.png",
-		"resources/textures/cloudtop_bk.png",
-		"resources/textures/cloudtop_ft.png"
-		);*/
 	skyBoxCubeMap = std::make_shared<CubeMap>(
 		"resources/textures/space/right.png",
 		"resources/textures/space/left.png",
@@ -194,9 +169,9 @@ Game::Game()
 		"resources/textures/space/front.png"
 		);
 
-	ResourceManager::createMaterial("BlueSkyBox", skyBoxCubeMap, "skyBoxV.glsl", "skyBoxF.glsl");
+	ResourceManager::createMaterial("SpaceSkyBox", skyBoxCubeMap, "skyBoxV.glsl", "skyBoxF.glsl");
 
-	auto skyBox = GameObject::create("SkyBox").lock();
+	auto skyBox = GameObject::create("SpaceSkyBox").lock();
 
 	skyBox->addComponent<Transform>("Transform");
 	//Add primitive cube
@@ -205,7 +180,7 @@ Game::Game()
 	);
 
 	skyBox->addComponent<SkyBoxRenderer>("Sky").lock()->setMaterial(
-		ResourceManager::getMaterial("BlueSkyBox", 0, false)
+		ResourceManager::getMaterial("SpaceSkyBox", 0, false)
 	);
 	
 	//socket = new Socket("localhost", 8080);
@@ -265,7 +240,7 @@ bool Game::eventHandler()
 		return true;
 	}
 
-	mobileUIEventQueue();
+	//mobileUIEventQueue();
 
 	return false;
 }
@@ -281,17 +256,15 @@ void Game::update()
 		ResourceManager::getAudio("Item Place.wav", false).lock()->play(0,0);
 	}
 	
-	//reset scene
-	if (InputManager::wasKeyReleased(SDLK_SPACE) || InputManager::wasControllerButtonPressed(0, Controller::Button::B))
+	//change scene
+	if (InputManager::wasKeyReleased(SDLK_f) || InputManager::wasControllerButtonPressed(0, Controller::Button::B))
 	{
-		//std::shared_ptr<Transform> camera = GameVariables::data->currentCamera.lock()->getGameObject().lock()
-			//->getComponent<Transform>("Transform").lock();
+		GameVariables::data->gameObjs.clear();
+		GameVariables::data->currentLight = std::weak_ptr<GameObject>();
+		GameVariables::data->currentCamera = std::weak_ptr<Camera>();
 
-		//camera->setEulerRotation(glm::vec3(0.0f));
-		//camera->setPosition(glm::vec3(0, 0, 40));
-
-		//GameVariables::data->gameObjs["light"]->getComponent<Transform>().lock()->setPosition(glm::vec3(-50.0f, 10.0f, -5.0f));
-		//GameVariables::data->gameObjs["sphere"]->getComponent<Transform>().lock()->setPosition(glm::vec3(-40.0f, 0.0f, -5.0f));
+		StateManager::changeState(std::make_shared<PlanetState>());
+		return;
 	}
 
 	if (InputManager::wasKeyPressed(SDLK_n))
@@ -389,7 +362,7 @@ void Game::movementControls()
 		light->setDiffuse(glm::vec3(0.8f, 0.4f, 0.4f));
 	}
 }
-
+/*
 void Game::mobileUIUpdate()
 {
 	if (!qrGenerated &&
@@ -527,3 +500,4 @@ void Game::toggleQRVisiblity()
 		return;
 	}
 }
+*/

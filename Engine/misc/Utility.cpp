@@ -328,6 +328,11 @@ void Utility::Timer::cleanup()
 }
 
 
+Utility::SimpleTimer::SimpleTimer()
+	: TIME_INTERVAL(1.0f)
+{
+}
+
 //Simple Timer
 Utility::SimpleTimer::SimpleTimer(float duration)
 	: TIME_INTERVAL(1.0f)

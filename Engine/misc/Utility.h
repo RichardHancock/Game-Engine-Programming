@@ -296,6 +296,9 @@ namespace Utility
 			float duration;
 		};
 	public:
+		/** @brief	Default constructor. */
+		SimpleTimer();
+
 		/**
 		 @brief Constructor.
 		
