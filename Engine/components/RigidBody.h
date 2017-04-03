@@ -20,6 +20,8 @@ public:
 	
 	void setDamping(float linearDamping, float angularDamping);
 
+	void setRestitution(float value);
+
 	virtual void onAwake();
 
 	void applyForce(glm::vec3 newForce);

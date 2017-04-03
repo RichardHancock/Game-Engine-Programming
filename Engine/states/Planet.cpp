@@ -18,6 +18,8 @@
 #include "../components/SkyBoxRenderer.h"
 #include "../components/ShipController.h"
 #include "../components/Camera.h"
+#include "../components/ExpiryTimer.h"
+#include "../Physics.h"
 
 PlanetState::PlanetState()
 {
@@ -30,7 +32,9 @@ PlanetState::PlanetState()
 	hmap->addComponent<MeshComponent>("MeshComponent").lock()->setMesh(
 		heightmap);
 	hmap->addComponent<CollisionShape>("CollisionShape").lock()->generateStaticMeshShape();
-	hmap->addComponent<RigidBody>("RigidBody").lock()->init(0.0f, glm::vec3(0.0f));
+	auto hmapRb = hmap->addComponent<RigidBody>("RigidBody").lock();
+	hmapRb->init(0.0f, glm::vec3(0.0f));
+	hmapRb->setRestitution(1.0f);
 
 	ResourceManager::createMaterial("hmapTex", ResourceManager::getTexture("heightmap.png"),
 		"texturedV.glsl", "texturedF.glsl");
@@ -50,7 +54,7 @@ PlanetState::PlanetState()
 	//Game Object
 	auto gameO = GameObject::create("fighter").lock();
 	auto transform = gameO->addComponent<Transform>("Transform").lock();
-	transform->setPosition(glm::vec3(0.0f, 150.0f, 5.0f));
+	transform->setPosition(glm::vec3(0.0f, 170.0f, 5.0f));
 	transform->setScale(glm::vec3(1));
 
 	gameO->addComponent<MeshComponent>("MeshComponent").lock()->setMesh(
@@ -71,7 +75,7 @@ PlanetState::PlanetState()
 
 	auto light = GameObject::create("light").lock();
 	auto lightT = light->addComponent<Transform>("Transform").lock();
-	lightT->setPosition(glm::vec3(-50.0f, 10.0f, -5.0f));
+	lightT->setPosition(glm::vec3(-50.0f, 150.0f, -5.0f));
 
 	light->addComponent<MeshComponent>("MeshComponent").lock()->setMesh(
 		ResourceManager::getModel("bowl.obj", false));
@@ -92,6 +96,22 @@ PlanetState::PlanetState()
 	);
 
 
+	//Game Object
+	auto tree = GameObject::create("Tree").lock();
+	auto treeT = tree->addComponent<Transform>("Transform").lock();
+	treeT->setPosition(glm::vec3(20.0f, 150.0f, 5.0f));
+	treeT->setScale(glm::vec3(4));
+
+    tree->addComponent<MeshComponent>("MeshComponent").lock()->setMesh(
+		ResourceManager::getModel("tree4-obj.obj"));
+
+	tree->addComponent<MeshRenderer>("MeshRenderer").lock()->setMaterials(
+		ResourceManager::getMaterials("tree4-obj.obj")
+	);
+
+	
+
+	Physics::getWorld()->setGravity(btVector3(0.0f, -15.0f, 0.0f));
 
 	//MODELS LOADED USING PRIMITIVES
 	//SkyBox
@@ -177,6 +197,34 @@ void PlanetState::update()
 {
 	InputManager::printDebugInfo();
 
+	if (InputManager::wasKeyReleased(SDLK_b))
+	{
+		///Generate a bunch of spheres
+		for (unsigned int i = 0; i < 50; i++)
+		{
+			auto sphere = GameObject::create("sphere", true).lock();
+			auto sphereT = sphere->addComponent<Transform>("Transform").lock();
+			sphereT->setPosition(glm::vec3(-10.0f * i, 200.0f, 10.0f * i));
+			sphereT->setScale(glm::vec3(5.0f));
+
+			sphere->addComponent<MeshComponent>("MeshComponent").lock()->setMesh(
+				ResourceManager::getModel("bowl.obj", false));
+
+			sphere->addComponent<MeshRenderer>("MeshRenderer").lock()->setMaterial(
+				ResourceManager::getMaterial("red", 0, false)
+			);
+
+			sphere->addComponent<CollisionShape>("CollisionShape").lock()->generateConvexMeshShape();
+			auto rbSphere = sphere->addComponent<RigidBody>("RigidBody").lock();
+			rbSphere->init(1.0f, glm::vec3(1.0f));
+			rbSphere->setDamping(0.1f, 0.1f);
+			rbSphere->setRestitution(1.0f);
+
+			rbSphere->applyForce(glm::vec3(0.0f, -50.0f, 0.0f));
+
+			sphere->addComponent<ExpiryTimer>("ExpiryTimer").lock()->startExpiryTimer(100.0f);
+		}
+	}
 
 	//Calculate Camera Pos
 	std::shared_ptr<Transform> camera = GameVariables::data->currentCamera.lock()

@@ -31,7 +31,7 @@ void ShipController::onUpdate()
 	{
 		fireRocket();
 
-		reloadTimer.restart(5.0f);
+		reloadTimer.restart(2.0f);
 	}
 }
 
@@ -140,10 +140,10 @@ void ShipController::fireRocket()
 		->generateBoxShape();
 
 	auto rocketRB = rocket->addComponent<RigidBody>("RigidBody").lock();
-	rocketRB->init(0.1f, glm::vec3(0.1f));
-	rocketRB->applyForce(rocketT->getForwardVector() * -10.0f);
-
-	rocket->addComponent<ExpiryTimer>("ExpiryTimer").lock()->startExpiryTimer(7.0f);
+	rocketRB->init(1.0f, glm::vec3(1.0f));
+	rocketRB->applyForce(rocketT->getForwardVector() * DeltaTime::getDT() * -9000.0f);
+	
+	rocket->addComponent<ExpiryTimer>("ExpiryTimer").lock()->startExpiryTimer(10.0f);
 
 	rocket->addComponent<ExplosiveCollision>("ExplosiveCollision");
 }

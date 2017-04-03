@@ -24,6 +24,7 @@
 
 #include "../mobileUI/QRCode.h"
 #include "../misc/Random.h"
+#include "../Physics.h"
 
 Game::Game()
 {
@@ -48,6 +49,8 @@ Game::Game()
 
 	//controllingCamera = true;
 
+
+	Physics::getWorld()->setGravity(btVector3(0.0f, 0.0f, 0.0f));
 
 	//Camera
 	auto cameraObj = GameObject::create("Camera").lock();

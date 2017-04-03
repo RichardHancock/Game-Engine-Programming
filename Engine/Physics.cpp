@@ -138,6 +138,7 @@ void Physics::removeRigidBody(btRigidBody * rigidBody)
 void Physics::triggerExplosion(glm::vec3 position, float radius, float duration)
 {
 	btCollisionShape* collisionShape = new btSphereShape(radius);
+	collisionShape->setMargin(2.0f);
 
 	btMotionState* motionState = new btDefaultMotionState(
 		btTransform(btQuaternion().getIdentity(), Utility::glmToBulletVec3(position)));
@@ -154,6 +155,6 @@ void Physics::triggerExplosion(glm::vec3 position, float radius, float duration)
 	explosions.push_back(e);
 	
 	rb->setUserPointer(new std::string("Explosion"));
-	rb->setRestitution(2.0f);
+	rb->setRestitution(5.0f);
 	world->addRigidBody(rb);
 }

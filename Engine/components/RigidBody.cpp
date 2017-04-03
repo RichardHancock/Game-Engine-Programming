@@ -54,6 +54,12 @@ void RigidBody::setDamping(float linearDamping, float angularDamping)
 	rigidBody->setDamping(linearDamping, angularDamping);
 }
 
+void RigidBody::setRestitution(float value)
+{
+	if (rigidBody != nullptr)
+		rigidBody->setRestitution(value);
+}
+
 void RigidBody::onAwake()
 {
 	
@@ -99,7 +105,7 @@ void RigidBody::init(float weight, glm::vec3 inertia)
 
 	rigidBody = new btRigidBody(rigidBodyInfo);
 	rigidBody->setUserPointer(new std::string(getGameObject().lock()->getName()));
-	rigidBody->setRestitution(0.5f);
-
+	//rigidBody->setRestitution(0.1f);
+	//rigidBody-
 	Physics::addRigidBody(rigidBody);
 }

@@ -110,6 +110,7 @@ bool CollisionShape::generateStaticMeshShape()
 	btBvhTriangleMeshShape* rawShape = new btBvhTriangleMeshShape(triangles, false);
 	shape = rawShape;
 
+	shape->setMargin(2.0f);
 	return true;
 }
 
@@ -179,6 +180,7 @@ bool CollisionShape::generateConvexMeshShape()
 	btConvexTriangleMeshShape* rawShape = new btConvexTriangleMeshShape(triangles);
 	shape = rawShape;
 
+	shape->setMargin(2.0f);
 	return true;
 }
 

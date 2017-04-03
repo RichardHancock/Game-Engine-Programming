@@ -61,7 +61,8 @@ int main(int argc, char *argv[])
 
 
 	glEnable(GL_DEPTH_TEST);
-
+	glEnable(GL_BLEND); 
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	if (Platform::getSetting("MSAA") != 0)
 		glEnable(GL_MULTISAMPLE);
@@ -94,14 +95,14 @@ int main(int argc, char *argv[])
 		// Update
 		//Calculate deltaTime
 		DeltaTime::update();
-
+		Physics::getWorld()->stepSimulation(DeltaTime::getDT(), 1, 1.0f / 120.0f);
 		Physics::update();
 
 		Utility::Timer::update();
 
 		StateManager::update();
 
-		Physics::getWorld()->stepSimulation(DeltaTime::getDT(), 10);
+		
 		//ResourceManager::update(dt);
 
 		//Pre Render

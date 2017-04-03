@@ -50,6 +50,9 @@ void main()
 
 	vec2 flipTexCoords = vec2(fs_in.TexCoords.x, 1.0 - fs_in.TexCoords.y);
 
+	vec4 diffuse = texture(diffuseMap, flipTexCoords);
+	float alpha = diffuse.w;
+	
     // Obtain normal from normal map in range [0,1]
     vec3 normal = texture(normalMap, flipTexCoords).rgb;
     // Transform normal vector to range [-1,1]
@@ -59,7 +62,7 @@ void main()
 
 	vec3 result = CalcDirLight(dirLight, normal, flipTexCoords, viewDir);
 	result += CalcPointLight(pointlight, normal, flipTexCoords, fs_in.FragPos, viewDir);
-	FragColor = vec4(result, 1.0f);
+	FragColor = vec4(result, alpha);
 }
 
 // Calculates the color when using a directional light.
