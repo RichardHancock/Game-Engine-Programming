@@ -254,7 +254,7 @@ void Game::update()
 	InputManager::printDebugInfo();
 
 
-	if (InputManager::wasKeyPressed(SDLK_1) || InputManager::wasControllerButtonPressed(0,Controller::Button::A))
+	if (InputManager::wasKeyPressed(SDLK_SPACE) || InputManager::wasControllerButtonPressed(0,Controller::Button::A))
 	{
 		ResourceManager::getAudio("Item Place.wav", false).lock()->play(0,0);
 	}

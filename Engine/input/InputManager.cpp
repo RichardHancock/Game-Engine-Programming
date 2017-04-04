@@ -583,8 +583,8 @@ void InputManager::printDebugInfo()
 		Log::logI("RightTrigger: " +
 			Utility::floatToString(InputManager::getControllerAxis1D(0, Controller::RightTrigger)));
 	}
-
-	if (InputManager::wasControllerButtonPressed(0, Controller::RIGHTSHOULDER))
+	
+	if (InputManager::wasControllerButtonPressed(0, Controller::RIGHTSHOULDER) || InputManager::wasControllerButtonPressed(0, Controller::LEFTSHOULDER))
 	{
 		InputManager::playControllerRumble(0, 1.0f, 2000);
 	}

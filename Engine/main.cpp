@@ -87,7 +87,7 @@ int main(int argc, char *argv[])
 	{
 		done = StateManager::eventHandler();
 
-		if (InputManager::wasKeyReleased(SDLK_F1))
+		if (InputManager::wasKeyReleased(SDLK_F1) || InputManager::wasControllerButtonReleased(0, Controller::Button::BACK))
 		{
 			renderDebugWorld = !renderDebugWorld;
 		}

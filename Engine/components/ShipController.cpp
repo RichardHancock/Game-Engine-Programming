@@ -27,7 +27,7 @@ void ShipController::onUpdate()
 
 	movementControls();
 
-	if (InputManager::wasKeyPressed(SDLK_SPACE) && reloadTimer.hasTimerFinished())
+	if ((InputManager::wasKeyPressed(SDLK_SPACE) || InputManager::wasControllerButtonPressed(0, Controller::Button::A)) && reloadTimer.hasTimerFinished())
 	{
 		fireRocket();
 
@@ -60,13 +60,13 @@ void ShipController::movementControls()
 	}
 
 	//move object along y
-	if (InputManager::isKeyHeld(SDLK_q))
-	{
-		objectRB->applyForce(-speedDT * up);
-	}
-	else if (InputManager::isKeyHeld(SDLK_e))
+	if (InputManager::isKeyHeld(SDLK_q) || InputManager::isControllerButtonHeld(0, Controller::Button::Y))
 	{
 		objectRB->applyForce(speedDT * up);
+	}
+	else if (InputManager::isKeyHeld(SDLK_e) || InputManager::isControllerButtonHeld(0, Controller::Button::X))
+	{
+		objectRB->applyForce(-speedDT * up);
 	}
 
 	//move object along z
@@ -112,10 +112,27 @@ void ShipController::movementControls()
 	//Controller Movement
 	if (InputManager::isControllerAxisInUse(0, Controller::Axis2D::LeftStick))
 	{
-		objectRB->applyForce(glm::vec3(
-			InputManager::getControllerAxis2D(0, Controller::Axis2D::LeftStick).x * speed * DeltaTime::getDT(),
+		glm::vec3 rightMovement = InputManager::getControllerAxis2D(0, Controller::Axis2D::LeftStick).x * speedDT * right;
+		glm::vec3 forwardMovement = InputManager::getControllerAxis2D(0, Controller::Axis2D::LeftStick).y * speedDT * forward;
+
+		objectRB->applyForce(glm::vec3(rightMovement + forwardMovement));
+	}
+
+	if (InputManager::isControllerAxisInUse(0, Controller::Axis2D::RightStick))
+	{
+		object->rotate(glm::vec3(
+			InputManager::getControllerAxis2D(0, Controller::Axis2D::RightStick).y * speedRadians * 50.0f * DeltaTime::getDT(),
 			0.0f,
-			InputManager::getControllerAxis2D(0, Controller::Axis2D::LeftStick).y * speed * DeltaTime::getDT()));
+			-InputManager::getControllerAxis2D(0, Controller::Axis2D::RightStick).x * speedRadians * 50.0f * DeltaTime::getDT()));
+	}
+
+	if (InputManager::isControllerButtonHeld(0, Controller::Button::LEFTSHOULDER))
+	{
+		object->rotate(glm::vec3(0.0f, speedRadians, 0.0f));
+	}
+	else if (InputManager::isControllerButtonHeld(0, Controller::Button::RIGHTSHOULDER))
+	{
+		object->rotate(glm::vec3(0.0f, -speedRadians, 0.0f));
 	}
 }
 
