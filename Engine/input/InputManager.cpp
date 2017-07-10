@@ -244,7 +244,7 @@ std::unordered_map<SDL_Keycode, InputManager::ButtonState> InputManager::keys = 
 	{ SDLK_EJECT, None },
 	{ SDLK_SLEEP, None },
 };
-std::unordered_map<uint8_t, InputManager::ButtonState> InputManager::mouseButtons = {
+std::unordered_map<int, InputManager::ButtonState> InputManager::mouseButtons = {
 	{ SDL_BUTTON_LEFT, None },
 	{ SDL_BUTTON_MIDDLE, None },
 	{ SDL_BUTTON_RIGHT, None },

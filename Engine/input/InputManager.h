@@ -269,7 +269,7 @@ private:
 	static std::unordered_map<SDL_Keycode, ButtonState> keys;
 
 	/** @brief	Map of mouse buttons and their states. */
-	static std::unordered_map<uint8_t, ButtonState> mouseButtons;
+	static std::unordered_map<int, ButtonState> mouseButtons;
 
 	/** 
 	@brief Vector containing all initialised controllers
