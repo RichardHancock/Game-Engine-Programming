@@ -49,8 +49,9 @@ public:
 	enum Renderer
 	{
 		Dummy,
-		OpenGL
+		OpenGL,
 		//OpenGL_Legacy
+		SDL2
 	};
 
 	/**
@@ -88,6 +89,15 @@ public:
 	 @return	The current renderer.
 	 */
 	static Renderer getCurrentRenderer();
+
+	/**
+	@brief	      	Gets SDL renderer.
+	
+	Issues a warning if renderer is requested when another renderer is currently in use.
+	
+	@return	Null if it fails, else the sdl renderer.
+	 */
+	static SDL_Renderer* getSDLRenderer();
 
 	/**
 	 @brief	Query if the current renderer is dummy renderer.
@@ -142,7 +152,11 @@ private:
 
 	/** @brief	The current renderer. */
 	static Renderer currentRenderer;
-	
+
+
+	/** @brief	The SDL renderer */
+	static SDL_Renderer* renderer;
+
 	//Version Number
 	/**
 	 @brief	SDL Version number to string converter.

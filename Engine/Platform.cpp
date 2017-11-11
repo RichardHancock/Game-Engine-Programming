@@ -14,7 +14,8 @@ const std::string Platform::defaultSettingsPath = "resources/defaultSettings.xml
 Setting::FullscreenMode Platform::fullscreenMode = Setting::FullscreenMode::Windowed;
 std::unordered_map<std::string, int> Platform::settings;
 std::unordered_map<std::string, bool> Platform::features;
-Platform::Renderer Platform::currentRenderer;
+Platform::Renderer Platform::currentRenderer = Platform::Dummy;
+SDL_Renderer* Platform::renderer = nullptr;
 
 
 void Platform::init(std::string newSettingsFilename)
@@ -430,6 +431,20 @@ void Platform::loadSettingsFromFile(std::string org, std::string app, std::strin
 Platform::Renderer Platform::getCurrentRenderer()
 {
 	return currentRenderer;
+}
+
+SDL_Renderer * Platform::getSDLRenderer()
+{
+	if (currentRenderer != Renderer::SDL2)
+	{
+		Log::logW("SDL Renderer requested when it is not the current renderer");
+		return nullptr;
+	}
+	else
+	{
+		return renderer
+	}
+	
 }
 
 bool Platform::isDummyRenderer()
