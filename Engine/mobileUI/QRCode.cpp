@@ -23,8 +23,8 @@ SDL_Surface* QRCode::convertToSurface(int segmentSize)
 		Log::logE("Segment size passed to qrToSurface() is below 1.");
 		return nullptr;
 	}
-	
-	int size = qr.size + 2;
+
+	int size = qr.getSize() + 2;
 	SDL_Rect* rects = new SDL_Rect[size*size];
 
 	int arrayIt = 0; //Get this working with just X and Y
