@@ -5,6 +5,57 @@
 #include "Log.h"
 #include "DeltaTime.h"
 
+//Credit to Jamie for below 2 functions
+std::string getOpenGLErrorString(GLenum errorCode)
+{
+	std::string errorMessage;
+	switch (errorCode)
+	{
+	case GL_INVALID_ENUM:
+		errorMessage = "GL_INVALID_ENUM (" + std::to_string(errorCode) + ")";
+		break;
+	case GL_INVALID_VALUE:
+		errorMessage = "GL_INVALID_VALUE (" + std::to_string(errorCode) + ")";
+		break;
+	case GL_INVALID_OPERATION:
+		errorMessage = "GL_INVALID_OPERATION (" + std::to_string(errorCode) + ")";
+		break;
+	case GL_STACK_OVERFLOW:
+		errorMessage = "GL_STACK_OVERFLOW (" + std::to_string(errorCode) + ")";
+		break;
+	case GL_STACK_UNDERFLOW:
+		errorMessage = "GL_STACK_UNDERFLOW (" + std::to_string(errorCode) + ")";
+		break;
+	case GL_OUT_OF_MEMORY:
+		errorMessage = "GL_OUT_OF_MEMORY (" + std::to_string(errorCode) + ")";
+		break;
+	case GL_INVALID_FRAMEBUFFER_OPERATION:
+		errorMessage = "GL_INVALID_FRAMEBUFFER_OPERATION (" + std::to_string(errorCode) + ")";
+		break;
+	case GL_CONTEXT_LOST:
+		errorMessage = "GL_CONTEXT_LOST (" + std::to_string(errorCode) + ")";
+		break;
+	case GL_TABLE_TOO_LARGE:
+		errorMessage = "GL_TABLE_TOO_LARGE (" + std::to_string(errorCode) + ")";
+		break;
+	default:
+		//return the number if something else
+		errorMessage = "UNHANDLED ENUM (" + std::to_string(errorCode) + ")";
+		break;
+	}
+	return errorMessage;
+}
+
+void logOpenGLError(std::string file, int lineNum)
+{
+	GLenum errorCode;
+	while ((errorCode = glGetError()) != GL_NO_ERROR)
+	{
+		//Process/log the error.
+		Log::logE("[OPENGL] Location: " + file + ", Line " + std::to_string(lineNum) + " | Type: " + getOpenGLErrorString(errorCode));
+	}
+}
+
 std::string Utility::intToString(int num)
 {
 	std::stringstream stream;
@@ -13,7 +64,7 @@ std::string Utility::intToString(int num)
 	std::string result = stream.str();
 
 	return result;
-	
+
 }
 
 std::string Utility::intToString(unsigned int num)
@@ -96,7 +147,7 @@ glm::vec3 Utility::bulletVec3ToGLM(const btVector3& vector)
 }
 
 glm::vec3 Utility::bulletVec3ToGLM(btVector3& vector)
-{	
+{
 	return glm::vec3(vector.getX(), vector.getY(), vector.getZ());
 }
 
@@ -221,7 +272,7 @@ bool Utility::lineRectIntersection(Vec2 lineP1, Vec2 lineP2, SDL_Rect rect)
 	bl.y += rect.h;
 	Vec2 br = tr;
 	br.y += rect.h;
-	
+
 	if (
 		lineIntersection(lineP1, lineP2, tl, tr) ||
 		lineIntersection(lineP1, lineP2, tr, br) ||
@@ -308,7 +359,7 @@ bool Utility::Timer::hasTimerFinished(std::string id)
 		Log::logW("Unknown timer was asked if finished. Timer ID:" +id);
 		return false;
 	}
-	
+
 	TimerStruct timer = timers[id];
 	if (timer.currentTime >= timer.duration)
 	{

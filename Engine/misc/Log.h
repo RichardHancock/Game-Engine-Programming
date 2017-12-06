@@ -3,17 +3,16 @@
 #include <SDL.h>
 #include <string>
 #include <fstream>
-#include <GL\glew.h>
 
 //Ref: Was used in previous assignment
 
-/** 
+/**
 @brief	Contains the Engine's logging features.
 */
 class Log
 {
 public:
-	/** 
+	/**
 	@brief A type of log message
 	*/
 	enum LogType
@@ -26,11 +25,11 @@ public:
 
 	/**
 	 @brief	Initialises the Log System.
-	
+
 	 @param	fileOutput	True for file output.
 	 @param	org		  	The organisation.
 	 @param	app		  	The application.
-	
+
 	 @return	True if it succeeds, false if it fails.
 	 */
 	static bool init(bool fileOutput, std::string org, std::string app);
@@ -80,10 +79,8 @@ public:
 
 	static void LogOutputFunction(void* userdata, int category, SDL_LogPriority priority, const char* message);
 
-	static void Log::logOpenGLError(std::string file, int lineNum);
-
 private:
-	
+
 	/** @brief	True if initialized. */
 	static bool initialized;
 
@@ -91,6 +88,4 @@ private:
 
 	/** @brief	The log file. */
 	static std::ofstream logFile;
-
-	static std::string Log::getOpenGLErrorString(GLenum errorCode);
 };

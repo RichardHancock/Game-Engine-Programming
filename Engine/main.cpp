@@ -61,7 +61,7 @@ int main(int argc, char *argv[])
 
 
 	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_BLEND); 
+	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	if (Platform::getSetting("MSAA") != 0)
@@ -102,7 +102,7 @@ int main(int argc, char *argv[])
 
 		StateManager::update();
 
-		
+
 		//ResourceManager::update(dt);
 
 		//Pre Render
@@ -120,7 +120,7 @@ int main(int argc, char *argv[])
 			// This writes the above colour to the colour part of the frame buffer
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		}
-		
+
 
 		StateManager::render();
 
@@ -135,7 +135,7 @@ int main(int argc, char *argv[])
 		InputManager::update();
 
 #ifdef _DEBUG
-		Log::logOpenGLError("Test",0);
+		Utility::logOpenGLError("Test",0);
 #endif
 		/* TODO: This makes physics out of sync, Really need to fix the time-step and main program flow in a future update
 		if (DeltaTime::getDT() < (1.0f / 50.0f))
