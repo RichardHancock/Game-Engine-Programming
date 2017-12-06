@@ -3,6 +3,7 @@
 #include <SDL.h>
 #include <string>
 #include <fstream>
+#include <GL\glew.h>
 
 //Ref: Was used in previous assignment
 
@@ -79,6 +80,8 @@ public:
 
 	static void LogOutputFunction(void* userdata, int category, SDL_LogPriority priority, const char* message);
 
+	static void Log::logOpenGLError(std::string file, int lineNum);
+
 private:
 	
 	/** @brief	True if initialized. */
@@ -88,4 +91,6 @@ private:
 
 	/** @brief	The log file. */
 	static std::ofstream logFile;
+
+	static std::string Log::getOpenGLErrorString(GLenum errorCode);
 };

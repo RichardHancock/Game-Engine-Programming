@@ -134,6 +134,9 @@ int main(int argc, char *argv[])
 
 		InputManager::update();
 
+#ifdef _DEBUG
+		Log::logOpenGLError("Test",0);
+#endif
 		/* TODO: This makes physics out of sync, Really need to fix the time-step and main program flow in a future update
 		if (DeltaTime::getDT() < (1.0f / 50.0f))
 		{

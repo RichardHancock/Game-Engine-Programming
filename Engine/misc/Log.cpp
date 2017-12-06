@@ -189,3 +189,54 @@ std::string Log::convertSDL_LogPriority(SDL_LogPriority priority)
 		break;
 	}
 }
+
+//Credit to Jamie for below 2 functions
+void Log::logOpenGLError(std::string file, int lineNum)
+{
+	GLenum errorCode;
+	while ((errorCode = glGetError()) != GL_NO_ERROR)
+	{
+		//Process/log the error.
+		logE("[OPENGL] Location: " + file + ", Line " + std::to_string(lineNum) + " | Type: " + getOpenGLErrorString(errorCode));
+	}
+}
+
+std::string Log::getOpenGLErrorString(GLenum errorCode)
+{
+	std::string errorMessage;
+	switch (errorCode)
+	{
+	case GL_INVALID_ENUM:
+		errorMessage = "GL_INVALID_ENUM (" + std::to_string(errorCode) + ")";
+		break;
+	case GL_INVALID_VALUE:
+		errorMessage = "GL_INVALID_VALUE (" + std::to_string(errorCode) + ")";
+		break;
+	case GL_INVALID_OPERATION:
+		errorMessage = "GL_INVALID_OPERATION (" + std::to_string(errorCode) + ")";
+		break;
+	case GL_STACK_OVERFLOW:
+		errorMessage = "GL_STACK_OVERFLOW (" + std::to_string(errorCode) + ")";
+		break;
+	case GL_STACK_UNDERFLOW:
+		errorMessage = "GL_STACK_UNDERFLOW (" + std::to_string(errorCode) + ")";
+		break;
+	case GL_OUT_OF_MEMORY:
+		errorMessage = "GL_OUT_OF_MEMORY (" + std::to_string(errorCode) + ")";
+		break;
+	case GL_INVALID_FRAMEBUFFER_OPERATION:
+		errorMessage = "GL_INVALID_FRAMEBUFFER_OPERATION (" + std::to_string(errorCode) + ")";
+		break;
+	case GL_CONTEXT_LOST:
+		errorMessage = "GL_CONTEXT_LOST (" + std::to_string(errorCode) + ")";
+		break;
+	case GL_TABLE_TOO_LARGE:
+		errorMessage = "GL_TABLE_TOO_LARGE (" + std::to_string(errorCode) + ")";
+		break;
+	default:
+		//return the number if something else
+		errorMessage = "UNHANDLED ENUM (" + std::to_string(errorCode) + ")";
+		break;
+	}
+	return errorMessage;
+}
